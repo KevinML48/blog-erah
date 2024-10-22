@@ -13,7 +13,7 @@ Route::get('/dashboard', function () {
 
 Route::middleware('can:create_post')->group(function () {
     Route::get('/admin', function () {
-        return view('dashboard');
+        return view('admin.dashboard');
     })->name('admin');
 });
 
