@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,9 +13,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('can:create_post')->group(function () {
-    Route::get('/admin', function () {
-        return view('admin.dashboard');
-    })->name('admin');
+    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
 });
 
 Route::middleware('auth')->group(function () {
