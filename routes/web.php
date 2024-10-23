@@ -13,6 +13,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+
 Route::middleware('can:create_post')->group(function () {
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
 
