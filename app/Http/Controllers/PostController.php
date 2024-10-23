@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
@@ -39,10 +40,13 @@ class PostController extends Controller
             $mediaPath = $request->video_link;
         }
 
+        $publicationTime = Carbon::createFromFormat('Y-m-d\TH:i', $request->publication_time, 'UTC')
+            ->setTimezone('UTC');
+
         Post::create([
             'title' => $request->title,
             'body' => $request->body,
-            'publication_time' => $request->publication_time,
+            'publication_time' => $publicationTime,
             'media' => $mediaPath,
             'user_id' => auth()->id(),
         ]);
