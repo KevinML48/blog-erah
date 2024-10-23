@@ -8,12 +8,14 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
+            <!-- Welcome message -->
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     {{ __("You're an admin!") }}
                 </div>
             </div>
 
+            <!-- Users list -->
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="p-6">
                     <h2 class="mt-6 text-lg font-semibold">Last 10 Users</h2>
@@ -43,6 +45,17 @@
                     </table>
                 </div>
             </div>
+
+            <!-- Posts -->
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <h2 class="mt-6 text-lg font-semibold">Posts</h2>
+                <div class="mt-4">
+                    <a href="{{ route('admin.posts.create') }}" class="text-blue-600 px-4 hover:underline">
+                        Créer Nouveau Post
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
 </x-app-layout>
