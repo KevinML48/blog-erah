@@ -18,43 +18,46 @@
             <!-- Users list -->
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="p-6">
-                    <h2 class="mt-6 text-lg font-semibold">Last 10 Users</h2>
+                    <h2 class="mt-6 text-lg font-semibold">10 Derniers Inscrits</h2>
                     <table class="min-w-full mt-4 bg-white border border-gray-200">
                         <thead>
                         <tr>
-                            <th class="py-2 px-4 border-b">{{ __('Name') }}</th>
+                            <th class="py-2 px-4 border-b">{{ __('Nom') }}</th>
                             <th class="py-2 px-4 border-b">{{ __('Email') }}</th>
-                            <th class="py-2 px-4 border-b">{{ __('Role') }}</th>
-                            <th class="py-2 px-4 border-b">{{ __('Created At') }}</th>
+                            <th class="py-2 px-4 border-b">{{ __('Inscrit le') }}</th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($users as $user)
-                            <tr>
-                                <td class="py-2 px-4 border-b">
-                                    <a href="{{ route('profile.show', ['username' => $user->name]) }}" class="text-blue-600 hover:underline">
-                                        {{ $user->name }}
-                                    </a>
-                                </td>
-                                <td class="py-2 px-4 border-b">{{ $user->email }}</td>
-                                <td class="py-2 px-4 border-b">{{ $user->role }}</td>
-                                <td class="py-2 px-4 border-b">{{ $user->created_at->format('Y-m-d H:i') }}</td>
-                            </tr>
+                            @include('admin.partials.user', ['user' => $user])
                         @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
 
+
             <!-- Posts -->
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <h2 class="mt-6 text-lg font-semibold">Posts</h2>
                 <div class="mt-4">
-                    <a href="{{ route('admin.posts.create') }}" class="text-blue-600 px-4 hover:underline">
+                    <a href="{{ route('admin.posts.create') }}" class="py-2 px-4 text-blue-600 hover:underline">
                         Créer Nouveau Post
                     </a>
                 </div>
+
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold">10 Derniers Posts</h3>
+                    <div class="space-y-4 mt-4">
+                        @foreach($posts as $post)
+                            @include('admin.partials.post', ['post' => $post])
+                        @endforeach
+                    </div>
+                </div>
             </div>
+
+
+
 
         </div>
     </div>
