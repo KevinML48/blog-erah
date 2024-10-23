@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +15,9 @@ Route::get('/dashboard', function () {
 
 Route::middleware('can:create_post')->group(function () {
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
+
+    Route::get('/admin/posts/create', [PostController::class, 'create'])->name('admin.posts.create');
+    Route::post('/admin/posts/store', [PostController::class, 'store'])->name('admin.posts.store');
 });
 
 Route::middleware('auth')->group(function () {
