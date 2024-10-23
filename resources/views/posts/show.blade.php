@@ -17,7 +17,7 @@
                 </p>
 
                 <div class="mt-4">
-                    <p>{{ $post->body }}</p>
+                    {!! nl2br(e($post->body)) !!}
                 </div>
             </div>
         </div>
