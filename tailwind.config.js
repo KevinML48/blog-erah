@@ -14,6 +14,10 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            boxShadow: {
+                'erah': '0 0px 10px 0 rgb(0 0 0 / 0.05)',
+                'inner-erah': 'inset 0 0px 4px 0 rgb(0 0 0 / 0.05)',
+            },
         },
     },
 

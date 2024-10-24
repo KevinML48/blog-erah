@@ -12,13 +12,15 @@
 
         <!-- Title -->
         <a href="{{ route('posts.show', $post->id) }}">
-            <h4 class="font-semibold text-lg">{{ $post->title }}</h4>
+            <h4 class="font-semibold text-lg hover:underline inline-block">{{ $post->title }}</h4>
         </a>
 
         <!-- Edit link -->
-        <a href="{{ route('admin.posts.edit', $post->id) }}" class="text-blue-500 hover:text-blue-700">
-            Éditer
-        </a>
+        <div class="mt-1">
+            <a href="{{ route('admin.posts.edit', $post->id) }}" class="erah-link">
+                Éditer
+            </a>
+        </div>
 
         <!-- Credit -->
         <p class="text-gray-600">

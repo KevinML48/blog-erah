@@ -5,8 +5,8 @@
 <div class="grid grid-cols-1 gap-6">
     <!-- Title -->
     <div>
-        <label for="title" class="block font-medium text-sm text-gray-700">Titre</label>
-        <input type="text" name="title" id="title" value="{{ old('title', $post->title ?? '') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+        <x-input-label for="title" :value="__('Titre')" />
+        <x-text-input id="title" name="title" type="text" class="mt-1 block w-full" :value="old('title', $post->title ?? '')" required autofocus autocomplete="title" />
         @error('title')
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
@@ -14,8 +14,8 @@
 
     <!-- Body -->
     <div>
-        <label for="body" class="block font-medium text-sm text-gray-700">Contenu</label>
-        <textarea name="body" id="body" rows="5" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>{{ old('body', $post->body ?? '') }}</textarea>
+        <x-input-label for="body" :value="__('Contenu')" />
+        <x-text-area id="body" name="body" rows="5" class="mt-1 block w-full" :value="old('body', $post->body ?? '')" required autofocus autocomplete="body" />
         @error('body')
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
@@ -23,7 +23,7 @@
 
     <!-- Publication Time -->
     <div>
-        <label for="publication_time" class="block font-medium text-sm text-gray-700">Date de publication</label>
+        <x-input-label for="publication_time" :value="__('Date de publication')" />
         <input type="datetime-local" name="publication_time" id="publication_time" value="{{ old('publication_time', isset($post) && $post->publication_time ? $post->publication_time->format('Y-m-d\TH:i') : '') }}"
                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
         @error('publication_time')
@@ -33,7 +33,7 @@
 
     <!-- Media Type -->
     <div>
-        <label for="media_type" class="block font-medium text-sm text-gray-700">Type de Média</label>
+        <x-input-label for="media_type" :value="__('Type de Média')" />
         <select name="media_type" id="media_type" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
             <option value="image" {{ old('media_type', $post->media_type ?? '') == 'image' ? 'selected' : '' }}>Uploader une image</option>
             <option value="video" {{ old('media_type', $post->media_type ?? '') == 'video' ? 'selected' : '' }}>Lien vidéo</option>
@@ -42,7 +42,7 @@
 
     <!-- Media Upload -->
     <div id="mediaUpload" class="media-upload">
-        <label for="media" class="block font-medium text-sm text-gray-700">Image</label>
+        <x-input-label for="media" :value="__('Image')" />
         <input type="file" name="media" id="media" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" accept="image/*">
         @error('media')
         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -51,7 +51,7 @@
 
     <!-- Video Link -->
     <div id="mediaLink" class="media-link hidden">
-        <label for="video_link" class="block font-medium text-sm text-gray-700">Vidéo</label>
+        <x-input-label for="video_link" :value="__('Vidéo')" />
         <input type="url" name="video_link" id="video_link" value="{{ old('video_link', $post->video_link ?? '') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="https://example.com/video">
         @error('video_link')
         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -60,9 +60,9 @@
 
     <!-- Submit -->
     <div class="mt-4">
-        <button type="submit" class="bg-white hover:bg-gray-100 text-sm text-gray-700 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-            {{ isset($post) ? 'Modifier Post' : 'Créer Post' }}
-        </button>
+        <x-primary-button>
+            {{ isset($post) ? __('Modifier Post') : __('Créer Post') }}
+        </x-primary-button>
     </div>
 </div>
 

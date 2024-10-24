@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input {
+    @apply text-black;
+}
+
+textarea {
+    @apply text-black;
+}
+
+select {
+    @apply text-black;
+}
+
+.erah-box {
+    @apply p-4 bg-black shadow-erah shadow-red-600 sm:rounded-lg;
+}
+
+
+
+.erah-link {
+    @apply text-blue-600 hover:underline visited:text-blue-400;
+}

@@ -1,6 +1,6 @@
 <tr>
     <td class="py-2 px-4 border-b">
-        <a href="{{ route('profile.show', ['username' => $user->name]) }}" class="text-gray-600 hover:underline">
+        <a href="{{ route('profile.show', ['username' => $user->name]) }}" class="hover:underline">
             {{ $user->name }}
         </a>
     </td>
