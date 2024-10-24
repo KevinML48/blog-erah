@@ -20,6 +20,10 @@ Route::middleware('can:create_post')->group(function () {
 
     Route::get('/admin/posts/create', [PostController::class, 'create'])->name('admin.posts.create');
     Route::post('/admin/posts/store', [PostController::class, 'store'])->name('admin.posts.store');
+
+    Route::get('/admin/posts/{post}/edit', [PostController::class, 'edit'])->name('admin.posts.edit');
+    Route::put('/admin/posts/{post}', [PostController::class, 'update'])->name('admin.posts.update');
+
 });
 
 Route::middleware('auth')->group(function () {

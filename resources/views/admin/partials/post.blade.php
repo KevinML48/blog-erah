@@ -9,8 +9,16 @@
 
     <!-- Post -->
     <div class="w-2/3 pl-4">
+
         <!-- Title -->
-        <a href="{{ route('posts.show', $post->id) }}"><h4 class="font-semibold text-lg">{{ $post->title }}</h4></a>
+        <a href="{{ route('posts.show', $post->id) }}">
+            <h4 class="font-semibold text-lg">{{ $post->title }}</h4>
+        </a>
+
+        <!-- Edit link -->
+        <a href="{{ route('admin.posts.edit', $post->id) }}" class="text-blue-500 hover:text-blue-700">
+            Éditer
+        </a>
 
         <!-- Credit -->
         <p class="text-gray-600">
