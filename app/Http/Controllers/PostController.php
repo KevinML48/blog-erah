@@ -42,7 +42,7 @@ class PostController extends Controller
         }
 
         $publicationTime = null;
-        if ($request->publicationTime) {
+        if ($request->publication_time) {
             $publicationTime = Carbon::createFromFormat('Y-m-d\TH:i', $request->publication_time, 'UTC')
                 ->setTimezone('UTC');
         }
@@ -95,7 +95,7 @@ class PostController extends Controller
         }
 
         $publicationTime = null;
-        if ($request->publicationTime) {
+        if ($request->publication_time) {
             $publicationTime = Carbon::createFromFormat('Y-m-d\TH:i', $request->publication_time, 'UTC')
                 ->setTimezone('UTC');
         }
