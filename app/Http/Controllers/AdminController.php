@@ -13,6 +13,10 @@ class AdminController extends Controller
         $users = $request->user()->orderBy('created_at', 'desc')->take(10)->get();
         $posts = Post::orderBy('created_at', 'desc')->take(10)->get();
 
-        return view('admin.dashboard', compact('users', 'posts'));
+        $unpublishedPosts = Post::where('publication_time', '>', now())
+            ->orderBy('publication_time', 'asc')
+            ->get();
+
+        return view('admin.dashboard', compact('users', 'posts', 'unpublishedPosts'));
     }
 }

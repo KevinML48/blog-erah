@@ -54,6 +54,15 @@
                         @endforeach
                     </div>
                 </div>
+
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold">Posts non publiés</h3>
+                    <div class="space-y-4 mt-4">
+                        @foreach($unpublishedPosts as $post)
+                            @include('admin.partials.post', ['post' => $post])
+                        @endforeach
+                    </div>
+                </div>
             </div>
 
 
