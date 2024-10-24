@@ -18,8 +18,6 @@ select {
     @apply p-4 bg-black shadow-erah shadow-red-600 sm:rounded-lg;
 }
 
-
-
 .erah-link {
     @apply text-blue-600 hover:underline visited:text-blue-400;
 }

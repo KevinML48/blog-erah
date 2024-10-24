@@ -16,7 +16,7 @@ export default {
             },
             boxShadow: {
                 'erah': '0 0px 10px 0 rgb(0 0 0 / 0.05)',
-                'inner-erah': 'inset 0 0px 4px 0 rgb(0 0 0 / 0.05)',
+                'inner-erah': 'inset 0 0px 6px 0 rgb(0 0 0 / 0.05)',
             },
         },
     },

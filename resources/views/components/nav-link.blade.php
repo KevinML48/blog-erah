@@ -8,7 +8,7 @@
 
 <a {{ $attributes->merge(['class' => $classes]) }}>
     @if($active)
-        <span class="px-2 py-1 rounded shadow-inner-erah shadow-red-600 sm:rounded-lg">{{ $slot }}</span>
+        <span class="px-2 py-1 rounded shadow-inner-erah shadow-red-600 sm:rounded-lg border border-black bg-black">{{ $slot }}</span>
     @else
         {{ $slot }}
     @endif
