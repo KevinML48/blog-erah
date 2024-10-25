@@ -1,5 +1,3 @@
-<!-- resources/views/posts/partials/form.blade.php -->
-
 @csrf
 
 <div class="grid grid-cols-1 gap-6">
@@ -15,7 +13,7 @@
     <!-- Body -->
     <div>
         <x-input-label for="body" :value="__('Contenu')" />
-        <x-text-area id="body" name="body" rows="5" class="mt-1 block w-full" :value="old('body', $post->body ?? '')" required autofocus autocomplete="body" />
+        <x-text-area id="body" name="body" rows="5" class="mt-1 block w-full" required autofocus autocomplete="body">{{ old('body', $post->body ?? '') }}</x-text-area>
         @error('body')
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
@@ -54,6 +52,22 @@
         <x-input-label for="video_link" :value="__('Vidéo')" />
         <input type="url" name="video_link" id="video_link" value="{{ old('video_link', $post->video_link ?? '') }}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" placeholder="https://example.com/video">
         @error('video_link')
+        <span class="text-red-600 text-sm">{{ $message }}</span>
+        @enderror
+    </div>
+
+    <!-- Theme Selection -->
+    <div>
+        <x-input-label for="theme_id" :value="__('Thème')" />
+        <select name="theme_id" id="theme_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" required>
+            <option value="">-- Choisir un Thème --</option>
+            @foreach ($themes as $theme)
+                <option value="{{ $theme->id }}" {{ old('theme_id', $post->theme_id ?? '') == $theme->id ? 'selected' : '' }}>
+                    {{ $theme->name }}
+                </option>
+            @endforeach
+        </select>
+        @error('theme_id')
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
     </div>

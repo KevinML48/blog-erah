@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
+use App\Models\Theme;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -25,7 +26,8 @@ class PostController extends Controller
      */
     public function create(): View
     {
-        return view('admin.posts.create');
+        $themes = Theme::all();
+        return view('admin.posts.create', compact('themes'));
     }
 
     /**
@@ -53,6 +55,7 @@ class PostController extends Controller
             'publication_time' => $publicationTime,
             'media' => $mediaPath,
             'user_id' => auth()->id(),
+            'theme_id' => $request->theme_id,
         ]);
 
         return redirect()->route('admin')->with('success', 'Post créé avec succès');
@@ -71,7 +74,8 @@ class PostController extends Controller
      */
     public function edit(Post $post): View
     {
-        return view('admin.posts.edit', compact('post'));
+        $themes = Theme::all();
+        return view('admin.posts.edit', compact('post', 'themes'));
     }
 
     /**

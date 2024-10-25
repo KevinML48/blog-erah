@@ -22,6 +22,11 @@
             </a>
         </div>
 
+        <!-- Theme Display -->
+        <div class="mt-1">
+            {{ $post->theme->name }}
+        </div>
+
         <!-- Credit -->
         <p class="text-gray-600">
             @include('posts.partials.credit', ['post' => $post])

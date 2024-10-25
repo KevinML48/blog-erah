@@ -30,6 +30,7 @@ class UpdatePostRequest extends FormRequest
             'media_type' => 'required|in:image,video',
             'media' => 'nullable|file|image|max:2048',
             'video_link' => 'nullable|url',
+            'theme_id' => 'required|exists:themes,id'
         ];
     }
 }
