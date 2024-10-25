@@ -57,7 +57,7 @@
                     <h3 class="text-lg bg-black font-semibold">Posts non publiés</h3>
                     <div class="space-y-4 mt-4">
                         @foreach($unpublishedPosts as $post)
-                            @include('admin.partials.post', ['post' => $post])
+                            @include('posts.partials.post', ['post' => $post])
                         @endforeach
                     </div>
                 </div>
