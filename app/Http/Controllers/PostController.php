@@ -6,6 +6,7 @@ use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\Theme;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
@@ -85,6 +86,20 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
+
+        $user = auth()->user();
+        // hacky, can't find better way
+        if (!$user) {
+            $user = new User([
+                'role' => 'guest'
+                ]
+            );
+
+        }
+        if ($user->cannot('view', $post)) {
+            abort(404);
+        }
+
         return view('posts.show', compact('post'));
     }
 
