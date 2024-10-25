@@ -1,6 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ $theme->name }}
+        <div class="flex justify-center space-x-8">
+            @foreach ($themes as $theme)
+                <x-theme-link :href="route('posts.theme', $theme->id)" :active="request()->routeIs('posts.theme') && request()->route('id') == $theme->id">
+                    {{ $theme->name }}
+                </x-theme-link>
+            @endforeach
+        </div>
     </x-slot>
 
     <div class="py-12">

@@ -2,9 +2,9 @@
     <x-slot name="header">
         <div class="flex justify-center space-x-8">
             @foreach ($themes as $theme)
-                <a href="{{ route('posts.theme', $theme->id) }}" class="erah-link">
+                <x-theme-link :href="route('posts.theme', $theme->id)" :active="request()->routeIs('admin')">
                     {{ $theme->name }}
-                </a>
+                </x-theme-link>
             @endforeach
         </div>
     </x-slot>

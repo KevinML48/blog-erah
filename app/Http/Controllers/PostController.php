@@ -30,14 +30,14 @@ class PostController extends Controller
 
     public function showByTheme($id): View
     {
+        $themes = Theme::all();
+
         $posts = Post::where('theme_id', $id)
             ->where('publication_time', '<=', now())
             ->orderBy('publication_time', 'desc')
             ->paginate(15);
-
-        $theme = Theme::findOrFail($id);
-
-        return view('posts.theme', compact('posts', 'theme'));
+        
+        return view('posts.theme', compact('posts', 'themes'));
     }
 
 
