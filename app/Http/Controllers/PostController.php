@@ -16,10 +16,29 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): View
     {
-        //
+        $themes = Theme::all();
+
+        $posts = Post::where('publication_time', '<=', now())
+            ->orderBy('publication_time', 'desc')
+            ->get();
+
+        return view('posts.index', compact('themes', 'posts'));
     }
+
+    public function showByTheme($id): View
+    {
+        $posts = Post::where('theme_id', $id)
+            ->where('publication_time', '<=', now())
+            ->orderBy('publication_time', 'desc')
+            ->get();
+
+        $theme = Theme::findOrFail($id);
+
+        return view('posts.theme', compact('posts', 'theme'));
+    }
+
 
     /**
      * Show the form for creating a new resource.

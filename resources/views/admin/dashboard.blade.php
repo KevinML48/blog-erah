@@ -48,7 +48,7 @@
                     <h3 class="text-lg font-semibold">10 Derniers Posts</h3>
                     <div class="space-y-4 mt-4">
                         @foreach($posts as $post)
-                            @include('admin.partials.post', ['post' => $post])
+                            @include('posts.partials.post', ['post' => $post])
                         @endforeach
                     </div>
                 </div>

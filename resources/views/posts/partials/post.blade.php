@@ -2,7 +2,7 @@
 
     <!-- Media Display -->
     <div class="w-1/3 pr-4">
-        <div class="w-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+        <div class="w-64 bg-gray-200 flex items-center justify-center overflow-hidden">
             @include('posts.partials.media', ['post' => $post])
         </div>
     </div>
@@ -16,11 +16,13 @@
         </a>
 
         <!-- Edit link -->
-        <div class="mt-1">
-            <a href="{{ route('admin.posts.edit', $post->id) }}" class="erah-link">
-                Éditer
-            </a>
-        </div>
+        @if(auth()->user() && auth()->user()->isAdmin())
+            <div class="mt-1">
+                <a href="{{ route('admin.posts.edit', $post->id) }}" class="erah-link">
+                    Éditer
+                </a>
+            </div>
+        @endif
 
         <!-- Theme Display -->
         <div class="mt-1">
