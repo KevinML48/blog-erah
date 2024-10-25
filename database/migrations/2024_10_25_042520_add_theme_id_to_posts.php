@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,8 +12,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->foreignId('theme_id')->constrained('themes')->onDelete('cascade');
+        $defaultThemeId = DB::table('themes')->insertGetId([
+            'name' => 'Default Theme',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        Schema::table('posts', function (Blueprint $table) use ($defaultThemeId) {
+            $table->foreignId('theme_id')->default($defaultThemeId)->constrained('themes')->onDelete('cascade');
         });
     }
 
@@ -25,5 +32,7 @@ return new class extends Migration
             $table->dropForeign(['theme_id']);
             $table->dropColumn('theme_id');
         });
+
+        DB::table('themes')->where('name', 'Default Theme')->delete();
     }
 };
