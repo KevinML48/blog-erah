@@ -15,6 +15,5 @@ class ThemeSeeder extends Seeder
         Theme::create(['name' => 'Valorant']);
         Theme::create(['name' => 'Rocket League']);
         Theme::create(['name' => 'Black Ops 6']);
-        Theme::create(['name' => 'ERAH']);
     }
 }

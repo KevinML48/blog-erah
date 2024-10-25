@@ -110,6 +110,7 @@ class PostController extends Controller
             'publication_time' => $publicationTime,
             'media' => $mediaPath,
             'user_id' => auth()->id(),
+            'theme_id' => $request->theme_id,
         ]);
 
         return redirect()->route('admin')->with('success', 'Post mis à jour avec succès');

@@ -13,7 +13,7 @@ return new class extends Migration
     public function up(): void
     {
         $defaultThemeId = DB::table('themes')->insertGetId([
-            'name' => 'Default Theme',
+            'name' => 'ERAH',
             'created_at' => now(),
             'updated_at' => now()
         ]);

@@ -19,6 +19,7 @@ class Post extends Model
         'publication_time',
         'media',
         'user_id',
+        'theme_id',
     ];
 
     protected $casts = [
