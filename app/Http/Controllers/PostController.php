@@ -84,17 +84,10 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Post $post)
+    public function show(User $user, Post $post)
     {
-
+        if (auth()->user()) {
         $user = auth()->user();
-        // hacky, can't find better way
-        if (!$user) {
-            $user = new User([
-                'role' => 'guest'
-                ]
-            );
-
         }
         if ($user->cannot('view', $post)) {
             abort(404);
