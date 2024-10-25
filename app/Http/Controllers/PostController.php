@@ -86,9 +86,7 @@ class PostController extends Controller
      */
     public function show(User $user, Post $post)
     {
-        if (auth()->user()) {
-        $user = auth()->user();
-        }
+        $user = auth()->user() ?? $user;
         if ($user->cannot('view', $post)) {
             abort(404);
         }
