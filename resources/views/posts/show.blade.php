@@ -10,6 +10,14 @@
 
                 <h3 class="font-bold text-lg">{{ $post->title }}</h3>
 
+                @if(auth()->user() && auth()->user()->isAdmin())
+                    <div class="mt-1">
+                        <a href="{{ route('admin.posts.edit', $post->id) }}" class="erah-link">
+                            Éditer
+                        </a>
+                    </div>
+                @endif
+
                 <p class="text-gray-600">
                     @include('posts.partials.credit', ['post' => $post])
                 </p>
