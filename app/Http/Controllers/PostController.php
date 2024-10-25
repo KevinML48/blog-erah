@@ -22,7 +22,7 @@ class PostController extends Controller
 
         $posts = Post::where('publication_time', '<=', now())
             ->orderBy('publication_time', 'desc')
-            ->get();
+            ->paginate(15);
 
         return view('posts.index', compact('themes', 'posts'));
     }
@@ -32,7 +32,7 @@ class PostController extends Controller
         $posts = Post::where('theme_id', $id)
             ->where('publication_time', '<=', now())
             ->orderBy('publication_time', 'desc')
-            ->get();
+            ->paginate(15);
 
         $theme = Theme::findOrFail($id);
 

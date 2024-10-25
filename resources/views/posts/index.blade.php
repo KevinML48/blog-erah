@@ -20,4 +20,9 @@
             </div>
         </div>
     </div>
+
+    <!-- Pagination Links -->
+    <div class="pagination">
+        {{ $posts->links() }}
+    </div>
 </x-app-layout>
