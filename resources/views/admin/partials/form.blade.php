@@ -41,7 +41,7 @@
     <!-- Media Upload -->
     <div id="mediaUpload" class="media-upload">
         <x-input-label for="media" :value="__('Image')" />
-        <input type="file" name="media" id="media" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm" accept="image/*">
+        <input type="file" name="media" id="media" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm text-white" accept="image/*">
         @error('media')
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
