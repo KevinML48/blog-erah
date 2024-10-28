@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -9,7 +10,10 @@ use Illuminate\Support\Facades\Route;
 //    return view('welcome');
 //});
 
+
+// Main page
 Route::get('/', [PostController::class, 'index'])->name('posts.index');
+// Filter main page by theme
 Route::get('/posts/theme/{id}', [PostController::class, 'showByTheme'])->name('posts.theme');
 
 
@@ -17,8 +21,16 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+// Single Post display
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
+// Comments
+Route::middleware('auth')->group(function () {
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/posts/{post}/comments', [CommentController::class, 'index'])->name('comments.index');
+});
+
+// Admin zone
 Route::middleware('can:create_post')->group(function () {
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
 
@@ -30,6 +42,7 @@ Route::middleware('can:create_post')->group(function () {
 
 });
 
+// User zone
 Route::middleware('auth')->group(function () {
     Route::get('/user/{username}', [ProfileController::class, 'show'])->name('profile.show');
 

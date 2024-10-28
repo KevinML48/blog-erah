@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
+use App\Models\CommentStructure;
 use App\Models\Post;
 use App\Models\Theme;
 use App\Models\User;
@@ -80,11 +81,19 @@ class PostController extends Controller
     public function show(User $user, Post $post)
     {
         $user = auth()->user() ?? $user;
+
         if ($user->cannot('view', $post)) {
             abort(404);
         }
 
-        return view('posts.show', compact('post'));
+        $comments = CommentStructure::with(['content.user', 'replies.content.user'])
+            ->where('post_id', $post->id)
+            ->whereNull('parent_id')
+            ->get();
+
+        $totalCommentsCount = CommentStructure::where('post_id', $post->id)->count();
+
+        return view('posts.show', compact('post', 'comments', 'totalCommentsCount'));
     }
 
     /**

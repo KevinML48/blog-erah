@@ -25,6 +25,8 @@
                 <div class="mt-4">
                     {!! nl2br(e($post->body)) !!}
                 </div>
+
+                @include('posts.partials.comments', ['comments' => $comments])
             </div>
         </div>
     </div>
