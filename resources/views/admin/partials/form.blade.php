@@ -21,8 +21,9 @@
 
     <!-- Publication Time -->
     <div>
+        <input type="hidden" name="timezone" id="timezone">
         <x-input-label for="publication_time" :value="__('Date de publication')" />
-        <input type="datetime-local" name="publication_time" id="publication_time" value="{{ old('publication_time', isset($post) && $post->publication_time ? $post->publication_time->format('Y-m-d\TH:i') : '') }}"
+        <input type="datetime-local" name="publication_time" id="publication_time"
                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
         @error('publication_time')
         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -98,4 +99,7 @@
 
         mediaTypeSelect.dispatchEvent(new Event('change'));
     });
+</script>
+<script>
+    document.getElementById('timezone').value = Intl.DateTimeFormat().resolvedOptions().timeZone;
 </script>

@@ -7,7 +7,6 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Models\Post;
 use App\Models\Theme;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
@@ -36,7 +35,7 @@ class PostController extends Controller
             ->where('publication_time', '<=', now())
             ->orderBy('publication_time', 'desc')
             ->paginate(15);
-        
+
         return view('posts.theme', compact('posts', 'themes'));
     }
 
@@ -63,16 +62,10 @@ class PostController extends Controller
             $mediaPath = $request->video_link;
         }
 
-        $publicationTime = null;
-        if ($request->publication_time) {
-            $publicationTime = Carbon::createFromFormat('Y-m-d\TH:i', $request->publication_time, 'UTC')
-                ->setTimezone('UTC');
-        }
-
         Post::create([
             'title' => $request->title,
             'body' => $request->body,
-            'publication_time' => $publicationTime,
+            'publication_time' => $request->publication_time,
             'media' => $mediaPath,
             'user_id' => auth()->id(),
             'theme_id' => $request->theme_id,
@@ -123,16 +116,10 @@ class PostController extends Controller
             $mediaPath = $request->video_link;
         }
 
-        $publicationTime = null;
-        if ($request->publication_time) {
-            $publicationTime = Carbon::createFromFormat('Y-m-d\TH:i', $request->publication_time, 'UTC')
-                ->setTimezone('UTC');
-        }
-
         $post->update([
             'title' => $request->title,
             'body' => $request->body,
-            'publication_time' => $publicationTime,
+            'publication_time' => $request->publication_time,
             'media' => $mediaPath,
             'user_id' => auth()->id(),
             'theme_id' => $request->theme_id,

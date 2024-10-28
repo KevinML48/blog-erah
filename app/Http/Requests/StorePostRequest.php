@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -15,6 +16,20 @@ class StorePostRequest extends FormRequest
     {
         return Auth::check() && Auth::user()->isAdmin();
     }
+
+    public function prepareForValidation()
+    {
+        if ($this->has('publication_time')) {
+            $userTime = $this->input('publication_time');
+            $timezone = $this->input('timezone', 'UTC');
+            $utcTime = Carbon::parse($userTime, $timezone)->setTimezone('UTC');
+            $this->merge([
+                'publication_time' => $utcTime->format('Y-m-d H:i:s'),
+            ]);
+        }
+    }
+
+
 
     /**
      * Get the validation rules that apply to the request.
