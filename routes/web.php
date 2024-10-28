@@ -25,9 +25,9 @@ Route::get('/dashboard', function () {
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
 
 // Comments
+Route::get('/posts/{post}/comment/{comment}', [CommentController::class, 'show'])->name('comments.show');
 Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::get('/posts/{post}/comments', [CommentController::class, 'index'])->name('comments.index');
 });
 
 // Admin zone

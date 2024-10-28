@@ -11,11 +11,6 @@ class CommentController extends Controller
 {
     public function store(Request $request, Post $post)
     {
-        $request->validate([
-            'body' => 'required|string|max:255',
-            'parent_id' => 'nullable|exists:comments_structure,id',
-        ]);
-
         $commentContent = CommentContent::create([
             'user_id' => auth()->id(),
             'body' => $request->body,
@@ -27,18 +22,22 @@ class CommentController extends Controller
             'content_id' => $commentContent->id,
         ]);
 
-        return redirect()->route('posts.show', $post->id)->with('success', 'Comment added successfully.');
+        return redirect()->route('posts.show', $post->id)->with('success', 'Commentaire ajouté.');
     }
 
-
-    public function index(Post $post)
+    public function show(Post $post, CommentStructure $comment)
     {
-        $comments = CommentStructure::with(['content', 'replies.content'])
-            ->where('post_id', $post->id)
-            ->whereNull('parent_id')
+        if ($comment->post_id !== $post->id) {
+            abort(404);
+        }
+
+        $comments = CommentStructure::with(['content.user', 'replies.content.user'])
+            ->where('id', $comment->id)
             ->get();
 
-        return response()->json($comments);
+        return view('posts.show', compact('post', 'comments', 'comment'));
     }
+
+
 
 }
