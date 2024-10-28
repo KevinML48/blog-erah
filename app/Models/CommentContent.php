@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommentContent extends Model
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'comments_content';
+
     protected $fillable = ['user_id', 'body'];
 
     public function comment()

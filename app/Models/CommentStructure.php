@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class CommentStructure extends Model
 {
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    protected $table = 'comments_structure';
+
     protected $fillable = ['post_id', 'parent_id', 'content_id'];
 
     public function post()
@@ -26,5 +33,15 @@ class CommentStructure extends Model
     public function content()
     {
         return $this->belongsTo(CommentContent::class, 'content_id');
+    }
+
+    public function contentExists()
+    {
+        return $this->content()->exists();
+    }
+
+    public function getBodyAttribute()
+    {
+        return $this->contentExists() ? $this->content->body : null;
     }
 }
