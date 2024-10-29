@@ -48,6 +48,7 @@ Route::middleware('can:create_post')->group(function () {
 // User zone
 Route::middleware('auth')->group(function () {
     Route::get('/user/{username}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/user/{username}/comments', [ProfileController::class, 'comments'])->name('profile.comments');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

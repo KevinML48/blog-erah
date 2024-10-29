@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +28,16 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function comments(Request $request, $username): View
+    {
+        $user = User::where('name', $username)->firstOrFail();
+        $comments = $user->comments()->latest()->paginate(15);
+
+        return view('profile.comments', [
+            'user' => $user,
+            'comments' => $comments,
+        ]);
+    }
 
     /**
      * Display the user's profile form.
