@@ -19,7 +19,7 @@
                 </a>
 
                 <a href="{{ route('comments.show', ['post' => $content->structure->post->id, 'comment' => $comment->id]) }}" class="hover:underline">
-                    <span class="text-gray-500 text-sm convert-time" data-time="{{ $comment->created_at }}"></span>
+                    <span class="text-gray-500 text-sm convert-time" data-time="{{ $comment->created_at->toIso8601String() }}"></span>
                 </a>
             </div>
 

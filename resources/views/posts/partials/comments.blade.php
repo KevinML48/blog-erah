@@ -18,23 +18,25 @@
 
             <!-- Link to the parent comment, if one exists -->
             @if ($comment->parent_id)
-                <a href="{{ route('comments.show', ['post' => $post->id, 'comment' => $comment->parent_id]) }}" class="text-blue-600 ml-4">
+                <a href="{{ route('comments.show', ['post' => $post->id, 'comment' => $comment->parent_id]) }}"
+                   class="text-blue-600 ml-4">
                     ← Retour au commentaire parent
                 </a>
             @endif
         </div>
     @endif
-        <div class="mt-4" id="comments-container">
-            @foreach ($comments as $comment)
-                @include('posts.partials.comment', ['comment' => $comment])
-            @endforeach
-        </div>
+    <div class="mt-4" id="comments-container">
+        @foreach ($comments as $comment)
+            @include('posts.partials.comment', ['comment' => $comment])
+        @endforeach
+    </div>
 
-        @if ($comments->hasMorePages())
-            <button id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}" data-page="{{ $comments->currentPage() }}">
-                Charger plus de commentaires
-            </button>
-        @endif
+    @if ($comments->hasMorePages())
+        <button id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}"
+                data-page="{{ $comments->currentPage() }}">
+            Charger plus de commentaires
+        </button>
+    @endif
 </div>
 
 <script>
@@ -48,6 +50,8 @@
             .then(data => {
                 document.getElementById('comments-container').insertAdjacentHTML('beforeend', data.comments);
 
+                convertTimes();
+
                 button.setAttribute('data-page', currentPage + 1);
 
                 if (!data.hasMore) {
@@ -57,11 +61,10 @@
     });
 </script>
 
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.load-more-replies').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const url = this.getAttribute('data-url');
                 const currentReplyPage = parseInt(this.getAttribute('data-page'));
 
@@ -72,6 +75,8 @@
 
                         if (repliesContainer) {
                             repliesContainer.insertAdjacentHTML('beforeend', data.replies);
+
+                            convertTimes();
 
                             this.setAttribute('data-page', currentReplyPage + 1);
 
@@ -87,4 +92,5 @@
         });
     });
 </script>
+
 
