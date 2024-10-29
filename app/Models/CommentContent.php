@@ -17,7 +17,7 @@ class CommentContent extends Model
 
     public function structure()
     {
-        return $this->hasOne(CommentStructure::class, 'content_id');
+        return $this->hasOne(Comment::class, 'content_id');
     }
 
     public function user()

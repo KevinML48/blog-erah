@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class CommentStructure extends Model
+class Comment extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'comments_structure';
+    protected $table = 'comments';
 
     protected $fillable = ['post_id', 'parent_id', 'content_id'];
 
@@ -22,12 +22,12 @@ class CommentStructure extends Model
 
     public function parent()
     {
-        return $this->belongsTo(CommentStructure::class, 'parent_id');
+        return $this->belongsTo(Comment::class, 'parent_id');
     }
 
     public function replies()
     {
-        return $this->hasMany(CommentStructure::class, 'parent_id');
+        return $this->hasMany(Comment::class, 'parent_id');
     }
 
     public function content()

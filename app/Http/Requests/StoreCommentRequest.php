@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\CommentStructure;
+use App\Models\Comment;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreCommentRequest extends FormRequest
@@ -26,10 +26,10 @@ class StoreCommentRequest extends FormRequest
             'body' => 'required|string|max:255',
             'parent_id' => [
                 'nullable',
-                'exists:comments_structure,id',
+                'exists:comments,id',
                 function ($attribute, $value, $fail) {
                     if ($value) {
-                        $parentComment = CommentStructure::find($value);
+                        $parentComment = Comment::find($value);
                         if ($parentComment && $parentComment->post_id !== $this->route('post')->id) {
                             $fail("Le parent selectionné n'apartient pas à ce post.");
                         }

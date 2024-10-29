@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\CommentContent;
-use App\Models\CommentStructure;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +17,7 @@ class CommentController extends Controller
             'body' => $request->body,
         ]);
 
-        CommentStructure::create([
+        Comment::create([
             'post_id' => $post->id,
             'parent_id' => $request->parent_id,
             'content_id' => $commentContent->id,
@@ -26,13 +26,13 @@ class CommentController extends Controller
         return redirect()->route('posts.show', $post->id)->with('success', 'Commentaire ajouté.');
     }
 
-    public function show(Post $post, CommentStructure $comment)
+    public function show(Post $post, Comment $comment)
     {
         if ($comment->post_id !== $post->id) {
             abort(404);
         }
 
-        $comments = CommentStructure::with(['content.user', 'replies.content.user'])
+        $comments = Comment::with(['content.user', 'replies.content.user'])
             ->where('id', $comment->id)
             ->paginate(5);
 
@@ -42,7 +42,7 @@ class CommentController extends Controller
     public function loadMoreComments(Post $post, Request $request)
     {
         $currentPage = $request->input('page', 1);
-        $comments = CommentStructure::with(['content.user', 'replies.content.user'])
+        $comments = Comment::with(['content.user', 'replies.content.user'])
             ->where('post_id', $post->id)
             ->whereNull('parent_id')
             ->paginate(5, ['*'], 'page', $currentPage + 1);
@@ -53,7 +53,7 @@ class CommentController extends Controller
         ]);
     }
 
-    public function loadMoreReplies(CommentStructure $comment, Request $request)
+    public function loadMoreReplies(Comment $comment, Request $request)
     {
         $currentPage = $request->input('page', 1);
         $replies = $comment->replies()
@@ -85,7 +85,7 @@ class CommentController extends Controller
         return redirect()->back()->with('success', 'Comment deleted successfully.');
     }
 
-    protected function deleteEmptyParentStructures(CommentStructure $structure)
+    protected function deleteEmptyParentStructures(Comment $structure)
     {
         $parentStructure = $structure->parent;
 

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
-use App\Models\CommentStructure;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Theme;
 use App\Models\User;
@@ -86,12 +86,12 @@ class PostController extends Controller
             abort(404);
         }
 
-        $comments = CommentStructure::with(['content.user', 'replies.content.user'])
+        $comments = Comment::with(['content.user', 'replies.content.user'])
             ->where('post_id', $post->id)
             ->whereNull('parent_id')
             ->paginate(5);
 
-        $totalCommentsCount = CommentStructure::where('post_id', $post->id)->count();
+        $totalCommentsCount = Comment::where('post_id', $post->id)->count();
 
         return view('posts.show', compact('post', 'comments', 'totalCommentsCount'));
     }
