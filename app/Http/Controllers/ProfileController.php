@@ -19,9 +19,11 @@ class ProfileController extends Controller
     public function show(Request $request, $username): View
     {
         $user = $request->user()->where('name', $username)->firstOrFail();
+        $comments = $user->comments()->latest()->take(5)->get();
 
         return view('profile.show', [
             'user' => $user,
+            'comments' => $comments,
         ]);
     }
 

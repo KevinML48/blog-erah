@@ -18,13 +18,13 @@
                     {{ $content->user->name }}
                 </a>
 
-                <a href="{{ route('comments.show', ['post' => $content->structure->post->id, 'comment' => $comment->id]) }}" class="hover:underline">
-                    <span class="text-gray-500 text-sm convert-time" data-time="{{ $comment->created_at->toIso8601String() }}"></span>
+                <a href="{{ route('comments.show', ['post' => $content->structure->post->id, 'comment' => $content->id]) }}" class="hover:underline">
+                    <span class="text-gray-500 text-sm convert-time" data-time="{{ $content->created_at->toIso8601String() }}"></span>
                 </a>
             </div>
 
             <div class="mt-1">
-                {!! nl2br(e($comment->body)) !!}
+                {!! nl2br(e($content->body)) !!}
             </div>
         </div>
     </div>
