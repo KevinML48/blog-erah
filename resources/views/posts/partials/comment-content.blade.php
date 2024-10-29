@@ -18,7 +18,7 @@
                     {{ $comment->user->name }}
                 </a>
 
-                <a href="{{ route('comments.show', ['post' => $comment->comment->post->id, 'comment' => $comment->id]) }}" class="hover:underline">
+                <a href="{{ route('comments.show', ['post' => $comment->structure->post->id, 'comment' => $comment->id]) }}" class="hover:underline">
                     <span class="text-gray-500 text-sm convert-time" data-time="{{ $comment->created_at }}"></span>
                 </a>
             </div>

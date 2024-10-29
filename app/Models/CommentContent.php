@@ -15,7 +15,7 @@ class CommentContent extends Model
 
     protected $fillable = ['user_id', 'body'];
 
-    public function comment()
+    public function structure()
     {
         return $this->hasOne(CommentStructure::class, 'content_id');
     }
