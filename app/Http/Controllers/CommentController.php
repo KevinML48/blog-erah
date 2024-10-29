@@ -6,6 +6,7 @@ use App\Models\CommentContent;
 use App\Models\CommentStructure;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
@@ -65,6 +66,37 @@ class CommentController extends Controller
         ]);
     }
 
+    public function destroy($id)
+    {
+        $commentContent = CommentContent::findOrFail($id);
 
+        if (Auth::user()->id !== $commentContent->user_id && !Auth::user()->isAdmin()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $commentStructure = $commentContent->structure;
+
+        $commentContent->delete();
+
+        if (!$commentStructure->contentExists()) {
+            $this->deleteEmptyParentStructures($commentStructure);
+        }
+
+        return redirect()->back()->with('success', 'Comment deleted successfully.');
+    }
+
+    protected function deleteEmptyParentStructures(CommentStructure $structure)
+    {
+        $parentStructure = $structure->parent;
+
+        while ($parentStructure) {
+            if (!$parentStructure->contentExists()) {
+                $parentStructure->delete();
+                $parentStructure = $parentStructure->parent;
+            } else {
+                break;
+            }
+        }
+    }
 
 }

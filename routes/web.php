@@ -31,6 +31,8 @@ Route::get('/comments/{comment}/load-more-replies', [CommentController::class, '
 
 Route::middleware('auth')->group(function () {
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
 });
 
 // Admin zone
