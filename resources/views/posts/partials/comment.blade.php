@@ -15,16 +15,19 @@
     @endif
 
     <!-- Display Replies -->
-    <div id="replies-container-{{ $comment->id }}" class="ml-4 mt-2">
-        @foreach ($comment->replies()->take(2)->get() as $reply)
-        @include('posts.partials.comment', ['comment' => $reply])
-        @endforeach
+    <div id="replies-container-{{ $comment->id }}" class="ml-12 mt-2">
+        @if ($depth < 2)
+            @foreach ($comment->replies()->take(2)->get() as $reply)
+                @include('posts.partials.comment', ['comment' => $reply, 'depth' => $depth + 1])
+            @endforeach
+        @endif
     </div>
 
     @if ($comment->replies()->count() > 2)
-    <button class="load-more-replies text-sm text-blue-600" data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}" data-page="1">
-        Charger plus de commentaires
-    </button>
+        <button class="load-more-replies text-sm text-blue-600"
+                data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}" data-page="1">
+            Charger plus de commentaires
+        </button>
     @endif
 </div>
 
@@ -34,4 +37,3 @@
         replyForm.classList.toggle('hidden');
     }
 </script>
-

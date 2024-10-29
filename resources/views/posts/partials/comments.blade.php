@@ -25,11 +25,12 @@
             @endif
         </div>
     @endif
-    <div class="mt-4" id="comments-container">
-        @foreach ($comments as $comment)
-            @include('posts.partials.comment', ['comment' => $comment])
-        @endforeach
-    </div>
+        <div class="mt-4" id="comments-container">
+            @foreach ($comments as $comment)
+                @include('posts.partials.comment', ['comment' => $comment, 'depth' => 0])
+            @endforeach
+        </div>
+
 
     @if ($comments->hasMorePages())
         <button id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}"
