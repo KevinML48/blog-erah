@@ -23,11 +23,20 @@
         @endif
     </div>
 
-    @if ($comment->replies()->count() > 2)
-        <button class="load-more-replies text-sm text-blue-600"
-                data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}" data-page="1">
-            Charger plus de commentaires
-        </button>
+    @if ($depth > 1)
+        @if ($comment->replies()->count() > 0)
+            <button class="load-more-replies text-sm text-blue-600"
+                    data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}" data-page="0">
+                Charger plus de commentaires
+            </button>
+        @endif
+    @else
+        @if ($comment->replies()->count() > 2)
+            <button class="load-more-replies text-sm text-blue-600"
+                    data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}" data-page="1">
+                Charger plus de commentaires
+            </button>
+        @endif
     @endif
 </div>
 
