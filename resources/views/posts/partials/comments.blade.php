@@ -24,9 +24,36 @@
             @endif
         </div>
     @endif
-    <div class="mt-4">
-        @foreach ($comments as $comment)
-            @include('posts.partials.comment', ['comment' => $comment])
-        @endforeach
-    </div>
+        <div class="mt-4" id="comments-container">
+            @foreach ($comments as $comment)
+                @include('posts.partials.comment', ['comment' => $comment])
+            @endforeach
+        </div>
+
+        @if ($comments->hasMorePages())
+            <button id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}" data-page="{{ $comments->currentPage() }}">
+                Load More
+            </button>
+        @endif
 </div>
+
+<script>
+    document.getElementById('load-more').addEventListener('click', function () {
+        const button = this;
+        const url = button.getAttribute('data-url');
+        const currentPage = parseInt(button.getAttribute('data-page'));
+
+        fetch(`${url}?page=${currentPage}`)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('comments-container').insertAdjacentHTML('beforeend', data.comments);
+
+                button.setAttribute('data-page', currentPage + 1);
+
+                if (!data.hasMore) {
+                    button.style.display = 'none';
+                }
+            });
+    });
+</script>
+

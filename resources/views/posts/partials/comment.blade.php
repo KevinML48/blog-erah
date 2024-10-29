@@ -10,7 +10,7 @@
         <button class="text-sm text-blue-600" onclick="showReplyForm({{ $comment->id }})">Répondre</button>
 
         <div id="reply-form-{{ $comment->id }}" class="hidden mt-2">
-            @include('posts.partials.comment-form', ['parentId' => $comment->id, 'post' => $post,])
+            @include('posts.partials.comment-form', ['parentId' => $comment->id, 'post' => $comment->post,])
         </div>
     @endif
 

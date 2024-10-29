@@ -89,12 +89,13 @@ class PostController extends Controller
         $comments = CommentStructure::with(['content.user', 'replies.content.user'])
             ->where('post_id', $post->id)
             ->whereNull('parent_id')
-            ->get();
+            ->paginate(5);
 
         $totalCommentsCount = CommentStructure::where('post_id', $post->id)->count();
 
         return view('posts.show', compact('post', 'comments', 'totalCommentsCount'));
     }
+
 
     /**
      * Show the form for editing the specified resource.

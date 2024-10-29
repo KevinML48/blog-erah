@@ -33,11 +33,24 @@ class CommentController extends Controller
 
         $comments = CommentStructure::with(['content.user', 'replies.content.user'])
             ->where('id', $comment->id)
-            ->get();
+            ->paginate(5);
 
         return view('posts.show', compact('post', 'comments', 'comment'));
     }
 
+    public function loadMore(Post $post, Request $request)
+    {
+        $currentPage = $request->input('page', 1);
+        $comments = CommentStructure::with(['content.user', 'replies.content.user'])
+            ->where('post_id', $post->id)
+            ->whereNull('parent_id')
+            ->paginate(5, ['*'], 'page', $currentPage + 1);
+
+        return response()->json([
+            'comments' => view('posts.partials.comments-loop', compact('comments'))->render(),
+            'hasMore' => $comments->hasMorePages(),
+        ]);
+    }
 
 
 }
