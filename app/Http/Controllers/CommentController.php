@@ -38,7 +38,7 @@ class CommentController extends Controller
         return view('posts.show', compact('post', 'comments', 'comment'));
     }
 
-    public function loadMore(Post $post, Request $request)
+    public function loadMoreComments(Post $post, Request $request)
     {
         $currentPage = $request->input('page', 1);
         $comments = CommentStructure::with(['content.user', 'replies.content.user'])
@@ -51,6 +51,20 @@ class CommentController extends Controller
             'hasMore' => $comments->hasMorePages(),
         ]);
     }
+
+    public function loadMoreReplies(CommentStructure $comment, Request $request)
+    {
+        $currentPage = $request->input('page', 1);
+        $replies = $comment->replies()
+            ->paginate(2, ['*'], 'page', $currentPage + 1);
+
+        return response()->json([
+            'commentId' => $comment->id,
+            'replies' => view('posts.partials.replies-loop', compact('replies'))->render(),
+            'hasMore' => $replies->hasMorePages(),
+        ]);
+    }
+
 
 
 }

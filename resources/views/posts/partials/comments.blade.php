@@ -32,7 +32,7 @@
 
         @if ($comments->hasMorePages())
             <button id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}" data-page="{{ $comments->currentPage() }}">
-                Load More
+                Charger plus de commentaires
             </button>
         @endif
 </div>
@@ -54,6 +54,37 @@
                     button.style.display = 'none';
                 }
             });
+    });
+</script>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.load-more-replies').forEach(button => {
+            button.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                const currentReplyPage = parseInt(this.getAttribute('data-page'));
+
+                fetch(`${url}?page=${currentReplyPage}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const repliesContainer = document.getElementById(`replies-container-${data.commentId}`);
+
+                        if (repliesContainer) {
+                            repliesContainer.insertAdjacentHTML('beforeend', data.replies);
+
+                            this.setAttribute('data-page', currentReplyPage + 1);
+
+                            if (!data.hasMore) {
+                                this.style.display = 'none';
+                            }
+                        } else {
+                            console.error(`Replies container with ID 'replies-container-${data.commentId}' not found.`);
+                        }
+                    })
+                    .catch(error => console.error('Error loading more replies:', error));
+            });
+        });
     });
 </script>
 
