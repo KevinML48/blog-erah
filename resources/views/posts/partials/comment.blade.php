@@ -1,6 +1,6 @@
 <div class="border-l border-gray-300 py-2">
     <div class="flex items-start"> <!-- Added flex container -->
-        <div class="border-b border-gray-300 py-2 flex-shrink-0 w-12"></div>
+        <div class="border-b border-gray-300 py-2 flex-shrink-0 w-12 h-10"></div>
         <div class="py-2 flex-grow">
             @if ($comment->contentExists())
                 @include('posts.partials.comment-content', ['content' => $comment->content])
