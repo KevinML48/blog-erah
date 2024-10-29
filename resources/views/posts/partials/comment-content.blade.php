@@ -34,7 +34,7 @@
                     @endif
 
                     <!-- Creation date and link -->
-                    <a href="{{ route('comments.show', ['post' => $content->structure->post->id, 'comment' => $content->id]) }}"
+                    <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->id]) }}"
                        class="hover:underline">
                         <span class="text-gray-500 text-sm convert-time"
                               data-time="{{ $content->created_at->toIso8601String() }}"></span>

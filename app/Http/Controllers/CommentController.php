@@ -5,12 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Comment;
 use App\Models\CommentContent;
 use App\Models\Post;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
-    public function store(Request $request, Post $post)
+    public function store(Request $request, Post $post): RedirectResponse
     {
         $commentContent = CommentContent::create([
             'user_id' => auth()->id(),
@@ -26,7 +29,7 @@ class CommentController extends Controller
         return redirect()->route('posts.show', $post->id)->with('success', 'Commentaire ajouté.');
     }
 
-    public function show(Post $post, Comment $comment)
+    public function show(Post $post, Comment $comment): View
     {
         if ($comment->post_id !== $post->id) {
             abort(404);
@@ -39,7 +42,7 @@ class CommentController extends Controller
         return view('posts.show', compact('post', 'comments', 'comment'));
     }
 
-    public function loadMoreComments(Post $post, Request $request)
+    public function loadMoreComments(Post $post, Request $request): JsonResponse
     {
         $currentPage = $request->input('page', 1);
         $comments = Comment::with(['content.user', 'replies.content.user'])
@@ -53,7 +56,7 @@ class CommentController extends Controller
         ]);
     }
 
-    public function loadMoreReplies(Comment $comment, Request $request)
+    public function loadMoreReplies(Comment $comment, Request $request): JsonResponse
     {
         $currentPage = $request->input('page', 1);
         $replies = $comment->replies()
@@ -66,7 +69,7 @@ class CommentController extends Controller
         ]);
     }
 
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
         $commentContent = CommentContent::findOrFail($id);
 
@@ -74,29 +77,30 @@ class CommentController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $commentStructure = $commentContent->structure;
+        $comment = $commentContent->comment;
 
         $commentContent->delete();
 
-        if (!$commentStructure->contentExists()) {
-            $this->deleteEmptyParentStructures($commentStructure);
-        }
+        $this->checkAndDeleteComment($comment);
 
         return redirect()->back()->with('success', 'Comment deleted successfully.');
     }
 
-    protected function deleteEmptyParentStructures(Comment $structure)
+    protected function checkAndDeleteComment($comment): void
     {
-        $parentStructure = $structure->parent;
 
-        while ($parentStructure) {
-            if (!$parentStructure->contentExists()) {
-                $parentStructure->delete();
-                $parentStructure = $parentStructure->parent;
-            } else {
-                break;
+        if (!$comment->contentExists() && $comment->replies()->count() === 0) {
+            $parent = $comment->parent;
+            $comment->delete();
+
+            if ($parent) {
+                $parentComment = Comment::find($parent->id);
+                if ($parentComment) {
+                    $this->checkAndDeleteComment($parentComment);
+                }
             }
         }
     }
+
 
 }

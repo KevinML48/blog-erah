@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class CommentContent extends Model
 {
@@ -15,12 +17,12 @@ class CommentContent extends Model
 
     protected $fillable = ['user_id', 'body'];
 
-    public function structure()
+    public function comment(): HasOne
     {
         return $this->hasOne(Comment::class, 'content_id');
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
