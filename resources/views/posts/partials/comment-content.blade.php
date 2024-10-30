@@ -22,7 +22,7 @@
 
                 <div>
                     <!-- Delete Link -->
-                    @if (auth()->user()->id === $content->user->id || auth()->user()->isAdmin())
+                    @if (auth()->user() && (auth()->user()->id === $content->user->id || auth()->user()->isAdmin()))
                         <form action="{{ route('comments.destroy', $content->id) }}" method="POST" class="inline"
                               onsubmit="return confirmDelete();">
                             @csrf
