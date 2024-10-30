@@ -59,4 +59,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/profile/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');
 });
 
+Route::get('/tenor/search', [CommentController::class, 'searchTenor'])->name('tenor.search');
+
 require __DIR__ . '/auth.php';

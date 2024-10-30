@@ -11,6 +11,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 
 class CommentController extends Controller
@@ -115,5 +116,31 @@ class CommentController extends Controller
         }
     }
 
+    public function searchTenor(Request $request)
+    {
+        $query = $request->input('query');
+
+        if (empty($query)) {
+            return response()->json(['error' => 'No search query provided'], 400);
+        }
+
+        $apiKey = env('TENOR_API_KEY');
+        $clientKey = 'discord-bot';
+        $limit = 10;
+
+        $response = Http::withOptions(['verify' => false])->get("https://tenor.googleapis.com/v2/search", [
+            'q' => $query,
+            'key' => $apiKey,
+            'client_key' => $clientKey,
+            'limit' => $limit,
+            'media_filter' => 'gif',
+        ]);
+
+        if ($response->successful()) {
+            return response()->json($response->json());
+        } else {
+            return response()->json(['error' => 'Unable to fetch GIFs'], 500);
+        }
+    }
 
 }
