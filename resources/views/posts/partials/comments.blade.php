@@ -25,11 +25,11 @@
             @endif
         </div>
     @endif
-        <div class="mt-4" id="comments-container">
-            @foreach ($comments as $comment)
-                @include('posts.partials.comment', ['comment' => $comment, 'depth' => 0])
-            @endforeach
-        </div>
+    <div class="mt-4" id="comments-container">
+        @foreach ($comments as $comment)
+            @include('posts.partials.comment', ['comment' => $comment, 'depth' => 0])
+        @endforeach
+    </div>
 
 
     @if ($comments->hasMorePages())
@@ -171,14 +171,7 @@
         selectedGif.classList.remove('hidden');
         selectedImage.classList.add('hidden');
         document.getElementById(`mediaUpload-${parentId}`).classList.add('hidden');
-        resetFileInput(parentId);
         toggleModal(parentId);
-    }
-
-    function resetFileInput(parentId) {
-        // Get the file input element and reset its value
-        const fileInput = document.getElementById(`media-${parentId}`);
-        fileInput.value = ''; // Clear the file input
     }
 
     function clearMedia(parentId) {
@@ -194,24 +187,103 @@
         selectedGif.classList.add('hidden');
         displayZone.classList.add('hidden');
 
-        // Reset the file input using the separate function
-        resetFileInput(parentId);
+        // Reset the file input
+        const fileInput = document.getElementById(`media-${parentId}`);
+        fileInput.value = ''; // Clear the file input
 
         // Reappear the media upload input
         document.getElementById(`mediaUpload-${parentId}`).classList.remove('hidden');
     }
 
 
+    // Function to handle the paste event
+    function handlePaste(event, parentId) {
+        event.preventDefault(); // Prevent the default paste behavior
+
+        const clipboardData = event.clipboardData || window.clipboardData;
+        const items = clipboardData.items;
+
+        // Loop through clipboard items to find images
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i];
+
+            // Check if the pasted item is an image
+            if (item.kind === 'file' && item.type.startsWith('image/')) {
+                const file = item.getAsFile();
+                const fileInput = document.getElementById(`media-${parentId}`);
+                const dataTransfer = new DataTransfer();
+
+                // Add the file to the DataTransfer
+                dataTransfer.items.add(file);
+
+                // Set the file input's files property
+                fileInput.files = dataTransfer.files;
+
+                // Call the previewImage function
+                previewImage(parentId);
+                break; // Exit the loop after finding the first image
+            }
+        }
+    }
+
+    // Function to update hidden input field with content
+    function updateHiddenInput(parentId) {
+        const commentBody = document.getElementById(`commentBody-${parentId}`);
+        const commentInput = document.getElementById(`commentInput-${parentId}`);
+        commentInput.value = commentBody.innerHTML; // Store HTML content
+    }
+
+    // Function to initialize event listeners
+    function initEventListeners() {
+        // Select all contenteditable divs
+        const commentAreas = document.querySelectorAll('[contenteditable="true"]');
+
+        commentAreas.forEach((commentArea) => {
+            const parentId = commentArea.dataset.parentId; // Get parentId from data attribute
+
+            commentArea.addEventListener('paste', (event) => handlePaste(event, parentId));
+            commentArea.addEventListener('input', () => updateHiddenInput(parentId)); // Update on input
+        });
+    }
+
+    // Call this function to initialize event listeners for all editable divs
+    initEventListeners();
+
+
 </script>
-
-
 <script>
-    document.querySelectorAll('[id^="commentBody-"]').forEach(commentBody => {
-        const parentId = commentBody.id.split('-')[1]; // Extract parentId from the commentBody id
-        const currentCount = document.getElementById(`current-${parentId}`);
+    document.addEventListener("DOMContentLoaded", function() {
+        // Select all content-editable divs
+        document.querySelectorAll('[contenteditable="true"]').forEach(commentBody => {
+            const parentId = commentBody.dataset.parentId; // Get parentId from data attribute
+            const currentCount = document.getElementById(`current-${parentId}`);
 
-        commentBody.addEventListener('input', function () {
-            currentCount.textContent = commentBody.value.length;
+            // Check if currentCount exists to avoid null reference errors
+            if (currentCount) {
+                commentBody.addEventListener('input', function () {
+                    // Get the length of the inner text, removing <br> tags for accurate count
+                    const textContent = commentBody.innerText.replace(/^\s*<br\s*\/?>\s*|\s*<br\s*\/?>\s*$/g, '').length;
+                    currentCount.textContent = textContent; // Update the character count
+                });
+            } else {
+                console.warn(`Element with id "current-${parentId}" not found.`);
+            }
         });
     });
+</script>
+
+<script>
+    function handleSubmit(event, parentId) {
+        // Prevent the default form submission
+        event.preventDefault();
+
+        // Get the content from the editable div
+        const commentBody = document.getElementById(`commentBody-${parentId}`).innerText;
+
+        // Set the content to the hidden input
+        document.getElementById(`commentInput-${parentId}`).value = commentBody;
+
+        // Optionally, submit the form programmatically if you want to continue with the submission
+        document.getElementById(`commentForm-${parentId}`).submit();
+    }
 </script>

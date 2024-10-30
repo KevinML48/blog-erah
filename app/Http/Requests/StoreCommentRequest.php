@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Comment;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 class StoreCommentRequest extends FormRequest
 {
@@ -15,6 +16,13 @@ class StoreCommentRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        if ($this->input('parent_id') == -1) {
+            $this->merge(['parent_id' => null]);
+        }
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -22,6 +30,7 @@ class StoreCommentRequest extends FormRequest
      */
     public function rules()
     {
+        Log::info("submitting comment");
         return [
             'body' => 'required|string|max:255',
             'media' => 'nullable|image|max:2048',

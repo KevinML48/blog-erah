@@ -1,12 +1,21 @@
 <div id="reply-form-{{ $parentId }}" class="mt-2">
-    <form action="{{ route('comments.store', $post->id) }}" method="POST" enctype="multipart/form-data">
+    <form id="commentForm-{{ $parentId }}" action="{{ route('comments.store', $post->id) }}" method="POST"
+          enctype="multipart/form-data" onsubmit="return handleSubmit(event, '{{ $parentId }}')">
         @csrf
         {{-- Comment Body --}}
         @error('body')
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
-        <textarea name="body" rows="2" class="w-full border rounded-md p-2"
-                  placeholder="Votre commentaire..." maxlength="255" id="commentBody-{{ $parentId }}"></textarea>
+        <div>
+            <div
+                id="commentBody-{{ $parentId }}"
+                contenteditable="true"
+                class="w-full border rounded-md p-2 bg-white text-black"
+                data-parent-id="{{ $parentId }}"
+            ></div>
+            <input type="hidden" name="body" id="commentInput-{{ $parentId }}" maxlength="255"/>
+        </div>
+
 
         <div class="flex justify-between items-center mt-2">
             <div class="flex justify-between items-center">
@@ -37,7 +46,8 @@
         <div id="displayMediaZone-{{ $parentId }}" class="mt-2 hidden">
             <img id="selectedImage-{{ $parentId }}" src="" alt="Selected Image" class="w-32 h-32 rounded-md hidden">
             <img id="selectedGif-{{ $parentId }}" src="" alt="Selected GIF" class="w-32 h-32 rounded-md hidden">
-            <x-cancel-button id="cancelButton-{{ $parentId }}" onclick="clearMedia({{ $parentId }})"> Annuler</x-cancel-button>
+            <x-cancel-button id="cancelButton-{{ $parentId }}" onclick="clearMedia({{ $parentId }})"> Annuler
+            </x-cancel-button>
         </div>
 
         <input type="hidden" name="parent_id" value="{{ $parentId ?? '' }}">
@@ -50,7 +60,8 @@
     <div class="rounded-lg p-6 max-w-[66%] max-h-[66%] overflow-auto flex flex-col erah-box">
         <div class="flex justify-between items-center mb-4">
             <h2 class="text-lg font-bold">Recherche de GIF</h2>
-            <a href="https://tenor.com/legal-terms" target="_blank" class="text-xs text-gray-400 hover:underline">Powered by Tenor</a>
+            <a href="https://tenor.com/legal-terms" target="_blank" class="text-xs text-gray-400 hover:underline">Powered
+                by Tenor</a>
         </div>
         <x-text-input id="searchQuery" placeholder="Search Tenor"></x-text-input>
         <div id="gifResults" class="grid grid-cols-2 gap-2 mb-4 overflow-auto flex-grow"></div>
