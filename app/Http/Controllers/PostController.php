@@ -58,7 +58,7 @@ class PostController extends Controller
         $mediaPath = null;
 
         if ($request->media_type === 'image' && $request->hasFile('media')) {
-            $mediaPath = $request->file('media')->store('images', 'public');
+            $mediaPath = $request->file('media')->store('post_media', 'public');
         } elseif ($request->media_type === 'video' && $request->video_link) {
             $mediaPath = $request->video_link;
         }
@@ -121,7 +121,7 @@ class PostController extends Controller
         }
 
         if ($request->media_type === 'image' && $request->hasFile('media')) {
-            $mediaPath = $request->file('media')->store('images', 'public');
+            $mediaPath = $request->file('media')->store('post_media', 'public');
         } elseif ($request->media_type === 'video' && $request->video_link) {
             $mediaPath = $request->video_link;
         }
