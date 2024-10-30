@@ -134,7 +134,7 @@ class CommentController extends Controller
 
         $apiKey = env('TENOR_API_KEY');
         $clientKey = 'discord-bot';
-        $limit = 10;
+        $limit = 100;
 
         $response = Http::withOptions(['verify' => false])->get("https://tenor.googleapis.com/v2/search", [
             'q' => $query,

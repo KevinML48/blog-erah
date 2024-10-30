@@ -44,19 +44,18 @@
         </div>
 
         <input type="hidden" name="parent_id" value="{{ $parentId ?? '' }}">
-        <input type="hidden" name="gif_url" id="gifUrl-{{ $parentId }}" value=""> <!-- Hidden input for GIF URL -->
+        <input type="hidden" name="gif_url" id="gifUrl-{{ $parentId }}" value="">
     </form>
 </div>
 
 
 <!-- Modal Structure -->
 <div id="searchModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 hidden items-center justify-center">
-    <div class="rounded-lg p-6 w-96  erah-box">
-        <h2 class="text-lg font-bold mb-4">Search for Media</h2>
-        <input type="text" id="searchQuery" class="w-full border rounded-md p-2 mb-4" placeholder="Search...">
+    <div class="rounded-lg p-6 max-w-[66%] max-h-[66%] overflow-auto flex flex-col erah-box">
+        <h2 class="text-lg font-bold mb-4">Recherche de GIF</h2>
+        <input type="text" id="searchQuery" class="w-full border rounded-md p-2 mb-4" placeholder="Search Tenor">
 
-        <div id="gifResults" class="flex flex-wrap gap-2 mb-4"></div> <!-- GIF results will appear here -->
-
+        <div id="gifResults" class="grid grid-cols-2 gap-2 mb-4 overflow-auto flex-grow"></div>
         <div class="flex justify-end">
             <x-cancel-button onclick="toggleModal()"> Annuler </x-cancel-button>
             <x-secondary-button onclick="performSearch()"> Chercher </x-secondary-button>

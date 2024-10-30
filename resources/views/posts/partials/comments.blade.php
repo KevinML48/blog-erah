@@ -137,7 +137,7 @@
             const gifElement = document.createElement('img');
             gifElement.src = gif.media_formats.gif.url;
             gifElement.alt = gif.content_description;
-            gifElement.classList.add('w-20', 'h-20', 'cursor-pointer', 'rounded-md');
+            gifElement.classList.add('cursor-pointer', 'rounded-md');
             gifElement.onclick = () => {
                 const parentId = document.getElementById('searchModal').dataset.parentId; // Get the parentId
                 selectGIF(gif.media_formats.gif.url, parentId);
