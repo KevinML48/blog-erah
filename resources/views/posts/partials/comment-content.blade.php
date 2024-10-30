@@ -43,9 +43,13 @@
             </div>
 
             <!-- Body -->
-            <div class="mt-1">
+            <div class="py-2">
                 {!! nl2br(e($content->body)) !!}
             </div>
+            @if ($content->media)
+                <div class="py-2"><img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
+                                       class="object-contain h-48 w-48"></div>
+            @endif
         </div>
     </div>
 </div>

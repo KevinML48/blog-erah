@@ -24,6 +24,7 @@ class StoreCommentRequest extends FormRequest
     {
         return [
             'body' => 'required|string|max:255',
+            'media' => 'nullable|image|max:2048',
             'parent_id' => [
                 'nullable',
                 'exists:comments,id',

@@ -15,7 +15,11 @@ class CommentContent extends Model
      */
     protected $table = 'comments_content';
 
-    protected $fillable = ['user_id', 'body'];
+    protected $fillable = [
+        'user_id',
+        'body',
+        'media',
+    ];
 
     public function comment(): HasOne
     {

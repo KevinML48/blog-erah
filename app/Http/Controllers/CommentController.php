@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comment;
 use App\Models\CommentContent;
 use App\Models\Post;
@@ -10,14 +11,21 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class CommentController extends Controller
 {
-    public function store(Request $request, Post $post): RedirectResponse
+    public function store(StoreCommentRequest $request, Post $post): RedirectResponse
     {
+        $mediaPath = null;
+        if ($request->hasFile('media')) {
+            $mediaPath = $request->file('media')->store('comment_media', 'public');
+        }
+
         $commentContent = CommentContent::create([
             'user_id' => auth()->id(),
             'body' => $request->body,
+            'media' => $mediaPath,
         ]);
 
         Comment::create([
@@ -78,6 +86,11 @@ class CommentController extends Controller
         }
 
         $comment = $commentContent->comment;
+
+        $mediaPath = $commentContent->media;
+        if ($commentContent->media && Storage::disk('public')->exists($mediaPath)) {
+            Storage::disk('public')->delete($mediaPath);
+        }
 
         $commentContent->delete();
 
