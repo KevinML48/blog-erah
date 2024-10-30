@@ -101,9 +101,7 @@
         modal.classList.toggle('hidden');
         modal.classList.toggle('flex');
         document.getElementById('gifResults').innerHTML = ''; // Clear results on close
-
-        // Store the parentId for later use
-        modal.dataset.parentId = parentId; // Use data attribute to store the parentId
+        modal.dataset.parentId = parentId;
     }
 
     function performSearch() {
@@ -113,7 +111,6 @@
             return;
         }
 
-        // Fetch results from Laravel route
         fetch(`/tenor/search?query=${encodeURIComponent(query)}`)
             .then(response => response.json())
             .then(data => {
@@ -121,8 +118,7 @@
                     alert(data.error);
                     return;
                 }
-
-                displayGIFs(data.results); // Call function to display GIFs
+                displayGIFs(data.results);
             })
             .catch(error => {
                 console.error('Error fetching Tenor data:', error);
@@ -131,7 +127,7 @@
 
     function displayGIFs(gifs) {
         const gifResults = document.getElementById('gifResults');
-        gifResults.innerHTML = ''; // Clear previous results
+        gifResults.innerHTML = '';
 
         gifs.forEach(gif => {
             const gifElement = document.createElement('img');
@@ -139,52 +135,76 @@
             gifElement.alt = gif.content_description;
             gifElement.classList.add('cursor-pointer', 'rounded-md');
             gifElement.onclick = () => {
-                const parentId = document.getElementById('searchModal').dataset.parentId; // Get the parentId
+                const parentId = document.getElementById('searchModal').dataset.parentId;
                 selectGIF(gif.media_formats.gif.url, parentId);
             };
             gifResults.appendChild(gifElement);
         });
     }
 
-    function selectGIF(url, parentId) {
-        // Set the URL in the hidden input field
-        document.getElementById(`gifUrl-${parentId}`).value = url;
-
-        // Display the selected GIF
-        const selectedGifContainer = document.getElementById(`selectedGifContainer-${parentId}`);
+    function previewImage(parentId) {
+        const fileInput = document.getElementById(`media-${parentId}`);
+        const displayZone = document.getElementById(`displayMediaZone-${parentId}`);
+        const selectedImage = document.getElementById(`selectedImage-${parentId}`);
         const selectedGif = document.getElementById(`selectedGif-${parentId}`);
+
+        if (fileInput.files && fileInput.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                selectedImage.src = e.target.result;
+                displayZone.classList.remove('hidden');
+                selectedImage.classList.remove('hidden');
+                selectedGif.classList.add('hidden');
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    }
+
+    function selectGIF(url, parentId) {
+        document.getElementById(`gifUrl-${parentId}`).value = url;
+        const displayZone = document.getElementById(`displayMediaZone-${parentId}`);
+        const selectedGif = document.getElementById(`selectedGif-${parentId}`);
+        const selectedImage = document.getElementById(`selectedImage-${parentId}`);
+
         selectedGif.src = url;
-        selectedGifContainer.classList.remove('hidden'); // Show the container
-
-        // Hide the media upload input
-        const mediaUpload = document.getElementById(`mediaUpload-${parentId}`);
-        mediaUpload.classList.add('hidden');
-
-        // Show the cancel button
-        const cancelButton = document.getElementById(`cancelButton-${parentId}`);
-        cancelButton.classList.remove('hidden');
-
-        // Close the modal
+        displayZone.classList.remove('hidden');
+        selectedGif.classList.remove('hidden');
+        selectedImage.classList.add('hidden');
+        document.getElementById(`mediaUpload-${parentId}`).classList.add('hidden');
+        resetFileInput(parentId);
         toggleModal(parentId);
     }
 
-    function unselectGIF(parentId) {
+    function resetFileInput(parentId) {
+        // Get the file input element and reset its value
+        const fileInput = document.getElementById(`media-${parentId}`);
+        fileInput.value = ''; // Clear the file input
+    }
+
+    function clearMedia(parentId) {
         // Clear the GIF URL input
         document.getElementById(`gifUrl-${parentId}`).value = '';
 
-        // Hide the selected GIF container
-        const selectedGifContainer = document.getElementById(`selectedGifContainer-${parentId}`);
-        selectedGifContainer.classList.add('hidden');
+        // Hide the selected image and GIF containers
+        const displayZone = document.getElementById(`displayMediaZone-${parentId}`);
+        const selectedImage = document.getElementById(`selectedImage-${parentId}`);
+        const selectedGif = document.getElementById(`selectedGif-${parentId}`);
+
+        selectedImage.classList.add('hidden');
+        selectedGif.classList.add('hidden');
+        displayZone.classList.add('hidden');
+
+        // Reset the file input using the separate function
+        resetFileInput(parentId);
 
         // Reappear the media upload input
-        const mediaUpload = document.getElementById(`mediaUpload-${parentId}`);
-        mediaUpload.classList.remove('hidden');
-
-        // Hide the cancel button
-        const cancelButton = document.getElementById(`cancelButton-${parentId}`);
-        cancelButton.classList.add('hidden');
+        document.getElementById(`mediaUpload-${parentId}`).classList.remove('hidden');
     }
+
+
 </script>
+
+
 <script>
     document.querySelectorAll('[id^="commentBody-"]').forEach(commentBody => {
         const parentId = commentBody.id.split('-')[1]; // Extract parentId from the commentBody id
