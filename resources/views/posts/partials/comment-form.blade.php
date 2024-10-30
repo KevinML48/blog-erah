@@ -12,7 +12,7 @@
 
             <div class="flex justify-between items-center">
                 <!-- Search Button -->
-                <x-secondary-button onclick="toggleModal({{ $parentId }})"> GIF </x-secondary-button>
+                <x-secondary-button onclick="toggleModal({{ $parentId }})"> GIF</x-secondary-button>
 
                 <!-- Image Upload -->
                 <div id="mediaUpload-{{ $parentId }}" class="media-upload ml-2">
@@ -52,13 +52,17 @@
 <!-- Modal Structure -->
 <div id="searchModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 hidden items-center justify-center">
     <div class="rounded-lg p-6 max-w-[66%] max-h-[66%] overflow-auto flex flex-col erah-box">
-        <h2 class="text-lg font-bold mb-4">Recherche de GIF</h2>
-        <input type="text" id="searchQuery" class="w-full border rounded-md p-2 mb-4" placeholder="Search Tenor">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold">Recherche de GIF</h2>
+            <a href="https://tenor.com/legal-terms" target="_blank" class="text-xs text-gray-400 hover:underline">Powered
+                by Tenor</a>
+        </div>
+        <x-text-input id="searchQuery" placeholder="Search Tenor"></x-text-input>
 
         <div id="gifResults" class="grid grid-cols-2 gap-2 mb-4 overflow-auto flex-grow"></div>
         <div class="flex justify-end">
-            <x-cancel-button onclick="toggleModal()"> Annuler </x-cancel-button>
-            <x-secondary-button onclick="performSearch()"> Chercher </x-secondary-button>
+            <x-cancel-button onclick="toggleModal()"> Annuler</x-cancel-button>
+            <x-secondary-button onclick="performSearch()"> Chercher</x-secondary-button>
         </div>
     </div>
 </div>
