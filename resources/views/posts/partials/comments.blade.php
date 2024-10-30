@@ -4,7 +4,7 @@
 
         <!-- Comment Form -->
         <div class="mb-4">
-            @include('posts.partials.comment-form', ['parentId' => '', 'post' => $post,])
+            @include('posts.partials.comment-form', ['parentId' => -1, 'post' => $post,])
         </div>
     @endif
 
@@ -95,3 +95,103 @@
 </script>
 
 
+<script>
+    function toggleModal(parentId) {
+        const modal = document.getElementById('searchModal');
+        modal.classList.toggle('hidden');
+        modal.classList.toggle('flex');
+        document.getElementById('gifResults').innerHTML = ''; // Clear results on close
+
+        // Store the parentId for later use
+        modal.dataset.parentId = parentId; // Use data attribute to store the parentId
+    }
+
+    function performSearch() {
+        const query = document.getElementById('searchQuery').value;
+        if (!query) {
+            alert('Please enter a search term');
+            return;
+        }
+
+        // Fetch results from Laravel route
+        fetch(`/tenor/search?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                displayGIFs(data.results); // Call function to display GIFs
+            })
+            .catch(error => {
+                console.error('Error fetching Tenor data:', error);
+            });
+    }
+
+    function displayGIFs(gifs) {
+        const gifResults = document.getElementById('gifResults');
+        gifResults.innerHTML = ''; // Clear previous results
+
+        gifs.forEach(gif => {
+            const gifElement = document.createElement('img');
+            gifElement.src = gif.media_formats.gif.url;
+            gifElement.alt = gif.content_description;
+            gifElement.classList.add('w-20', 'h-20', 'cursor-pointer', 'rounded-md');
+            gifElement.onclick = () => {
+                const parentId = document.getElementById('searchModal').dataset.parentId; // Get the parentId
+                selectGIF(gif.media_formats.gif.url, parentId);
+            };
+            gifResults.appendChild(gifElement);
+        });
+    }
+
+    function selectGIF(url, parentId) {
+        // Set the URL in the hidden input field
+        document.getElementById(`gifUrl-${parentId}`).value = url;
+
+        // Display the selected GIF
+        const selectedGifContainer = document.getElementById(`selectedGifContainer-${parentId}`);
+        const selectedGif = document.getElementById(`selectedGif-${parentId}`);
+        selectedGif.src = url;
+        selectedGifContainer.classList.remove('hidden'); // Show the container
+
+        // Hide the media upload input
+        const mediaUpload = document.getElementById(`mediaUpload-${parentId}`);
+        mediaUpload.classList.add('hidden');
+
+        // Show the cancel button
+        const cancelButton = document.getElementById(`cancelButton-${parentId}`);
+        cancelButton.classList.remove('hidden');
+
+        // Close the modal
+        toggleModal(parentId);
+    }
+
+    function unselectGIF(parentId) {
+        // Clear the GIF URL input
+        document.getElementById(`gifUrl-${parentId}`).value = '';
+
+        // Hide the selected GIF container
+        const selectedGifContainer = document.getElementById(`selectedGifContainer-${parentId}`);
+        selectedGifContainer.classList.add('hidden');
+
+        // Reappear the media upload input
+        const mediaUpload = document.getElementById(`mediaUpload-${parentId}`);
+        mediaUpload.classList.remove('hidden');
+
+        // Hide the cancel button
+        const cancelButton = document.getElementById(`cancelButton-${parentId}`);
+        cancelButton.classList.add('hidden');
+    }
+</script>
+<script>
+    document.querySelectorAll('[id^="commentBody-"]').forEach(commentBody => {
+        const parentId = commentBody.id.split('-')[1]; // Extract parentId from the commentBody id
+        const currentCount = document.getElementById(`current-${parentId}`);
+
+        commentBody.addEventListener('input', function () {
+            currentCount.textContent = commentBody.value.length;
+        });
+    });
+</script>

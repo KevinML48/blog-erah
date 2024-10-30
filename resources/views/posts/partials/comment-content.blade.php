@@ -47,8 +47,15 @@
                 {!! nl2br(e($content->body)) !!}
             </div>
             @if ($content->media)
-                <div class="py-2"><img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
-                                       class="object-contain h-48 w-48"></div>
+                <div class="py-2">
+                    @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
+                        <!-- If it's a Tenor GIF URL -->
+                        <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
+                    @else
+                        <!-- If it's an uploaded image -->
+                        <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image" class="object-contain h-48 w-48">
+                    @endif
+                </div>
             @endif
         </div>
     </div>

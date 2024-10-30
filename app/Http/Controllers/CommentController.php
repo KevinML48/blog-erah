@@ -19,8 +19,11 @@ class CommentController extends Controller
     public function store(StoreCommentRequest $request, Post $post): RedirectResponse
     {
         $mediaPath = null;
+
         if ($request->hasFile('media')) {
             $mediaPath = $request->file('media')->store('comment_media', 'public');
+        } elseif ($request->filled('gif_url')) {
+            $mediaPath = $request->gif_url;
         }
 
         $commentContent = CommentContent::create([
@@ -28,15 +31,20 @@ class CommentController extends Controller
             'body' => $request->body,
             'media' => $mediaPath,
         ]);
-
+        if ($request->parent_id === -1) {
+            $parentId = null;
+        } else {
+            $parentId = $request->parent_id;
+        }
         Comment::create([
             'post_id' => $post->id,
-            'parent_id' => $request->parent_id,
+            'parent_id' => $parentId,
             'content_id' => $commentContent->id,
         ]);
 
         return redirect()->route('posts.show', $post->id)->with('success', 'Commentaire ajouté.');
     }
+
 
     public function show(Post $post, Comment $comment): View
     {
