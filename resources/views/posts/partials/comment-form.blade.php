@@ -1,6 +1,8 @@
 <div id="reply-form-{{ $parentId }}" class="mt-2">
     <form id="commentForm-{{ $parentId }}" action="{{ route('comments.store', $post->id) }}" method="POST"
-          enctype="multipart/form-data" onsubmit="return handleSubmit(event, '{{ $parentId }}')">
+          enctype="multipart/form-data"
+{{--          onsubmit="return handleSubmit(event, '{{ $parentId }}')"--}}
+    >
         @csrf
         {{-- Comment Body --}}
         @error('body')
@@ -13,7 +15,7 @@
                 class="w-full border rounded-md p-2 bg-white text-black"
                 data-parent-id="{{ $parentId }}"
             ></div>
-            <input type="hidden" name="body" id="commentInput-{{ $parentId }}" maxlength="255"/>
+            <input type="hidden" name="input-body-{{ $parentId }}" id="commentInput-{{ $parentId }}" value="{{ old('input-body-' . $parentId) }}"/>
         </div>
 
 

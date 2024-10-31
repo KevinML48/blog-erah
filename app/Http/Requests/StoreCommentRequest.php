@@ -31,8 +31,14 @@ class StoreCommentRequest extends FormRequest
     public function rules()
     {
         Log::info("submitting comment");
+        if (!$this->input('parent_id')) {
+            $body = -1;
+        } else {
+            $body = $this->input('parent_id');
+        }
+
         return [
-            'body' => 'required|string|max:255',
+            'input-body-' . $body => 'required|string|max:255',
             'media' => 'nullable|image|max:2048',
             'parent_id' => [
                 'nullable',
@@ -41,7 +47,7 @@ class StoreCommentRequest extends FormRequest
                     if ($value) {
                         $parentComment = Comment::find($value);
                         if ($parentComment && $parentComment->post_id !== $this->route('post')->id) {
-                            $fail("Le parent selectionné n'apartient pas à ce post.");
+                            $fail("Le commentaire selectionné n'apartient pas à ce post.");
                         }
                     }
                 },

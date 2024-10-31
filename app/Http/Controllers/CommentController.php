@@ -26,9 +26,16 @@ class CommentController extends Controller
             $mediaPath = $request->gif_url;
         }
 
+        if (!$request->parent_id) {
+            $bodyId = -1;
+        } else {
+            $bodyId = $request->parent_id;
+        }
+
+
         $commentContent = CommentContent::create([
             'user_id' => auth()->id(),
-            'body' => $request->body,
+            'body' => $request->input("input-body-$bodyId"),
             'media' => $mediaPath,
         ]);
         if ($request->parent_id === -1) {
@@ -36,13 +43,13 @@ class CommentController extends Controller
         } else {
             $parentId = $request->parent_id;
         }
-        Comment::create([
+        $comment = Comment::create([
             'post_id' => $post->id,
             'parent_id' => $parentId,
             'content_id' => $commentContent->id,
         ]);
 
-        return redirect()->route('posts.show', $post->id)->with('success', 'Commentaire ajouté.');
+        return redirect()->route('comments.show', [$post->id, $comment->id])->with('success', 'Commentaire ajouté.');
     }
 
 
@@ -50,6 +57,10 @@ class CommentController extends Controller
     {
         if ($comment->post_id !== $post->id) {
             abort(404);
+        }
+
+        if (!$comment) {
+            redirect()->route('posts.show', [$post->id]);
         }
 
         $comments = Comment::with(['content.user', 'replies.content.user'])
@@ -104,8 +115,10 @@ class CommentController extends Controller
         $commentContent->delete();
 
         $this->checkAndDeleteComment($comment);
-
-        return redirect()->back()->with('success', 'Comment deleted successfully.');
+        if ($comment->parent) {
+            return redirect()->route('comments.show', [$comment->post->id, $comment->parent->id])->with('success', 'Comment deleted successfully.');
+        }
+        return redirect()->route('posts.show', [$comment->post->id])->with('success', 'Comment deleted successfully.');
     }
 
     protected function checkAndDeleteComment($comment): void

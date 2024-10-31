@@ -198,10 +198,9 @@
 
     // Function to handle the paste event
     function handlePaste(event, parentId) {
-        event.preventDefault(); // Prevent the default paste behavior
-
         const clipboardData = event.clipboardData || window.clipboardData;
         const items = clipboardData.items;
+        let imageFound = false;
 
         // Loop through clipboard items to find images
         for (let i = 0; i < items.length; i++) {
@@ -209,6 +208,9 @@
 
             // Check if the pasted item is an image
             if (item.kind === 'file' && item.type.startsWith('image/')) {
+                event.preventDefault(); // Prevent the default paste behavior for images
+                imageFound = true;
+
                 const file = item.getAsFile();
                 const fileInput = document.getElementById(`media-${parentId}`);
                 const dataTransfer = new DataTransfer();
@@ -223,6 +225,11 @@
                 previewImage(parentId);
                 break; // Exit the loop after finding the first image
             }
+        }
+
+        // Allow normal paste behavior if no image is found
+        if (!imageFound) {
+            return; // let the event continue, allowing the default paste
         }
     }
 
@@ -273,17 +280,17 @@
 </script>
 
 <script>
-    function handleSubmit(event, parentId) {
-        // Prevent the default form submission
-        event.preventDefault();
-
-        // Get the content from the editable div
-        const commentBody = document.getElementById(`commentBody-${parentId}`).innerText;
-
-        // Set the content to the hidden input
-        document.getElementById(`commentInput-${parentId}`).value = commentBody;
-
-        // Optionally, submit the form programmatically if you want to continue with the submission
-        document.getElementById(`commentForm-${parentId}`).submit();
-    }
+    // function handleSubmit(event, parentId) {
+    //     // Prevent the default form submission
+    //     event.preventDefault();
+    //
+    //     // Get the content from the editable div
+    //     const commentBody = document.getElementById(`commentBody-${parentId}`).innerText;
+    //
+    //     // Set the content to the hidden input
+    //     document.getElementById(`commentInput-${parentId}`).value = commentBody;
+    //
+    //     // Optionally, submit the form programmatically if you want to continue with the submission
+    //     document.getElementById(`commentForm-${parentId}`).submit();
+    // }
 </script>
