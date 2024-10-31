@@ -277,7 +277,6 @@
     });
 
 
-
 </script>
 
 <script>
@@ -380,12 +379,29 @@
 </script>
 
 @if (request()->routeIs('comments.show'))
-<script>
-    window.onload = function() {
-        const targetElement = document.querySelector('.comment-section');
-        if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth' });
-        }
-    };
-</script>
+    <script>
+        window.onload = function () {
+            const targetElement = document.querySelector('.comment-section');
+            if (targetElement) {
+                targetElement.scrollIntoView({behavior: 'smooth'});
+            }
+        };
+    </script>
+@endif
+
+@if (session()->has('failed_id'))
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const failedId = "{{ session('failed_id') }}";
+            const targetElement = document.getElementById("reply-form-" + failedId);
+
+            if (failedId > 0) {
+                showReplyForm(failedId);
+            }
+
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        });
+    </script>
 @endif
