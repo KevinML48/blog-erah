@@ -162,6 +162,7 @@
     }
 
     function selectGIF(url, parentId) {
+        clearMedia(parentId)
         document.getElementById(`gifUrl-${parentId}`).value = url;
         const displayZone = document.getElementById(`displayMediaZone-${parentId}`);
         const selectedGif = document.getElementById(`selectedGif-${parentId}`);
@@ -242,20 +243,39 @@
     }
 
     // Function to initialize event listeners
-    function initEventListeners() {
-        // Select all contenteditable divs
-        const commentAreas = document.querySelectorAll('[contenteditable="true"]');
+    document.addEventListener("DOMContentLoaded", function () {
+        // Initialize event listeners for existing content-editable divs
+        function initEventListeners() {
+            const commentAreas = document.querySelectorAll('[contenteditable="true"]');
 
-        commentAreas.forEach((commentArea) => {
-            const parentId = commentArea.dataset.parentId; // Get parentId from data attribute
+            commentAreas.forEach((commentArea) => {
+                const parentId = commentArea.dataset.parentId; // Get parentId from data attribute
 
-            commentArea.addEventListener('paste', (event) => handlePaste(event, parentId));
-            commentArea.addEventListener('input', () => updateHiddenInput(parentId)); // Update on input
+                // Attach event listeners for existing elements
+                commentArea.addEventListener('paste', (event) => handlePaste(event, parentId));
+                commentArea.addEventListener('input', () => updateHiddenInput(parentId)); // Update on input
+            });
+        }
+
+        // Call the initialization function for existing inputs
+        initEventListeners();
+
+        // Event delegation for dynamically added content-editable divs
+        document.addEventListener('paste', function (event) {
+            if (event.target.matches('[contenteditable="true"]')) {
+                const parentId = event.target.dataset.parentId; // Get parentId from data attribute
+                handlePaste(event, parentId); // Call your handlePaste function
+            }
         });
-    }
 
-    // Call this function to initialize event listeners for all editable divs
-    initEventListeners();
+        document.addEventListener('input', function (event) {
+            if (event.target.matches('[contenteditable="true"]')) {
+                const parentId = event.target.dataset.parentId; // Get parentId from data attribute
+                updateHiddenInput(parentId); // Call your updateHiddenInput function
+            }
+        });
+    });
+
 
 
 </script>
@@ -283,22 +303,38 @@
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
-        // Select all content-editable divs
-        document.querySelectorAll('[contenteditable="true"]').forEach(commentBody => {
-            const parentId = commentBody.dataset.parentId; // Get parentId from data attribute
-            const hiddenInput = document.getElementById(`commentInput-${parentId}`);
+        // Function to initialize comment inputs
+        function initializeCommentInputs() {
+            // Select all content-editable divs
+            document.querySelectorAll('[contenteditable="true"]').forEach(commentBody => {
+                const parentId = commentBody.dataset.parentId; // Get parentId from data attribute
+                const hiddenInput = document.getElementById(`commentInput-${parentId}`);
 
-            // Set initial values
-            updateCounter(parentId);
-            updateHiddenInput(parentId);
-
-            // Add an input event listener to update the counter and hidden input as the user types
-            commentBody.addEventListener('input', function () {
+                // Set initial values
                 updateCounter(parentId);
                 updateHiddenInput(parentId);
+
+                // Add an input event listener to update the counter and hidden input as the user types
+                commentBody.addEventListener('input', function () {
+                    updateCounter(parentId);
+                    updateHiddenInput(parentId);
+                });
             });
+        }
+
+        // Call the function initially to set up existing inputs
+        initializeCommentInputs();
+
+        // Event delegation for dynamically added content-editable divs
+        document.addEventListener('input', function (event) {
+            if (event.target.matches('[contenteditable="true"]')) {
+                const parentId = event.target.dataset.parentId; // Get parentId from data attribute
+                updateCounter(parentId);
+                updateHiddenInput(parentId);
+            }
         });
     });
+
 
     // Function to update the character count
     function updateCounter(parentId) {
