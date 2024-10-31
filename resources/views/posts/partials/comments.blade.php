@@ -1,4 +1,4 @@
-<div class="mt-6">
+<div class="mt-6 comment-section">
     @if (request()->routeIs('posts.show'))
         <h4 class="font-semibold text-lg">Commentaires ({{ $totalCommentsCount }})</h4>
 
@@ -378,3 +378,14 @@
     //     document.getElementById(`commentForm-${parentId}`).submit();
     // }
 </script>
+
+@if (request()->routeIs('comments.show'))
+<script>
+    window.onload = function() {
+        const targetElement = document.querySelector('.comment-section');
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    };
+</script>
+@endif
