@@ -40,28 +40,29 @@
     @endif
 </div>
 
-<script>
-    document.getElementById('load-more').addEventListener('click', function () {
-        const button = this;
-        const url = button.getAttribute('data-url');
-        const currentPage = parseInt(button.getAttribute('data-page'));
+@if ($comments->hasMorePages())
+    <script>
+        document.getElementById('load-more').addEventListener('click', function () {
+            const button = this;
+            const url = button.getAttribute('data-url');
+            const currentPage = parseInt(button.getAttribute('data-page'));
 
-        fetch(`${url}?page=${currentPage}`)
-            .then(response => response.json())
-            .then(data => {
-                document.getElementById('comments-container').insertAdjacentHTML('beforeend', data.comments);
+            fetch(`${url}?page=${currentPage}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('comments-container').insertAdjacentHTML('beforeend', data.comments);
 
-                convertTimes();
+                    convertTimes();
 
-                button.setAttribute('data-page', currentPage + 1);
+                    button.setAttribute('data-page', currentPage + 1);
 
-                if (!data.hasMore) {
-                    button.style.display = 'none';
-                }
-            });
-    });
-</script>
-
+                    if (!data.hasMore) {
+                        button.style.display = 'none';
+                    }
+                });
+        });
+    </script>
+@endif
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.load-more-replies').forEach(button => {
@@ -260,10 +261,10 @@
 </script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         // Find all editable divs with the class "comment-body"
         const commentBodies = document.querySelectorAll(".comment-body");
-        commentBodies.forEach(function(commentBody) {
+        commentBodies.forEach(function (commentBody) {
             // Get the parent ID from the data attribute
             const parentId = commentBody.getAttribute("data-parent-id");
             const commentInput = document.getElementById(`commentInput-${parentId}`);
@@ -272,16 +273,16 @@
             if (commentInput && commentInput.value) {
                 // Set the editable div's content to the hidden input's value
                 commentBody.innerHTML = commentInput.value;
-                if (parentId > 0 ) {
+                if (parentId > 0) {
                     showReplyForm(parentId);
                 }
-                    updateCounter(parentId);
+                updateCounter(parentId);
             }
         });
     });
 </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         // Select all content-editable divs
         document.querySelectorAll('[contenteditable="true"]').forEach(commentBody => {
             const parentId = commentBody.dataset.parentId; // Get parentId from data attribute
