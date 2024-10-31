@@ -258,25 +258,72 @@
 
 
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        // Find all editable divs with the class "comment-body"
+        const commentBodies = document.querySelectorAll(".comment-body");
+        commentBodies.forEach(function(commentBody) {
+            // Get the parent ID from the data attribute
+            const parentId = commentBody.getAttribute("data-parent-id");
+            const commentInput = document.getElementById(`commentInput-${parentId}`);
+
+            // Check if the hidden input has a value
+            if (commentInput && commentInput.value) {
+                // Set the editable div's content to the hidden input's value
+                commentBody.innerHTML = commentInput.value;
+                if (parentId > 0 ) {
+                    showReplyForm(parentId);
+                }
+                    updateCounter(parentId);
+            }
+        });
+    });
+</script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         // Select all content-editable divs
         document.querySelectorAll('[contenteditable="true"]').forEach(commentBody => {
             const parentId = commentBody.dataset.parentId; // Get parentId from data attribute
-            const currentCount = document.getElementById(`current-${parentId}`);
+            const hiddenInput = document.getElementById(`commentInput-${parentId}`);
 
-            // Check if currentCount exists to avoid null reference errors
-            if (currentCount) {
-                commentBody.addEventListener('input', function () {
-                    // Get the length of the inner text, removing <br> tags for accurate count
-                    const textContent = commentBody.innerText.replace(/^\s*<br\s*\/?>\s*|\s*<br\s*\/?>\s*$/g, '').length;
-                    currentCount.textContent = textContent; // Update the character count
-                });
-            } else {
-                console.warn(`Element with id "current-${parentId}" not found.`);
-            }
+            // Set initial values
+            updateCounter(parentId);
+            updateHiddenInput(parentId);
+
+            // Add an input event listener to update the counter and hidden input as the user types
+            commentBody.addEventListener('input', function () {
+                updateCounter(parentId);
+                updateHiddenInput(parentId);
+            });
         });
     });
+
+    // Function to update the character count
+    function updateCounter(parentId) {
+        const commentBody = document.getElementById(`commentBody-${parentId}`);
+        const currentCount = document.getElementById(`current-${parentId}`);
+
+        if (commentBody && currentCount) {
+            // Count characters by text content only (ignoring HTML)
+            const textContentLength = commentBody.innerText.length;
+            currentCount.textContent = textContentLength;
+        }
+    }
+
+    // Function to update the hidden input without extra HTML tags
+    function updateHiddenInput(parentId) {
+        const commentBody = document.getElementById(`commentBody-${parentId}`);
+        const hiddenInput = document.getElementById(`commentInput-${parentId}`);
+
+        if (commentBody && hiddenInput) {
+            // Use textContent to get plain text, converting newlines properly
+            const plainText = commentBody.innerText.replace(/\n/g, '\n');
+            hiddenInput.value = plainText;
+        }
+    }
+
+
 </script>
 
 <script>

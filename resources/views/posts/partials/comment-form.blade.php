@@ -5,14 +5,14 @@
     >
         @csrf
         {{-- Comment Body --}}
-        @error('body')
+        @error('input-body-' . $parentId)
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
         <div>
             <div
                 id="commentBody-{{ $parentId }}"
                 contenteditable="true"
-                class="w-full border rounded-md p-2 bg-white text-black"
+                class="w-full border rounded-md p-2 bg-white text-black comment-body"
                 data-parent-id="{{ $parentId }}"
             ></div>
             <input type="hidden" name="input-body-{{ $parentId }}" id="commentInput-{{ $parentId }}" value="{{ old('input-body-' . $parentId) }}"/>

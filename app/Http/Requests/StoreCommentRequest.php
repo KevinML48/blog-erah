@@ -4,7 +4,6 @@ namespace App\Http\Requests;
 
 use App\Models\Comment;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 class StoreCommentRequest extends FormRequest
 {
@@ -30,7 +29,6 @@ class StoreCommentRequest extends FormRequest
      */
     public function rules()
     {
-        Log::info("submitting comment");
         if (!$this->input('parent_id')) {
             $body = -1;
         } else {
@@ -52,6 +50,18 @@ class StoreCommentRequest extends FormRequest
                     }
                 },
             ],
+        ];
+    }
+
+    public function messages(): array
+    {
+        if (!$this->input('parent_id')) {
+            $body = -1;
+        } else {
+            $body = $this->input('parent_id');
+        }
+        return [
+            'input-body-' . $body . '.max' => 'Le commentaire ne doit pas faire plus de 255 caractères.',
         ];
     }
 }
