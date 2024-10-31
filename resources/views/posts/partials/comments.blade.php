@@ -337,12 +337,12 @@
 
     // Function to update the character count
     function updateCounter(parentId) {
-        const commentBody = document.getElementById(`commentBody-${parentId}`);
+        const commentInput = document.getElementById(`commentInput-${parentId}`);
         const currentCount = document.getElementById(`current-${parentId}`);
 
-        if (commentBody && currentCount) {
+        if (commentInput && currentCount) {
             // Count characters by text content only (ignoring HTML)
-            const textContentLength = commentBody.innerText.length;
+            const textContentLength = commentInput.value.length;
             currentCount.textContent = textContentLength;
         }
     }
@@ -354,7 +354,7 @@
 
         if (commentBody && hiddenInput) {
             // Use textContent to get plain text, converting newlines properly
-            const plainText = commentBody.innerText.replace(/\n/g, '\n');
+            const plainText = commentBody.innerText.replace(/\n/g, '\n').trim();
             hiddenInput.value = plainText;
         }
     }
