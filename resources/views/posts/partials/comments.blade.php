@@ -3,7 +3,7 @@
         <h4 class="font-semibold text-lg">Commentaires ({{ $totalCommentsCount }})</h4>
 
         <!-- Comment Form -->
-        <div class="mb-4">
+        <div id="reply-form--1}" class="mb-4">
             @include('posts.partials.comment-form', ['parentId' => -1, 'post' => $post,])
         </div>
     @endif
@@ -367,9 +367,9 @@
         document.addEventListener("DOMContentLoaded", function() {
             const failedId = "{{ session('failed_id') }}";
             const targetElement = document.getElementById("reply-form-" + failedId);
-
+            if(failedId > 0) {
                 showReplyForm(failedId);
-
+            }
             if (targetElement) {
                 targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
             }
@@ -377,3 +377,14 @@
     </script>
 @endif
 
+<script>
+    function toggleReplyForm(commentId) {
+        const replyForm = document.getElementById(`reply-form-${commentId}`);
+        replyForm.classList.toggle('hidden');
+    }
+
+    function showReplyForm(commentId) {
+        const replyForm = document.getElementById(`reply-form-${commentId}`);
+        replyForm.classList.remove('hidden');
+    }
+</script>

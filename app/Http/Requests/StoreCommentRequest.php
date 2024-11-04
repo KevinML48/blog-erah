@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Comment;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 
 class StoreCommentRequest extends FormRequest
@@ -20,19 +21,6 @@ class StoreCommentRequest extends FormRequest
         return true;
     }
 
-    protected function prepareForValidation(): void
-    {
-        if (!$this->input('parent_id')) {
-            $this->parentId = -1;
-        } else {
-            $this->parentId = $this->input('parent_id');
-        }
-
-        if ($this->input('parent_id') == -1) {
-            $this->merge(['parent_id' => null]);
-        }
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -40,12 +28,12 @@ class StoreCommentRequest extends FormRequest
      */
     public function rules()
     {
+        $parentId = $this->input('parent_id');
 
         return [
-            'input-body-' . $this->parentId => 'required|string|max:255',
+            'input-body-' . $parentId => 'required|string|max:255',
             'media' => 'nullable|image|max:2048',
             'parent_id' => [
-                'nullable',
                 'exists:comments,id',
                 function ($attribute, $value, $fail) {
                     if ($value) {
@@ -63,14 +51,22 @@ class StoreCommentRequest extends FormRequest
     {
 
         return [
-            'input-body-' . $this->parentId . '.max' => 'Le commentaire ne doit pas faire plus de 255 caractères.',
-            'input-body-' . $this->parentId . '.required' => 'Un commentaire est requis.',
+            'input-body-' . $this->input('parent_id') . '.max' => 'Le commentaire ne doit pas faire plus de 255 caractères.',
+            'input-body-' . $this->input('parent_id') . '.required' => 'Un commentaire est requis.',
         ];
     }
 
     protected function failedValidation(Validator $validator): void
     {
-        $this->session()->flash('failed_id', $this->parentId);
+        $parentId = $this->input('parent_id');
+        $this->session()->flash('failed_id', $parentId);
+        if ($parentId > 0) {
+            $postId = $this->route('post')->id;
+            $response = redirect()->route('comments.show', [$postId, $parentId])
+                ->withInput($this->input())
+                ->withErrors($validator);
+            throw new HttpResponseException($response);
+        }
         parent::failedValidation($validator);
     }
 }

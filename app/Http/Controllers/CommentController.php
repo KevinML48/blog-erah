@@ -26,30 +26,25 @@ class CommentController extends Controller
             $mediaPath = $request->gif_url;
         }
 
-        if (!$request->parent_id) {
-            $bodyId = -1;
-        } else {
-            $bodyId = $request->parent_id;
-        }
-
 
         $commentContent = CommentContent::create([
             'user_id' => auth()->id(),
-            'body' => $request->input("input-body-$bodyId"),
+            'body' => $request->input("input-body-$request->parent_id"),
             'media' => $mediaPath,
         ]);
-        if ($request->parent_id === -1) {
+
+        if ($request->parent_id == -1) {
             $parentId = null;
         } else {
             $parentId = $request->parent_id;
         }
-        $comment = Comment::create([
+        $newComment = Comment::create([
             'post_id' => $post->id,
             'parent_id' => $parentId,
             'content_id' => $commentContent->id,
         ]);
 
-        return redirect()->route('comments.show', [$post->id, $comment->id])->with('success', 'Commentaire ajouté.');
+        return redirect()->route('comments.show', [$newComment->post->id, $newComment->id])->with('success', 'Commentaire ajouté.');
     }
 
 
