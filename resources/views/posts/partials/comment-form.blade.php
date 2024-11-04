@@ -65,11 +65,23 @@
             <a href="https://tenor.com/legal-terms" target="_blank" class="text-xs text-gray-400 hover:underline">Powered
                 by Tenor</a>
         </div>
-        <x-text-input id="searchQuery" placeholder="Search Tenor"></x-text-input>
-        <div id="gifResults" class="grid grid-cols-2 gap-2 mb-4 overflow-auto flex-grow"></div>
-        <div class="flex justify-end">
-            <x-cancel-button onclick="toggleModal()"> Annuler</x-cancel-button>
-            <x-secondary-button onclick="performSearch()"> Chercher</x-secondary-button>
-        </div>
+        <form onsubmit="performSearch(); return false;" class="flex flex-col">
+            <x-text-input id="searchQuery" placeholder="Search Tenor" class="w-full mb-2"></x-text-input>
+            <div id="gifResults" class="grid grid-cols-2 gap-2 mb-4 overflow-auto flex-grow"></div>
+            <div class="flex justify-end">
+                <x-cancel-button onclick="toggleModal()"> Annuler</x-cancel-button>
+                <x-secondary-button type="submit"> Chercher</x-secondary-button> <!-- Submit button -->
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+    function performSearch() {
+        // Your search logic here
+        const query = document.getElementById('searchQuery').value;
+        console.log('Searching for:', query);
+        // Add your search logic here...
+    }
+</script>
+

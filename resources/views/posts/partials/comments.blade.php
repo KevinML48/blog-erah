@@ -81,7 +81,6 @@
     function performSearch() {
         const query = document.getElementById('searchQuery').value;
         if (!query) {
-            alert('Please enter a search term');
             return;
         }
 
