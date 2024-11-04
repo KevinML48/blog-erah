@@ -5,7 +5,9 @@
             @if ($comment->contentExists())
                 @include('posts.partials.comment-content', ['content' => $comment->content])
             @else
-                <span class="text-red-500 italic">Commentaire introuvable.</span>
+                <div class="py-5 p-2">
+                    <span class="text-red-500 italic">Commentaire introuvable.</span>
+                </div>
             @endif
 
             <!-- Replies Button -->
