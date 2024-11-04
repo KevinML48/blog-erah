@@ -101,13 +101,14 @@
     });
 
     function showMore(contentId) {
+        event.preventDefault();
+
         const contentPreview = document.getElementById(`content-preview-${contentId}`);
         const buttonMore = document.getElementById(`toggle-button-more-${contentId}`);
         const buttonLess = document.getElementById(`toggle-button-less-${contentId}`);
 
         // Store the current max height
         const currentMaxHeightClass = Array.from(contentPreview.classList).find(cls => cls.startsWith('max-h-'));
-        const currentMaxHeight = contentPreview.offsetHeight;
 
         // Expand the content
         contentPreview.classList.remove(currentMaxHeightClass);
@@ -122,6 +123,8 @@
     }
 
     function showLess(contentId) {
+        event.preventDefault();
+
         const contentPreview = document.getElementById(`content-preview-${contentId}`);
         const buttonMore = document.getElementById(`toggle-button-more-${contentId}`);
         const buttonLess = document.getElementById(`toggle-button-less-${contentId}`);
