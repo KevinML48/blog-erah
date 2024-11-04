@@ -28,18 +28,27 @@ class StoreCommentRequest extends FormRequest
      */
     public function rules()
     {
-        $parentId = $this->input('parent_id');
+        $formId = $this->input('parent_id');
 
         return [
-            'input-body-' . $parentId => 'required|string|max:255',
+            'input-body-' . $formId => 'required|string|max:255',
             'media' => 'nullable|image|max:2048',
             'parent_id' => [
-                'exists:comments,id',
                 function ($attribute, $value, $fail) {
+                    if ($value == -1) {
+                        return;
+                    }
+
                     if ($value) {
                         $parentComment = Comment::find($value);
-                        if ($parentComment && $parentComment->post_id !== $this->route('post')->id) {
-                            $fail("Le commentaire selectionné n'apartient pas à ce post.");
+
+                        if (!$parentComment || is_null($parentComment->content_id)) {
+                            $fail("Commentaire supprimé ou introuvable.");
+                            return;
+                        }
+
+                        if ($parentComment->post_id !== $this->route('post')->id) {
+                            $fail();
                         }
                     }
                 },
