@@ -43,58 +43,51 @@
 @if ($comments->hasMorePages())
     <script>
         document.getElementById('load-more').addEventListener('click', function () {
-            const button = this;
-            const url = button.getAttribute('data-url');
-            const currentPage = parseInt(button.getAttribute('data-page'));
-
-            fetch(`${url}?page=${currentPage}`)
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById('comments-container').insertAdjacentHTML('beforeend', data.comments);
-
-                    convertTimes();
-
-                    button.setAttribute('data-page', currentPage + 1);
-
-                    if (!data.hasMore) {
-                        button.style.display = 'none';
-                    }
-                });
+            const url = this.getAttribute('data-url');
+            loadMore(this, url);
         });
     </script>
 @endif
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.load-more-replies').forEach(button => {
             button.addEventListener('click', function () {
                 const url = this.getAttribute('data-url');
-                const currentReplyPage = parseInt(this.getAttribute('data-page'));
-
-                fetch(`${url}?page=${currentReplyPage}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        const repliesContainer = document.getElementById(`replies-container-${data.commentId}`);
-
-                        if (repliesContainer) {
-                            repliesContainer.insertAdjacentHTML('beforeend', data.replies);
-
-                            convertTimes();
-
-                            this.setAttribute('data-page', currentReplyPage + 1);
-
-                            if (!data.hasMore) {
-                                this.style.display = 'none';
-                            }
-                        } else {
-                            console.error(`Replies container with ID 'replies-container-${data.commentId}' not found.`);
-                        }
-                    })
-                    .catch(error => console.error('Error loading more replies:', error));
+                loadMore(this, url);
             });
         });
     });
 </script>
 
+
+<script>
+    function loadMore(button, url) {
+        const currentPage = parseInt(button.getAttribute('data-page'));
+
+        fetch(`${url}?page=${currentPage}`)
+            .then(response => response.json())
+            .then(data => {
+                const containerId = button.classList.contains('load-more-replies')
+                    ? `replies-container-${data.commentId}`
+                    : 'comments-container';
+                const container = document.getElementById(containerId);
+
+                if (container) {
+                    container.insertAdjacentHTML('beforeend', data.comments || data.replies);
+                    convertTimes();
+                    button.setAttribute('data-page', currentPage + 1);
+
+                    if (!data.hasMore) {
+                        button.style.display = 'none';
+                    }
+                } else {
+                    console.error(`Container with ID '${containerId}' not found.`);
+                }
+            })
+            .catch(error => console.error('Error loading more comments/replies:', error));
+    }
+</script>
 
 <script>
     function toggleModal(parentId) {
