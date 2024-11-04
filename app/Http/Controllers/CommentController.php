@@ -92,15 +92,17 @@ class CommentController extends Controller
         ]);
     }
 
-    public function destroy($id): RedirectResponse
+    public function destroy(Comment $comment): RedirectResponse
     {
-        $commentContent = CommentContent::findOrFail($id);
+        $commentContent = $comment->content;
 
-        if (Auth::user()->id !== $commentContent->user_id && !Auth::user()->isAdmin()) {
+        if (
+            !$comment->contentExists()
+            ||
+            (Auth::user()->id !== $commentContent->user_id && !Auth::user()->isAdmin())) {
             abort(403, 'Unauthorized action.');
         }
 
-        $comment = $commentContent->comment;
 
         $mediaPath = $commentContent->media;
         if ($commentContent->media && Storage::disk('public')->exists($mediaPath)) {
@@ -109,16 +111,19 @@ class CommentController extends Controller
 
         $commentContent->delete();
 
-        $this->checkAndDeleteComment($comment);
-        if ($comment->parent) {
-            return redirect()->route('comments.show', [$comment->post->id, $comment->parent->id])->with('success', 'Comment deleted successfully.');
+        $firstExistingParent = $this->checkAndDeleteComment($comment);
+
+        if ($firstExistingParent) {
+            return redirect()->route('comments.show', [$comment->post->id, $firstExistingParent->id])
+                ->with('success', 'Comment deleted successfully.');
         }
-        return redirect()->route('posts.show', [$comment->post->id])->with('success', 'Comment deleted successfully.');
+
+        return redirect()->route('posts.show', [$comment->post->id])
+            ->with('success', 'Comment deleted successfully.');
     }
 
-    protected function checkAndDeleteComment($comment): void
+    protected function checkAndDeleteComment($comment)
     {
-
         if (!$comment->contentExists() && $comment->replies()->count() === 0) {
             $parent = $comment->parent;
             $comment->delete();
@@ -126,11 +131,15 @@ class CommentController extends Controller
             if ($parent) {
                 $parentComment = Comment::find($parent->id);
                 if ($parentComment) {
-                    $this->checkAndDeleteComment($parentComment);
+                    return $this->checkAndDeleteComment($parentComment);
                 }
+            } else {
+                return null;
             }
         }
+        return $comment;
     }
+
 
     public function searchTenor(Request $request)
     {
