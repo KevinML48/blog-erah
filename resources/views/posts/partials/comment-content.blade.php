@@ -1,4 +1,4 @@
-<a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->id]) }}">
+<a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}">
     <div class="py-2 p-2 flex flex-col border-b border-gray-300 bg-gray-900 hover:bg-gray-800">
         <div class="flex justify-between items-start">
             <div class="flex items-center space-x-2">
