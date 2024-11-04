@@ -14,13 +14,15 @@
                 </div>
                 <!-- Name -->
                 <div>
-                    <span class="erah-link font-bold">
-                        {{ $content->user->name }}
-                    </span>
+                    <form action="{{ route('profile.show', $content->user->name) }}" method="GET" class="inline">
+                        <button type="submit" class="erah-link font-bold text-left focus:outline-none">
+                            {{ $content->user->name }}
+                        </button>
+                    </form>
                 </div>
             </div>
 
-            <div class="flex space-x-2">
+            <div class="flex space-x-2 ml-auto">
                 <!-- Delete Link -->
                 <div>
                     @if (auth()->user() && (auth()->user()->id === $content->user->id || auth()->user()->isAdmin()))
@@ -73,6 +75,8 @@
         @endif
     </div>
 </a>
+
+
 
 
 
