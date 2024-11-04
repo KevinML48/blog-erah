@@ -30,7 +30,8 @@
                 @if ($comment->replies()->count() > 0)
                     <button class="load-more-replies text-sm text-blue-600"
                             data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
-                            data-page="0">
+                            data-page="0"
+                            onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
                         Charger plus de commentaires
                     </button>
                 @endif
@@ -38,7 +39,8 @@
                 @if ($comment->replies()->count() > 2)
                     <button class="load-more-replies text-sm text-blue-600"
                             data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
-                            data-page="1">
+                            data-page="1"
+                            onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
                         Charger plus de commentaires
                     </button>
                 @endif

@@ -34,32 +34,12 @@
 
     @if ($comments->hasMorePages())
         <button id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}"
-                data-page="{{ $comments->currentPage() }}">
+                data-page="{{ $comments->currentPage() }}"
+                onclick="loadMore(this, '{{ route('comments.loadMore', ['post' => $post->id]) }}')">
             Charger plus de commentaires
         </button>
     @endif
 </div>
-
-@if ($comments->hasMorePages())
-    <script>
-        document.getElementById('load-more').addEventListener('click', function () {
-            const url = this.getAttribute('data-url');
-            loadMore(this, url);
-        });
-    </script>
-@endif
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.load-more-replies').forEach(button => {
-            button.addEventListener('click', function () {
-                const url = this.getAttribute('data-url');
-                loadMore(this, url);
-            });
-        });
-    });
-</script>
-
 
 <script>
     function loadMore(button, url) {
@@ -388,9 +368,7 @@
             const failedId = "{{ session('failed_id') }}";
             const targetElement = document.getElementById("reply-form-" + failedId);
 
-            if (failedId > 0) {
                 showReplyForm(failedId);
-            }
 
             if (targetElement) {
                 targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -398,3 +376,4 @@
         });
     </script>
 @endif
+
