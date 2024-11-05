@@ -9,6 +9,7 @@ use App\Models\Post;
 use App\Models\Theme;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
@@ -144,5 +145,27 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+
+    public function like(Post $post)
+    {
+        if (!$post->likes()->where('user_id', Auth::id())->exists()) {
+            $post->likes()->create(['user_id' => Auth::id()]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'likes_count' => $post->likes()->count(),
+        ]);
+    }
+
+    public function unlike(Post $post)
+    {
+        $post->likes()->where('user_id', Auth::id())->delete();
+
+        return response()->json([
+            'success' => true,
+            'likes_count' => $post->likes()->count(),
+        ]);
     }
 }

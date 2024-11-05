@@ -30,8 +30,15 @@ Route::get('/posts/{post}/comments/load-more-comments', [CommentController::clas
 Route::get('/comments/{comment}/load-more-replies', [CommentController::class, 'loadMoreReplies'])->name('comments.loadMoreReplies');
 
 Route::middleware('auth')->group(function () {
+    Route::post('/comments/{comment}/like', [CommentController::class, 'like'])->name('comments.like');
+    Route::delete('/comments/{comment}/unlike', [CommentController::class, 'unlike'])->name('comments.unlike');
+
+
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+    Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
+    Route::delete('/posts/{post}/unlike', [PostController::class, 'unlike'])->name('posts.unlike');
 
 });
 

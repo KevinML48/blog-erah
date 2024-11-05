@@ -168,4 +168,37 @@ class CommentController extends Controller
         }
     }
 
+    public function like(Comment $comment)
+    {
+        // Check if the user has already liked this content
+        if (!$comment->content->likes()->where('user_id', Auth::id())->exists()) {
+            // Create a new like for the content associated with the comment
+            $comment->content->likes()->create([
+                'user_id' => Auth::id(),
+            ]);
+        }
+
+        // Return a JSON response with updated likes count
+        return response()->json([
+            'message' => 'Comment liked successfully!',
+            'likes_count' => $comment->content->likes()->count(), // Return updated like count
+        ]);
+    }
+
+    public function unlike(Comment $comment)
+    {
+        // Find the like for the content by the current user
+        $like = $comment->content->likes()->where('user_id', Auth::id())->first();
+
+        if ($like) {
+            // Delete the like
+            $like->delete();
+        }
+
+        // Return a JSON response with updated likes count
+        return response()->json([
+            'message' => 'Comment unliked successfully!',
+            'likes_count' => $comment->content->likes()->count(), // Return updated like count
+        ]);
+    }
 }
