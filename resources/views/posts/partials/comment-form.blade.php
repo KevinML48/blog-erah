@@ -26,13 +26,22 @@
 
                 <!-- Image Upload -->
                 <div id="mediaUpload-{{ $parentId }}" class="media-upload ml-2">
+
                     <input type="file" name="media" id="media-{{ $parentId }}"
-                           class="mt-1 w-full border-gray-300 rounded-md shadow-sm text-white" accept="image/*"
+                           class="hidden" accept="image/*"
                            onchange="previewImage({{ $parentId }})">
+
+                    <label for="media-{{ $parentId }}"
+                           class="erah-button">
+                        Télécharger une Image
+                    </label>
+
                     @error('media')
                     <span class="text-red-600 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
+
+
             </div>
 
             <div class="flex items-center">
