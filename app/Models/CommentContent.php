@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class CommentContent extends Model
 {
@@ -45,6 +46,25 @@ class CommentContent extends Model
                 return $sanitizedContent;
             }
         );
+    }
+
+    public function likes(): MorphMany
+    {
+        return $this->morphMany(Like::class, 'likeable');
+    }
+
+    public function isLikedBy(User $user)
+    {
+        return $this->likes()->where('user_id', $user->id)->exists();
+    }
+
+    protected static function boot(): void
+    {
+        parent::boot();
+
+        static::deleting(function ($content) {
+            $content->likes()->delete();
+        });
     }
 }
 

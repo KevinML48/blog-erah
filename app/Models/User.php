@@ -62,4 +62,19 @@ class User extends Authenticatable
     {
         return $this->role === 'admin';
     }
+
+    public function likes()
+    {
+        return $this->hasMany(Like::class);
+    }
+
+    public function likedPosts()
+    {
+        return $this->morphedByMany(Post::class, 'likeable', 'likes');
+    }
+
+    public function likedComments()
+    {
+        return $this->morphedByMany(Comment::class, 'likeable', 'likes');
+    }
 }
