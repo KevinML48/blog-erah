@@ -20,22 +20,22 @@ class ProfileController extends Controller
     public function show(Request $request, $username): View
     {
         $user = $request->user()->where('name', $username)->firstOrFail();
-        $comments = $user->comments()->latest()->take(5)->get();
+        $contents = $user->commentContents()->latest()->take(5)->get();
 
         return view('profile.show', [
             'user' => $user,
-            'comments' => $comments,
+            'comments' => $contents,
         ]);
     }
 
     public function comments(Request $request, $username): View
     {
         $user = User::where('name', $username)->firstOrFail();
-        $comments = $user->comments()->latest()->paginate(15);
+        $contents = $user->commentContents()->latest()->paginate(15);
 
         return view('profile.comments', [
             'user' => $user,
-            'comments' => $comments,
+            'contents' => $contents,
         ]);
     }
 

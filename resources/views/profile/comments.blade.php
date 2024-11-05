@@ -9,14 +9,17 @@
             <h2 class="font-bold text-lg">Commentaires</h2>
 
             <div id="comments-container">
-                @foreach ($comments as $comment)
-                    @include('posts.partials.comment-content', ['content' => $comment])
+                @foreach ($contents as $content)
+                    @include('posts.partials.comment', ['comment' => $content->comment, 'depth' => -1])
                 @endforeach
             </div>
 
             <!-- Pagination Links -->
-            {{ $comments->links() }}
+            {{ $contents->links() }}
 
         </div>
     </div>
+
+    <script src="{{ asset('js/comment-form.js') }}" defer></script>
+    <script src="{{ asset('js/likes.js') }}" defer></script>
 </x-app-layout>
