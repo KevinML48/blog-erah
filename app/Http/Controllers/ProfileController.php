@@ -100,12 +100,35 @@ class ProfileController extends Controller
 
         Auth::logout();
 
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+
         $user->delete();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
         return Redirect::to('/');
+    }
+
+    public function adminDestroy(User $user, Request $request)
+    {
+        if (auth()->user()->role !== 'admin') {
+            abort(403);
+        }
+
+        if ($user->id === auth()->id()) {
+            return redirect()->route('admin.users.search')->with('error', 'Vous ne pouvez pas supprimer votre compte ici.');
+        }
+
+        if ($user->profile_picture) {
+            Storage::disk('public')->delete($user->profile_picture);
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.users.search')->with('success', 'Utilisateur supprimé.');
     }
 
     public function updateProfilePicture(Request $request)

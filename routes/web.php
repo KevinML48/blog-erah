@@ -80,6 +80,7 @@ Route::middleware('can:administrate')->group(function () {
     // User Management in Admin Zone
     Route::get('/admin/users/search', [ProfileController::class, 'search'])->name('admin.users.search');
     Route::get('/admin/users/{user}/change-role/{role}', [ProfileController::class, 'changeRole'])->name('admin.users.changeRole');
+    Route::get('/admin/users/{user}/delete', [ProfileController::class, 'adminDestroy'])->name('admin.users.delete');
 
 });
 
