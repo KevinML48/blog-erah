@@ -11,7 +11,7 @@
     <td class="py-2 px-4 border-b">{{ $user->email }}</td>
     {{--  User Role  --}}
     <td class="py-2 px-4 border-b">
-        <x-role-span :role="$user->role">
+        <x-role-span :role="$user->role" :badge="false">
             {{ ucfirst($user->role) }}
         </x-role-span>
 
