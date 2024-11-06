@@ -9,10 +9,10 @@
     {{ $slot }}
     @if($badge)
         @if($role == 'admin')
-            <x-svg-admin />
+            <x-badge-admin />
         @endif
         @if($role == 'ultra')
-            <x-svg-ultra />
+            <x-badge-ultra />
         @endif
     @endif
 </span>
