@@ -37,6 +37,8 @@ Route::middleware('auth')->group(function () {
     // User Profile Routes
     Route::get('/user/{username}', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/user/{username}/comments', [ProfileController::class, 'comments'])->name('profile.comments');
+    Route::get('/user/{username}/likes/comments', [ProfileController::class, 'commentLikes'])->name('profile.likes.comments');
+    Route::get('/user/{username}/likes/posts', [ProfileController::class, 'postLikes'])->name('profile.likes.posts');
 
     // Profile Settings
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

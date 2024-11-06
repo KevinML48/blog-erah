@@ -75,6 +75,6 @@ class User extends Authenticatable
 
     public function likedComments()
     {
-        return $this->morphedByMany(Comment::class, 'likeable', 'likes');
+        return $this->morphedByMany(CommentContent::class, 'likeable', 'likes');
     }
 }

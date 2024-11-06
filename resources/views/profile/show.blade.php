@@ -39,6 +39,21 @@
                                 Voir tous les commentaires
                             </a>
                         </div>
+
+                        <!-- Link to View All Comment Likes -->
+                        <div class="mt-4">
+                            <a href="{{ route('profile.likes.comments', ['username' => $user->name]) }}" class="text-blue-600 hover:underline">
+                                Voir tous les commentaires likés
+                            </a>
+                        </div>
+
+                        <!-- Link to View All Post Likes -->
+                        <div class="mt-4">
+                            <a href="{{ route('profile.likes.posts', ['username' => $user->name]) }}" class="text-blue-600 hover:underline">
+                                Voir tous les posts likés
+                            </a>
+                        </div>
+
                     </div>
                 </div>
 

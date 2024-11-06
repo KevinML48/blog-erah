@@ -39,6 +39,28 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function commentLikes($username): View
+    {
+        $user = User::where('name', $username)->firstOrFail();
+        $contents = $user->likedComments()->latest()->paginate(15);
+
+        return view('profile.likes.comments', [
+            'user' => $user,
+            'contents' => $contents,
+        ]);
+    }
+
+    public function postLikes($username): View
+    {
+        $user = User::where('name', $username)->firstOrFail();
+        $posts = $user->likedPosts()->latest()->paginate(15);
+
+        return view('profile.likes.posts', [
+            'user' => $user,
+            'posts' => $posts,
+        ]);
+    }
+
     /**
      * Display the user's profile form.
      */
