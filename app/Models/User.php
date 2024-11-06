@@ -77,4 +77,20 @@ class User extends Authenticatable
     {
         return $this->morphedByMany(CommentContent::class, 'likeable', 'likes');
     }
+
+    // The Users that the current User follows
+    public function follows()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'follower_id', 'followed_id');
+    }
+
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'follows', 'followed_id', 'follower_id');
+    }
+
+    public function isFollowing(User $user)
+    {
+        return $this->follows()->where('followed_id', $user->id)->exists();
+    }
 }
