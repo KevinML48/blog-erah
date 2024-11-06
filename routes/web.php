@@ -66,7 +66,7 @@ Route::middleware('auth')->group(function () {
 // =======================================
 // Admin Routes
 // =======================================
-Route::middleware('can:create_post')->group(function () {
+Route::middleware('can:administrate')->group(function () {
 
     // Admin Dashboard
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
