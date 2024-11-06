@@ -1,85 +1,104 @@
-<a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}">
-    <div class="py-2 p-2 flex flex-col border-b border-gray-300 bg-gray-900 hover:bg-gray-800">
-        <div class="flex justify-between items-start">
-            <div class="flex items-center space-x-2">
-                <!-- Profile Picture -->
-                <div>
-                    @if($content->user->profile_picture)
-                        <img src="{{ asset('storage/' . $content->user->profile_picture) }}" alt="Profile Picture"
-                             class="w-12 h-12 rounded-full object-cover">
-                    @else
-                        <img src="{{ asset('storage/profile_picture/default.png')}}" alt="Profile Picture"
-                             class="w-12 h-12 rounded-full object-cover">
-                    @endif
-                </div>
-                <!-- Name -->
-                <div>
-                    <form action="{{ route('profile.show', $content->user->name) }}" method="GET" class="inline">
-                        <button type="submit" class="erah-link font-bold text-left focus:outline-none">
-                            <x-role-span :role="$content->user->role">
-                                {{ $content->user->name }}
-                            </x-role-span>
+<div class="py-2 p-2 flex flex-col border-b border-gray-300 bg-gray-900">
+    <div class="flex justify-between items-start">
+        <div class="flex items-center space-x-2">
+            <!-- Profile Picture -->
+            <div>
+                @if($content->user->profile_picture)
+                    <img src="{{ asset('storage/' . $content->user->profile_picture) }}" alt="Profile Picture"
+                         class="w-12 h-12 rounded-full object-cover">
+                @else
+                    <img src="{{ asset('storage/profile_pictures/default.png')}}" alt="Default Profile Picture"
+                         class="w-12 h-12 rounded-full object-cover">
+                @endif
+            </div>
+            <!-- Name -->
+            <div>
+                <a href="{{ route('profile.show', $content->user->name) }}"
+                   class="erah-link font-bold text-left focus:outline-none">
+                    <x-role-span :role="$content->user->role">
+                        {{ $content->user->name }}
+                    </x-role-span>
+                </a>
+            </div>
+        </div>
+
+        <div class="flex space-x-2 ml-auto">
+            <!-- Delete Link -->
+            <div>
+                @if (auth()->user() && (auth()->user()->id === $content->user->id || auth()->user()->isAdmin()))
+                    <form action="{{ route('comments.destroy', $content->comment) }}" method="POST" class="inline"
+                          onsubmit="return confirmDelete();">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="text-red-600 hover:underline">
+                            Supprimer
                         </button>
                     </form>
-                </div>
+                @endif
             </div>
 
-            <div class="flex space-x-2 ml-auto">
-                <!-- Delete Link -->
+            @if(auth()->user() != $content->user)
                 <div>
-                    @if (auth()->user() && (auth()->user()->id === $content->user->id || auth()->user()->isAdmin()))
-                        <form action="{{ route('comments.destroy', $content->comment) }}" method="POST" class="inline"
-                              onsubmit="return confirmDelete();">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600 hover:underline">
-                                Supprimer
-                            </button>
-                        </form>
-                    @endif
+                    <button id="unfollow-button-{{ $content->user->id }}"
+                            class="follow-button {{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}"
+                            data-following="true"
+                            onclick="unfollowUser({{ $content->user->id }})"
+                            data-user-id="{{ $content->user->id }}">
+                        Se désabonner
+                    </button>
+                    <button id="follow-button-{{ $content->user->id }}"
+                            class="follow-button {{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }}"
+                            data-following="false"
+                            onclick="followUser({{ $content->user->id }})"
+                            data-user-id="{{ $content->user->id }}">
+                        S'abonner
+                    </button>
                 </div>
-                <!-- Creation Date -->
-                <div>
+            @endif
+
+            <!-- Creation Date -->
+            <div>
                     <span class="text-gray-500 text-sm convert-time"
                           data-time="{{ $content->created_at->toIso8601String() }}">
                           {{ $content->created_at->diffForHumans() }}
                     </span>
-                </div>
             </div>
         </div>
+    </div>
 
-        <!-- Body -->
-        <div class="py-2 ml-14">
-            <div id="content-preview-{{ $content->id }}"
-                 class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
-                {!! nl2br(e($content->body)) !!}
-            </div>
-            <span id="toggle-container-{{ $content->id }}" class="hidden">
+    <!-- Body -->
+    <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}"
+       class="py-4">
+        <div class="hover:bg-gray-800 rounded">
+            <div class="py-2 ml-14">
+                <div id="content-preview-{{ $content->id }}"
+                     class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
+                    {!! nl2br(e($content->body)) !!}
+                </div>
+                <span id="toggle-container-{{ $content->id }}" class="hidden">
                 <button id="toggle-button-more-{{ $content->id }}" class="mt-2 text-blue-600 hover:underline"
                         onclick="showMore({{ $content->id }})">Dérouler</button>
                 <button id="toggle-button-less-{{ $content->id }}" class="mt-2 text-blue-600 hover:underline hidden"
                         onclick="showLess({{ $content->id }})">Cacher</button>
             </span>
-        </div>
-
-        <!-- Media -->
-        @if ($content->media)
-            <div class="py-2 ml-14">
-                @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
-                    <!-- If it's a Tenor GIF URL -->
-                    <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
-                @else
-                    <!-- If it's an uploaded image -->
-                    <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
-                         class="object-contain h-48 w-48">
-                @endif
             </div>
-        @endif
-    </div>
-</a>
 
-
-
+            <!-- Media -->
+            @if ($content->media)
+                <div class="py-2 ml-14">
+                    @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
+                        <!-- If it's a Tenor GIF URL -->
+                        <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
+                    @else
+                        <!-- If it's an uploaded image -->
+                        <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
+                             class="object-contain h-48 w-48">
+                    @endif
+                </div>
+            @endif
+        </div>
+    </a>
+</div>
 
 
 <script>

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\FollowController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,10 @@ Route::middleware('auth')->group(function () {
     // Post Actions
     Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
     Route::delete('/posts/{post}/unlike', [PostController::class, 'unlike'])->name('posts.unlike');
+
+    // Follow Actions
+    Route::post('/follow/{user}', [FollowController::class, 'follow'])->name('user.follow');
+    Route::post('/unfollow/{user}', [FollowController::class, 'unfollow'])->name('user.unfollow');
 
     // Tenor GIF Search
     Route::get('/tenor/search', [CommentController::class, 'searchTenor'])->name('tenor.search');
