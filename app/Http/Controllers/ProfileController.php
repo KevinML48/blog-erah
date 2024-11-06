@@ -155,6 +155,8 @@ class ProfileController extends Controller
     {
         $search = $request->input('search');
         $role = $request->input('role');
+        $sort = $request->input('sort', 'created_at'); // Default sort by created_at
+        $direction = $request->input('direction', 'desc'); // Default direction is descending
 
         $query = User::query();
 
@@ -169,6 +171,8 @@ class ProfileController extends Controller
             $query->where('role', $role);
         }
 
+        $query->orderBy($sort, $direction);
+
         $users = $query->paginate(50);
 
         if ($request->ajax()) {
@@ -182,6 +186,7 @@ class ProfileController extends Controller
 
         return view('admin.users.search', compact('users'));
     }
+
 
     public function changeRole(User $user, $role, Request $request)
     {
