@@ -159,4 +159,24 @@ class ProfileController extends Controller
 
         return view('admin.users.search', compact('users'));
     }
+
+    public function changeRole(User $user, $role, Request $request)
+    {
+        if (!in_array($role, ['user', 'ultra', 'admin'])) {
+            return redirect()->route('admin.users.search')->with('error', 'Rôle invalide');
+        }
+
+        $user->role = $role;
+        $user->save();
+
+        $query = $request->query('search', '');
+        $page = $request->query('page', 1);
+
+        return redirect()->route('admin.users.search', [
+            'search' => $query,
+            'page' => $page
+        ])->with('success', 'Rôle changé avec succès');
+    }
+
+
 }
