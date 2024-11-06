@@ -127,4 +127,36 @@ class ProfileController extends Controller
 
         return redirect()->back()->with('success', 'Profile picture updated successfully!');
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->input('search');
+        $role = $request->input('role');
+
+        $query = User::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        if ($role) {
+            $query->where('role', $role);
+        }
+
+        $users = $query->paginate(50);
+
+        if ($request->ajax()) {
+            $html = '';
+            foreach ($users as $user) {
+                $html .= view('admin.partials.user', ['user' => $user])->render();
+            }
+
+            return response()->json(['html' => $html, 'count' => $users->count()]);
+        }
+
+        return view('admin.users.search', compact('users'));
+    }
 }

@@ -76,6 +76,9 @@ Route::middleware('can:administrate')->group(function () {
     Route::post('/admin/posts/store', [PostController::class, 'store'])->name('admin.posts.store');
     Route::get('/admin/posts/{post}/edit', [PostController::class, 'edit'])->name('admin.posts.edit');
     Route::put('/admin/posts/{post}', [PostController::class, 'update'])->name('admin.posts.update');
+
+    // User Management in Admin Zone
+    Route::get('/admin/users/search', [ProfileController::class, 'search'])->name('admin.users.search');
 });
 
 require __DIR__ . '/auth.php';
