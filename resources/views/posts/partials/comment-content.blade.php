@@ -16,7 +16,9 @@
                 <div>
                     <form action="{{ route('profile.show', $content->user->name) }}" method="GET" class="inline">
                         <button type="submit" class="erah-link font-bold text-left focus:outline-none">
-                            {{ $content->user->name }}
+                            <x-role-span :role="$content->user->role">
+                                {{ $content->user->name }}
+                            </x-role-span>
                         </button>
                     </form>
                 </div>
