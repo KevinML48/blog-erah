@@ -30,14 +30,7 @@
                 <div class="p-6">
                     <h2 class="mt-6 text-lg font-semibold" id="resultsTitle">{{ $users->total() }} Résultats</h2>
                     <table class="min-w-full mt-4 border border-gray-200">
-                        <thead>
-                        <tr class="text-left">
-                            <th class="py-2 px-4 border-b">{{ __('Nom') }}</th>
-                            <th class="py-2 px-4 border-b">{{ __('Email') }}</th>
-                            <th class="py-2 px-4 border-b">{{ __('Role') }}</th>
-                            <th class="py-2 px-4 border-b">{{ __('Inscrit le') }}</th>
-                        </tr>
-                        </thead>
+                        @include('admin.partials.user-table-head')
                         <tbody id="results">
                         @foreach($users as $user)
                             @include('admin.partials.user', ['user' => $user])
