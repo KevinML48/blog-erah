@@ -115,11 +115,11 @@ class CommentController extends Controller
 
         if ($firstExistingParent) {
             return redirect()->route('comments.show', [$comment->post->id, $firstExistingParent->id])
-                ->with('success', 'Comment deleted successfully.');
+                ->with('success', 'Commentaire supprimé.');
         }
 
         return redirect()->route('posts.show', [$comment->post->id])
-            ->with('success', 'Comment deleted successfully.');
+            ->with('success', 'Commentaire supprimé.');
     }
 
     protected function checkAndDeleteComment($comment)

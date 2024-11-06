@@ -125,7 +125,7 @@ class ProfileController extends Controller
         $user->profile_picture = $path;
         $user->save();
 
-        return redirect()->back()->with('success', 'Profile picture updated successfully!');
+        return redirect()->back()->with('success', 'Image de profil téléchargée');
     }
 
     public function search(Request $request)

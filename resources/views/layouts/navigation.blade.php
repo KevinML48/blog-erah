@@ -1,4 +1,24 @@
 <nav x-data="{ open: false }" class="border-b border-gray-100">
+    <!-- Success/Error Banner -->
+    @if(session('success'))
+        <div class="fixed inset-x-0 top-0 z-50 bg-green-500 bg-opacity-20 text-center py-2 transition-all duration-1000 ease-in-out mx-auto max-w-md rounded-lg"
+             x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
+            <div><svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>{{ session('success') }}</div>
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div class="fixed inset-x-0 top-0 z-50 bg-red-500 bg-opacity-20 text-center py-2 transition-all duration-1000 ease-in-out mx-auto max-w-md rounded-lg"
+             x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)">
+            <div><svg class="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"/>
+                </svg>{{ session('error') }}</div>
+        </div>
+    @endif
+
+
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
