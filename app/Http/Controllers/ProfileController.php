@@ -232,9 +232,14 @@ class ProfileController extends Controller
     public function thread(Request $request): View | JsonResponse
     {
         $user = Auth::user();
-        $contents = CommentContent::whereIn('user_id', $user->follows()->pluck('followed_id'))
+        $contents = CommentContent::whereIn('user_id', function ($query) use ($user) {
+            $query->select('followed_id')
+                ->from('follows')
+                ->where('follower_id', $user->id);
+        })
+            ->with('user')
             ->latest()
-            ->paginate(5);
+            ->paginate(20);
 
         if ($request->ajax()) {
             return response()->json([
