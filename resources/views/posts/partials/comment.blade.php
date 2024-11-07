@@ -13,14 +13,14 @@
 
     <!-- Display Replies -->
     <div id="replies-container-{{ $comment->id }}" class="ml-6 mt-2">
-        @if ($depth < 2 && $depth >= 0)
+        @if ($depth < 1 && $depth >= 0)
             @foreach ($comment->replies()->take(2)->get() as $reply)
                 @include('posts.partials.comment-structure', ['comment' => $reply, 'depth' => $depth + 1])
             @endforeach
         @endif
     </div>
 
-    @if ($depth >= 2)
+    @if ($depth >= 1)
         @if ($comment->replies()->count() > 0)
             <button class="load-more-replies text-sm text-blue-600"
                     data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
@@ -30,7 +30,7 @@
             </button>
         @endif
     @else
-        @if ($comment->replies()->count() > 2 && $depth >= 0)
+        @if ($comment->replies()->count() > 1 && $depth >= 0)
             <button class="load-more-replies text-sm text-blue-600"
                     data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
                     data-page="1"
