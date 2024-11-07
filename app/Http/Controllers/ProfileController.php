@@ -29,7 +29,10 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function comments(Request $request, $username): View
+    /**
+     * Display the specified user's comment content list.
+     */
+    public function comments($username): View
     {
         $user = User::where('name', $username)->firstOrFail();
         $contents = $user->commentContents()->latest()->paginate(15);
@@ -40,6 +43,9 @@ class ProfileController extends Controller
         ]);
     }
 
+    /**
+     * Display the specified user's liked comments.
+     */
     public function commentLikes($username): View
     {
         $user = User::where('name', $username)->firstOrFail();
@@ -51,6 +57,9 @@ class ProfileController extends Controller
         ]);
     }
 
+    /**
+     * Display the specified user's liked posts.
+     */
     public function postLikes($username): View
     {
         $user = User::where('name', $username)->firstOrFail();
@@ -113,6 +122,9 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
+    /**
+     * Delete the user's account from the admin dashboard.
+     */
     public function adminDestroy(User $user, Request $request): RedirectResponse
     {
         if (auth()->user()->role !== 'admin') {
@@ -132,6 +144,9 @@ class ProfileController extends Controller
         return redirect()->route('admin.users.search')->with('success', 'Utilisateur supprimé.');
     }
 
+    /**
+     * Update the user's account Profile Picture.
+     */
     public function updateProfilePicture(Request $request): RedirectResponse
     {
         $request->validate([
@@ -152,6 +167,9 @@ class ProfileController extends Controller
         return redirect()->back()->with('success', 'Image de profil téléchargée');
     }
 
+    /**
+     * Search and filter users.
+     */
     public function search(Request $request): View|JsonResponse
     {
         $search = $request->input('search');
@@ -189,6 +207,9 @@ class ProfileController extends Controller
     }
 
 
+    /**
+     * Update the user's role.
+     */
     public function changeRole(User $user, $role, Request $request): RedirectResponse
     {
         if (!in_array($role, ['user', 'ultra', 'admin'])) {
