@@ -37,7 +37,7 @@
                 @endif
             </div>
 
-            @if(auth()->user() != $content->user)
+            @auth
                 <div>
                     <button id="unfollow-button-{{ $content->user->id }}"
                             class="follow-button {{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}"
@@ -54,7 +54,7 @@
                         S'abonner
                     </button>
                 </div>
-            @endif
+            @endauth
 
             <!-- Creation Date -->
             <div>
