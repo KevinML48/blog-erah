@@ -82,13 +82,13 @@ class CommentController extends Controller
     public function loadMoreReplies(Comment $comment, Request $request): JsonResponse
     {
         $currentPage = $request->input('page', 1);
-        $replies = $comment->replies()
+        $comments = $comment->replies()
             ->paginate(2, ['*'], 'page', $currentPage + 1);
 
         return response()->json([
             'commentId' => $comment->id,
-            'replies' => view('posts.partials.replies-loop', compact('replies'))->render(),
-            'hasMore' => $replies->hasMorePages(),
+            'replies' => view('posts.partials.comment-structure-loop', compact('comments'))->render(),
+            'hasMore' => $comments->hasMorePages(),
         ]);
     }
 
