@@ -78,6 +78,7 @@ Route::middleware('can:administrate')->group(function () {
 
     // Admin Dashboard
     Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
+    Route::get('/admin/orphans', [AdminController::class, 'deleteOrphanedContents'])->name('admin.delete.orphans');
 
     // Post Management in Admin Zone
     Route::get('/admin/posts/create', [PostController::class, 'create'])->name('admin.posts.create');

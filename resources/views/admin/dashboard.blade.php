@@ -10,6 +10,7 @@
             <div class="erah-box">
                 <div class="max-w-xl">
                     {{ __("You're an admin!") }}
+                    <a href="{{ route('admin.delete.orphans') }}" class="erah-link">Delete Orphaned comments</a>
                 </div>
             </div>
 

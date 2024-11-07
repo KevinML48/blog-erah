@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CommentContent;
 use App\Models\Post;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -18,5 +21,18 @@ class AdminController extends Controller
             ->get();
 
         return view('admin.dashboard', compact('users', 'posts', 'unpublishedPosts'));
+    }
+
+    public function deleteOrphanedContents(): RedirectResponse
+    {
+        $allContents = CommentContent::all();
+
+        foreach ($allContents as $content) {
+            if (!$content->comment) {
+                $content->delete();
+                Log::info('delete content');
+            }
+        }
+        return redirect()->route('admin');
     }
 }
