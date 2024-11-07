@@ -42,6 +42,7 @@
 </div>
 
 <script src="{{ asset('js/comment-form.js') }}" defer></script>
+<script src="{{ asset('js/follow.js') }}" defer></script>
 <script src="{{ asset('js/load-more.js') }}" defer></script>
 
 
