@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -112,7 +113,7 @@ class ProfileController extends Controller
         return Redirect::to('/');
     }
 
-    public function adminDestroy(User $user, Request $request)
+    public function adminDestroy(User $user, Request $request): RedirectResponse
     {
         if (auth()->user()->role !== 'admin') {
             abort(403);
@@ -131,7 +132,7 @@ class ProfileController extends Controller
         return redirect()->route('admin.users.search')->with('success', 'Utilisateur supprimé.');
     }
 
-    public function updateProfilePicture(Request $request)
+    public function updateProfilePicture(Request $request): RedirectResponse
     {
         $request->validate([
             'profile_picture' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
@@ -151,7 +152,7 @@ class ProfileController extends Controller
         return redirect()->back()->with('success', 'Image de profil téléchargée');
     }
 
-    public function search(Request $request)
+    public function search(Request $request): View|JsonResponse
     {
         $search = $request->input('search');
         $role = $request->input('role');
@@ -188,7 +189,7 @@ class ProfileController extends Controller
     }
 
 
-    public function changeRole(User $user, $role, Request $request)
+    public function changeRole(User $user, $role, Request $request): RedirectResponse
     {
         if (!in_array($role, ['user', 'ultra', 'admin'])) {
             return redirect()->route('admin.users.search')->with('error', 'Rôle invalide');
