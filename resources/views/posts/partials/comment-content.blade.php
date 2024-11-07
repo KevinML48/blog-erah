@@ -38,22 +38,24 @@
             </div>
 
             @auth
-                <div>
-                    <button id="unfollow-button-{{ $content->user->id }}"
-                            class="follow-button {{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}"
-                            data-following="true"
-                            onclick="unfollowUser({{ $content->user->id }})"
-                            data-user-id="{{ $content->user->id }}">
-                        Se désabonner
-                    </button>
-                    <button id="follow-button-{{ $content->user->id }}"
-                            class="follow-button {{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }}"
-                            data-following="false"
-                            onclick="followUser({{ $content->user->id }})"
-                            data-user-id="{{ $content->user->id }}">
-                        S'abonner
-                    </button>
-                </div>
+                @if(auth()->user() != $content->user)
+                    <div>
+                        <button id="unfollow-button-{{ $content->user->id }}"
+                                class="follow-button {{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}"
+                                data-following="true"
+                                onclick="unfollowUser({{ $content->user->id }})"
+                                data-user-id="{{ $content->user->id }}">
+                            Se désabonner
+                        </button>
+                        <button id="follow-button-{{ $content->user->id }}"
+                                class="follow-button {{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }}"
+                                data-following="false"
+                                onclick="followUser({{ $content->user->id }})"
+                                data-user-id="{{ $content->user->id }}">
+                            S'abonner
+                        </button>
+                    </div>
+                @endif
             @endauth
 
             <!-- Creation Date -->
