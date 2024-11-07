@@ -5,24 +5,30 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\CommentContent;
 use App\Models\User;
+use App\Services\ProfileServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
 {
+    protected ProfileServiceInterface $profileService;
+
+    public function __construct(ProfileServiceInterface $profileService)
+    {
+        $this->profileService = $profileService;
+    }
 
     /**
      * Display the specified user's profile.
      */
-    public function show(Request $request, $username): View
+    public function show($username): View
     {
-        $user = $request->user()->where('name', $username)->firstOrFail();
-        $contents = $user->commentContents()->latest()->take(5)->get();
+        $user = $this->profileService->getUserProfile($username);
+        $contents = $this->profileService->getUserComments($user, 5);
 
         return view('profile.show', [
             'user' => $user,
@@ -35,8 +41,8 @@ class ProfileController extends Controller
      */
     public function comments($username): View
     {
-        $user = User::where('name', $username)->firstOrFail();
-        $contents = $user->commentContents()->latest()->paginate(15);
+        $user = $this->profileService->getUserProfile($username);
+        $contents = $this->profileService->getUserComments($user, 15);
 
         return view('profile.comments', [
             'user' => $user,
@@ -49,8 +55,8 @@ class ProfileController extends Controller
      */
     public function commentLikes($username): View
     {
-        $user = User::where('name', $username)->firstOrFail();
-        $contents = $user->likedComments()->latest()->paginate(15);
+        $user = $this->profileService->getUserProfile($username);
+        $contents = $this->profileService->getUserLikedComments($user, 15);
 
         return view('profile.likes.comments', [
             'user' => $user,
@@ -63,8 +69,8 @@ class ProfileController extends Controller
      */
     public function postLikes($username): View
     {
-        $user = User::where('name', $username)->firstOrFail();
-        $posts = $user->likedPosts()->latest()->paginate(15);
+        $user = $this->profileService->getUserProfile($username);
+        $posts = $this->profileService->getUserLikedPosts($user, 15);
 
         return view('profile.likes.posts', [
             'user' => $user,
@@ -87,13 +93,14 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
+        $user->fill($request->validated());
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $request->user()->save();
+        $user->save();
 
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
@@ -108,14 +115,9 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         Auth::logout();
 
-        if ($user->profile_picture) {
-            Storage::disk('public')->delete($user->profile_picture);
-        }
-
-        $user->delete();
+        $this->profileService->deleteUserAccount($user);
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -136,11 +138,7 @@ class ProfileController extends Controller
             return redirect()->route('admin.users.search')->with('error', 'Vous ne pouvez pas supprimer votre compte ici.');
         }
 
-        if ($user->profile_picture) {
-            Storage::disk('public')->delete($user->profile_picture);
-        }
-
-        $user->delete();
+        $this->profileService->deleteUserAccount($user);
 
         return redirect()->route('admin.users.search')->with('success', 'Utilisateur supprimé.');
     }
@@ -155,15 +153,9 @@ class ProfileController extends Controller
         ]);
 
         $user = Auth::user();
-
-        if ($user->profile_picture) {
-            Storage::disk('public')->delete($user->profile_picture);
-        }
-
         $path = $request->file('profile_picture')->store('profile_pictures', 'public');
 
-        $user->profile_picture = $path;
-        $user->save();
+        $this->profileService->updateUserProfilePicture($user, $path);
 
         return redirect()->back()->with('success', 'Image de profil téléchargée');
     }
@@ -175,8 +167,8 @@ class ProfileController extends Controller
     {
         $search = $request->input('search');
         $role = $request->input('role');
-        $sort = $request->input('sort', 'created_at'); // Default sort by created_at
-        $direction = $request->input('direction', 'desc'); // Default direction is descending
+        $sort = $request->input('sort', 'created_at');
+        $direction = $request->input('direction', 'desc');
 
         $query = User::query();
 
@@ -192,7 +184,6 @@ class ProfileController extends Controller
         }
 
         $query->orderBy($sort, $direction);
-
         $users = $query->paginate(50);
 
         if ($request->ajax()) {
@@ -207,7 +198,6 @@ class ProfileController extends Controller
         return view('admin.users.search', compact('users'));
     }
 
-
     /**
      * Update the user's role.
      */
@@ -217,8 +207,7 @@ class ProfileController extends Controller
             return redirect()->route('admin.users.search')->with('error', 'Rôle invalide');
         }
 
-        $user->role = $role;
-        $user->save();
+        $this->profileService->changeUserRole($user, $role);
 
         $query = $request->query('search', '');
         $page = $request->query('page', 1);
@@ -229,6 +218,9 @@ class ProfileController extends Controller
         ])->with('success', 'Rôle changé avec succès');
     }
 
+    /**
+     * Display the followed threads.
+     */
     public function thread(Request $request): View | JsonResponse
     {
         $user = Auth::user();
