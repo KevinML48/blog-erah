@@ -17,6 +17,9 @@
         </div>
     </div>
 
+    <script src="{{ asset('js/likes.js') }}" defer></script>
+    <script src="{{ asset('js/comment-form.js') }}" defer></script>
+
     <script>
         let nextPageUrl = "{{ $contents->nextPageUrl() }}";
         let loading = false;
