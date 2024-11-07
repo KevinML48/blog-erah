@@ -10,7 +10,7 @@
 
             <div id="comments-container">
                 @foreach ($contents as $content)
-                    @include('posts.partials.comment', ['comment' => $like->comment, 'depth' => -1])
+                    @include('posts.partials.comment', ['comment' => $content->comment, 'depth' => -1])
                 @endforeach
             </div>
 
