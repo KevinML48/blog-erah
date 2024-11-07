@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\CommentService;
+use App\Services\CommentServiceInterface;
 use App\Services\ProfileService;
 use App\Services\ProfileServiceInterface;
 use Illuminate\Support\Facades\Gate;
@@ -15,6 +17,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(ProfileServiceInterface::class, ProfileService::class);
+        $this->app->singleton(CommentServiceInterface::class, CommentService::class);
     }
 
     /**

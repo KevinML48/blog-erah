@@ -4,20 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCommentRequest;
 use App\Models\Comment;
-use App\Models\CommentContent;
 use App\Models\Post;
+use App\Services\CommentServiceInterface;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 
 class CommentController extends Controller
 {
+    protected CommentServiceInterface $commentService;
+
+    public function __construct(CommentServiceInterface $commentService)
+    {
+        $this->commentService = $commentService;
+    }
+
     public function store(StoreCommentRequest $request, Post $post): RedirectResponse
     {
+        $userId = auth()->id();
+        $postId = $post->id;
+        $parentId = $request->parent_id == -1 ? null : $request->parent_id;
+        $body = $request->input("input-body-$parentId");
         $mediaPath = null;
 
         if ($request->hasFile('media')) {
@@ -26,52 +34,22 @@ class CommentController extends Controller
             $mediaPath = $request->gif_url;
         }
 
+        $newComment = $this->commentService->store($userId, $postId, $parentId, $body, $mediaPath, $request->gif_url);
 
-        $commentContent = CommentContent::create([
-            'user_id' => auth()->id(),
-            'body' => $request->input("input-body-$request->parent_id"),
-            'media' => $mediaPath,
-        ]);
-
-        if ($request->parent_id == -1) {
-            $parentId = null;
-        } else {
-            $parentId = $request->parent_id;
-        }
-        $newComment = Comment::create([
-            'post_id' => $post->id,
-            'parent_id' => $parentId,
-            'content_id' => $commentContent->id,
-        ]);
-
-        return redirect()->route('comments.show', [$newComment->post->id, $newComment->id])->with('success', 'Commentaire ajouté.');
+        return redirect()->route('comments.show', [$newComment->post->id, $newComment->id])
+            ->with('success', 'Commentaire ajouté.');
     }
-
 
     public function show(Post $post, Comment $comment): View
     {
-        if ($comment->post_id !== $post->id) {
-            abort(404);
-        }
-
-        if (!$comment) {
-            redirect()->route('posts.show', [$post->id]);
-        }
-
-        $comments = Comment::with(['content.user', 'replies.content.user'])
-            ->where('id', $comment->id)
-            ->paginate(5);
-
+        $comments = $this->commentService->show($post, $comment);
         return view('posts.show', compact('post', 'comments', 'comment'));
     }
 
     public function loadMoreComments(Post $post, Request $request): JsonResponse
     {
         $currentPage = $request->input('page', 1);
-        $comments = Comment::with(['content.user', 'replies.content.user'])
-            ->where('post_id', $post->id)
-            ->whereNull('parent_id')
-            ->paginate(5, ['*'], 'page', $currentPage + 1);
+        $comments = $this->commentService->loadMoreComments($post, $currentPage);
 
         return response()->json([
             'comments' => view('posts.partials.comments-loop', compact('comments'))->render(),
@@ -82,8 +60,7 @@ class CommentController extends Controller
     public function loadMoreReplies(Comment $comment, Request $request): JsonResponse
     {
         $currentPage = $request->input('page', 1);
-        $comments = $comment->replies()
-            ->paginate(2, ['*'], 'page', $currentPage + 1);
+        $comments = $this->commentService->loadMoreReplies($comment, $currentPage);
 
         return response()->json([
             'commentId' => $comment->id,
@@ -94,24 +71,7 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment): RedirectResponse
     {
-        $commentContent = $comment->content;
-
-        if (
-            !$comment->contentExists()
-            ||
-            (Auth::user()->id !== $commentContent->user_id && !Auth::user()->isAdmin())) {
-            abort(403, 'Unauthorized action.');
-        }
-
-
-        $mediaPath = $commentContent->media;
-        if ($commentContent->media && Storage::disk('public')->exists($mediaPath)) {
-            Storage::disk('public')->delete($mediaPath);
-        }
-
-        $commentContent->delete();
-
-        $firstExistingParent = $this->checkAndDeleteComment($comment);
+        $firstExistingParent = $this->commentService->destroy($comment);
 
         if ($firstExistingParent) {
             return redirect()->route('comments.show', [$comment->post->id, $firstExistingParent->id])
@@ -122,83 +82,35 @@ class CommentController extends Controller
             ->with('success', 'Commentaire supprimé.');
     }
 
-    protected function checkAndDeleteComment($comment)
+    public function like(Comment $comment): JsonResponse
     {
-        if (!$comment->contentExists() && $comment->replies()->count() === 0) {
-            $parent = $comment->parent;
-            $comment->delete();
+        $likesCount = $this->commentService->like($comment);
 
-            if ($parent) {
-                $parentComment = Comment::find($parent->id);
-                if ($parentComment) {
-                    return $this->checkAndDeleteComment($parentComment);
-                }
-            } else {
-                return null;
-            }
-        }
-        return $comment;
+        return response()->json([
+            'message' => 'Comment liked successfully!',
+            'likes_count' => $likesCount,
+        ]);
     }
 
+    public function unlike(Comment $comment): JsonResponse
+    {
+        $likesCount = $this->commentService->unlike($comment);
 
-    public function searchTenor(Request $request)
+        return response()->json([
+            'message' => 'Comment unliked successfully!',
+            'likes_count' => $likesCount,
+        ]);
+    }
+
+    public function searchTenor(Request $request): JsonResponse
     {
         $query = $request->input('query');
+        $tenorResults = $this->commentService->searchTenor($query);
 
-        if (empty($query)) {
+        if ($tenorResults === null) {
             return response()->json(['error' => 'No search query provided'], 400);
         }
 
-        $apiKey = env('TENOR_API_KEY');
-        $clientKey = 'discord-bot';
-        $limit = 100;
-
-        $response = Http::withOptions(['verify' => false])->get("https://tenor.googleapis.com/v2/search", [
-            'q' => $query,
-            'key' => $apiKey,
-            'client_key' => $clientKey,
-            'limit' => $limit,
-            'media_filter' => 'gif',
-        ]);
-
-        if ($response->successful()) {
-            return response()->json($response->json());
-        } else {
-            return response()->json(['error' => 'Unable to fetch GIFs'], 500);
-        }
-    }
-
-    public function like(Comment $comment)
-    {
-        // Check if the user has already liked this content
-        if (!$comment->content->likes()->where('user_id', Auth::id())->exists()) {
-            // Create a new like for the content associated with the comment
-            $comment->content->likes()->create([
-                'user_id' => Auth::id(),
-            ]);
-        }
-
-        // Return a JSON response with updated likes count
-        return response()->json([
-            'message' => 'Comment liked successfully!',
-            'likes_count' => $comment->content->likes()->count(), // Return updated like count
-        ]);
-    }
-
-    public function unlike(Comment $comment)
-    {
-        // Find the like for the content by the current user
-        $like = $comment->content->likes()->where('user_id', Auth::id())->first();
-
-        if ($like) {
-            // Delete the like
-            $like->delete();
-        }
-
-        // Return a JSON response with updated likes count
-        return response()->json([
-            'message' => 'Comment unliked successfully!',
-            'likes_count' => $comment->content->likes()->count(), // Return updated like count
-        ]);
+        return response()->json($tenorResults);
     }
 }
