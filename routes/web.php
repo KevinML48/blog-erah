@@ -49,6 +49,9 @@ Route::middleware('auth')->group(function () {
     // Profile Picture Update
     Route::put('/profile/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');
 
+    // Thread page
+    Route::get('/profile/thread', [ProfileController::class, 'thread'])->name('profile.thread');
+
     // Comment Actions
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');

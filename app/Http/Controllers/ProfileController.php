@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\CommentContent;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -228,5 +229,20 @@ class ProfileController extends Controller
         ])->with('success', 'Rôle changé avec succès');
     }
 
+    public function thread(Request $request): View | JsonResponse
+    {
+        $user = Auth::user();
+        $contents = CommentContent::whereIn('user_id', $user->follows()->pluck('followed_id'))
+            ->latest()
+            ->paginate(5);
 
+        if ($request->ajax()) {
+            return response()->json([
+                'html' => view('posts.partials.content-loop', compact('contents'))->render(),
+                'next_page_url' => $contents->nextPageUrl()
+            ]);
+        }
+
+        return view('profile.thread', compact('contents'));
+    }
 }
