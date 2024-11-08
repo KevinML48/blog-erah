@@ -24,8 +24,8 @@ class CommentController extends Controller
     {
         $userId = auth()->id();
         $postId = $post->id;
+        $body = $request->input("input-body-$request->parent_id");
         $parentId = $request->parent_id == -1 ? null : $request->parent_id;
-        $body = $request->input("input-body-$parentId");
         $mediaPath = null;
 
         if ($request->hasFile('media')) {

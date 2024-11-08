@@ -15,21 +15,25 @@ class CommentService implements CommentServiceInterface
     public function store($userId, $postId, $parentId, $body, $mediaPath, $gifUrl): Comment
     {
         // Handle file uploads or gifs
-        $mediaPath = $mediaPath ?? $gifUrl;
 
-        $commentContent = CommentContent::create([
+        $parentId = $parentId == -1 ? null : $parentId;
+        $comment = Comment::create([
+            'post_id' => $postId,
+            'parent_id' => $parentId,
+        ]);
+
+
+        $mediaPath = $mediaPath ?? $gifUrl;
+        CommentContent::create([
             'user_id' => $userId,
             'body' => $body,
             'media' => $mediaPath,
+            'comment_id' => $comment->id,
         ]);
 
-        $parentId = $parentId == -1 ? null : $parentId;
 
-        return Comment::create([
-            'post_id' => $postId,
-            'parent_id' => $parentId,
-            'content_id' => $commentContent->id,
-        ]);
+
+        return $comment;
     }
 
     public function show(Post $post, Comment $comment): LengthAwarePaginator

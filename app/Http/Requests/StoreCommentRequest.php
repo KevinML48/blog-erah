@@ -42,7 +42,7 @@ class StoreCommentRequest extends FormRequest
                     if ($value) {
                         $parentComment = Comment::find($value);
 
-                        if (!$parentComment || is_null($parentComment->content_id)) {
+                        if (!$parentComment || is_null($parentComment->content->id)) {
                             $fail("Commentaire supprimé ou introuvable.");
                             return;
                         }

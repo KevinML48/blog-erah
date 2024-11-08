@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class CommentContent extends Model
@@ -21,11 +20,12 @@ class CommentContent extends Model
         'user_id',
         'body',
         'media',
+        'comment_id'
     ];
 
-    public function comment(): HasOne
+    public function comment(): BelongsTo
     {
-        return $this->hasOne(Comment::class, 'content_id');
+        return $this->belongsTo(Comment::class);
     }
 
     public function user(): BelongsTo
@@ -56,15 +56,6 @@ class CommentContent extends Model
     public function isLikedBy(User $user)
     {
         return $this->likes()->where('user_id', $user->id)->exists();
-    }
-
-    protected static function boot(): void
-    {
-        parent::boot();
-
-        static::deleting(function ($content) {
-            $content->likes()->delete();
-        });
     }
 }
 

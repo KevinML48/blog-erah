@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Comment extends Model
 {
@@ -15,7 +16,7 @@ class Comment extends Model
      */
     protected $table = 'comments';
 
-    protected $fillable = ['post_id', 'parent_id', 'content_id'];
+    protected $fillable = ['post_id', 'parent_id'];
 
     public function post(): BelongsTo
     {
@@ -32,9 +33,9 @@ class Comment extends Model
         return $this->hasMany(Comment::class, 'parent_id');
     }
 
-    public function content(): BelongsTo
+    public function content(): HasOne
     {
-        return $this->belongsTo(CommentContent::class, 'content_id');
+        return $this->hasOne(CommentContent::class);
     }
 
     public function contentExists(): bool
