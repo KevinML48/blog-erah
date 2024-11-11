@@ -26,6 +26,11 @@
         </div>
     @endif
     <div class="mt-4" id="comments-container">
+        @if (request()->routeIs('comments.show'))
+            @if ($comment->parent_id)
+                @include('posts.partials.comment', ['comment' => $comment->parent, 'depth' => -1])
+            @endif
+        @endif
         @foreach ($comments as $comment)
             @include('posts.partials.comment-structure', ['comment' => $comment, 'depth' => 0])
         @endforeach
@@ -59,14 +64,14 @@
 
 @if (session()->has('failed_id'))
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const failedId = "{{ session('failed_id') }}";
             const targetElement = document.getElementById("reply-form-" + failedId);
-            if(failedId > 0) {
+            if (failedId > 0) {
                 showReplyForm(failedId);
             }
             if (targetElement) {
-                targetElement.scrollIntoView({ behavior: "smooth", block: "center" });
+                targetElement.scrollIntoView({behavior: "smooth", block: "center"});
             }
         });
     </script>
