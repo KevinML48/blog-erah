@@ -16,11 +16,20 @@ class NotificationController extends Controller
             if ($notification->type === 'App\Notifications\PostPublishedNotification') {
                 // Get the post related to the notification
                 $post = Post::find($notification->data['post_id']);
+                if (!$post) {
+                    $notification->delete();
+                } else {
                 // Attach the post to the notification object
                 $notification->post = $post;
+                }
+
             } elseif ($notification->type === 'App\Notifications\CommentLikeNotification' || $notification->type === 'App\Notifications\CommentReplyNotification') {
                 $comment = Comment::find($notification->data['comment_id']);
+                if (!$comment || !$comment->contentExists()) {
+                    $notification->delete();
+                } else {
                 $notification->comment = $comment;
+                }
             }
         });
 
