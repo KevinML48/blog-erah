@@ -32,11 +32,14 @@ class NotificationController extends Controller
                 $notification->comment = $comment;
                 }
             } elseif ($notification->type === 'App\Notifications\CommentLikeNotification') {
-                $like = Like::find($notification->data['like_id']);
-                if (!$like) {
+                $likeIds = $notification->data['like_ids'] ?? [];
+                $likes = Like::whereIn('id', $likeIds)->get();
+
+                if ($likes->isEmpty()) {
                     $notification->delete();
                 } else {
-                    $notification->like = $like;
+                    $notification->likes = $likes;
+                    $notification->like_count = $notification->data['like_count'] ?? count($likeIds);
                 }
             }
         });

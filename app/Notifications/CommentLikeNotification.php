@@ -2,7 +2,6 @@
 
 namespace App\Notifications;
 
-use App\Models\Like;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -10,13 +9,15 @@ use Illuminate\Notifications\Notification;
 class CommentLikeNotification extends Notification
 {
     use Queueable;
+    protected $notificationData;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Like $like)
+
+    public function __construct($notificationData)
     {
-        $this->like = $like;
+        $this->notificationData = $notificationData;
     }
 
     /**
@@ -55,7 +56,9 @@ class CommentLikeNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'like_id' => $this->like->id,
+            'like_ids' => $this->notificationData['like_ids'],
+            'comment_id' => $this->notificationData['comment_id'],
+            'like_count' => $this->notificationData['like_count'],
         ];
     }
 
