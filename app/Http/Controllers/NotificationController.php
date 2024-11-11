@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Post;
 
 class NotificationController extends Controller
@@ -17,6 +18,9 @@ class NotificationController extends Controller
                 $post = Post::find($notification->data['post_id']);
                 // Attach the post to the notification object
                 $notification->post = $post;
+            } elseif ($notification->type === 'App\Notifications\CommentLikeNotification' || $notification->type === 'App\Notifications\CommentReplyNotification') {
+                $comment = Comment::find($notification->data['comment_id']);
+                $notification->comment = $comment;
             }
         });
 
