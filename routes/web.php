@@ -3,8 +3,10 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserNotificationPreferenceController;
 use Illuminate\Support\Facades\Route;
 
 // =======================================
@@ -45,6 +47,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Notifications Page
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+
+    // Notification Settings
+    Route::get('/notifications/preferences', [UserNotificationPreferenceController::class, 'index'])->name('user.notification.preferences');
+    Route::put('/notifications/preferences', [UserNotificationPreferenceController::class, 'update'])->name('user.notification.preferences.update');
 
     // Profile Picture Update
     Route::put('/profile/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');

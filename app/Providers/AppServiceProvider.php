@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Post;
+use App\Observers\PostObserver;
 use App\Services\CommentService;
 use App\Services\CommentServiceInterface;
 use App\Services\ProfileService;
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Post::observe(PostObserver::class);
         Gate::define('administrate', function ($user) {
             return $user->isAdmin();
         });
