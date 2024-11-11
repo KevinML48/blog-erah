@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Like;
 use App\Models\Post;
 
 class NotificationController extends Controller
@@ -23,12 +24,19 @@ class NotificationController extends Controller
                 $notification->post = $post;
                 }
 
-            } elseif ($notification->type === 'App\Notifications\CommentLikeNotification' || $notification->type === 'App\Notifications\CommentReplyNotification') {
+            } elseif ($notification->type === 'App\Notifications\CommentReplyNotification') {
                 $comment = Comment::find($notification->data['comment_id']);
                 if (!$comment || !$comment->contentExists()) {
                     $notification->delete();
                 } else {
                 $notification->comment = $comment;
+                }
+            } elseif ($notification->type === 'App\Notifications\CommentLikeNotification') {
+                $like = Like::find($notification->data['like_id']);
+                if (!$like) {
+                    $notification->delete();
+                } else {
+                    $notification->like = $like;
                 }
             }
         });

@@ -15,7 +15,7 @@ class LikeObserver
     {
         if ($like->likeable_type === CommentContent::class) {
             $content = $like->likeable;
-            $content->user->notify(new CommentLikeNotification($content->comment));
+            $content->user->notify(new CommentLikeNotification($like));
         }
     }
 

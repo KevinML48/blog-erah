@@ -15,10 +15,10 @@
                             <div class="notification py-2">
                                 @if ($notification->type === 'App\Notifications\PostPublishedNotification')
                                     @include('notifications.partials.new_post', ['post' => $notification->post])
-                                @elseif($notification->type === 'App\Notifications\CommentLikeNotification')
-                                    @include('notifications.partials.new_like', ['comment' => $notification->comment])
                                 @elseif($notification->type === 'App\Notifications\CommentReplyNotification')
                                     @include('notifications.partials.new_reply', ['comment' => $notification->comment])
+                                @elseif($notification->type === 'App\Notifications\CommentLikeNotification')
+                                    @include('notifications.partials.new_like', ['like' => $notification->like])
                                 @endif
                             </div>
                         @endforeach
