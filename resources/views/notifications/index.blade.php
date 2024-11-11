@@ -11,19 +11,13 @@
                     @if($notifications->isEmpty())
                         <p>{{ __('Aucune notification pour le moment.') }}</p>
                     @else
-                        <ul>
-                            @foreach($notifications as $notification)
-                                <li class="mb-4 notification-item">
-                                    <div class="notification-content">
-                                        <!-- Display the notification message or a fallback text -->
-                                        {{ $notification->data['message'] ?? __('Notification sans contenu.') }}
-                                    </div>
-                                    <div class="notification-time text-sm">
-                                        {{ $notification->created_at->format('d M Y H:i') }}
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
+                        @foreach ($notifications as $notification)
+                            <div class="notification py-2">
+                                @if ($notification->type === 'App\Notifications\PostPublishedNotification')
+                                    @include('notifications.partials.new_post', ['post' => $notification->post])
+                                @endif
+                            </div>
+                        @endforeach
                     @endif
 
                 </div>

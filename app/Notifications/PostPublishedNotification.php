@@ -57,11 +57,13 @@ class PostPublishedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
+            'type' => 'new_post',
             'post_id' => $this->post->id,
-            'theme_name' => $this->post->theme->name,
-            'title' => $this->post->title,
-            'url' => route('posts.show', $this->post->id),
-            'message' => "'{$this->post->user->name}' a publié un nouvel article sur '{$this->post->theme->name}'."
         ];
+    }
+
+    public function post()
+    {
+        return Post::find($this->data['post_id']);
     }
 }
