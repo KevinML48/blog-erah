@@ -20,6 +20,6 @@ class Follow extends Model
 
     public function target()
     {
-        return $this->follower;
+        return $this->followed;
     }
 }
