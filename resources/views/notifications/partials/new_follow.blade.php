@@ -1,6 +1,6 @@
 <div class="new-follow-notification py-2">
     <div class="py-2 flex items-center">
-        <div class="text-red-600">
+        <div class="">
             <x-svg-follow/>
         </div>
         <div class="ml-2 flex">
@@ -13,19 +13,30 @@
     </div>
     <div class="ml-8 py-2">
         @php
-            // Collect the names of users who followed the comment
-            $followUsers = $follows->pluck('follower.name')->toArray();
+            // Collect the names and roles of users who followed the comment
+            $followUsers = $follows->map(function($follow) {
+                return [
+                    'name' => $follow->follower->name,
+                    'role' => $follow->follower->role
+                ];
+            })->toArray();
+
             $followCount = count($followUsers);
         @endphp
 
         @if ($followCount === 1)
-            <a href="{{ route('profile.show', $followUsers[0]) }}" class="erah-link font-bold text-left focus:outline-none">
-                {{ $followUsers[0] }}
-            </a> vous a followé.
+            <x-role-span :role="$followUsers[0]['role']">
+                <a href="{{ route('profile.show', $followUsers[0]['name']) }}" class="font-bold text-left focus:outline-none">
+                    {{ $followUsers[0]['name'] }}
+                </a>
+            </x-role-span> vous a followé.
         @else
             @foreach($followUsers as $index => $user)
-                <a href="{{ route('profile.show', $user) }}" class="erah-link font-bold text-left focus:outline-none">
-                    {{ $user }}
+                <x-role-span :role="$user['role']">
+                    {{ $user['name'] }}
+                </x-role-span>
+                <a href="{{ route('profile.show', $user['name']) }}" class="erah-link font-bold text-left focus:outline-none">
+                    {{ $user['name'] }}
                 </a>
                 @if ($index === $followCount - 2)
                     et
