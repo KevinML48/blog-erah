@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Comment;
+use App\Models\Follow;
 use App\Models\Like;
 use App\Models\Post;
 
@@ -43,6 +44,17 @@ class NotificationController extends Controller
                 } else {
                     $notification->likes = $likes;
                     $notification->like_count = $notification->data['count'] ?? count($likeIds);
+                }
+            } // Follow Notifications
+            elseif ($notification->type === 'App\Notifications\FollowNotification') {
+                $followIds = $notification->data['ids'] ?? [];
+                $follows = Follow::whereIn('id', $followIds)->get();
+
+                if ($follows->isEmpty()) {
+                    $notification->delete();
+                } else {
+                    $notification->follows = $follows;
+                    $notification->follow_count = $notification->data['count'] ?? count($followIds);
                 }
             }
         });

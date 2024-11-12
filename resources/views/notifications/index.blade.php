@@ -19,6 +19,8 @@
                                     @include('notifications.partials.new_reply', ['comment' => $notification->comment])
                                 @elseif($notification->type === 'App\Notifications\CommentLikeNotification')
                                     @include('notifications.partials.new_like', ['likes' => $notification->likes, 'count' => $notification->like_count])
+                                @elseif($notification->type === 'App\Notifications\FollowNotification')
+                                    @include('notifications.partials.new_follow', ['follows' => $notification->follows, 'count' => $notification->follow_count])
                                 @endif
                             </div>
                         @endforeach
