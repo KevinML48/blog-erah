@@ -30,5 +30,11 @@ class NotificationTypesSeeder extends Seeder
             'description' => 'Notifies when a user\'s comment gets a like.',
             'category' => 'interaction',
         ]);
+
+        NotificationType::firstOrCreate([
+            'name' => 'follow',
+            'description' => 'Notifies when a user gets a follow.',
+            'category' => 'interaction',
+        ]);
     }
 }
