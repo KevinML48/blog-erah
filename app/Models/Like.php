@@ -11,7 +11,7 @@ class Like extends Model
     ];
 
     /**
-     * Get the parent likeable model (post or comment).
+     * Get the parent likeable model (post or comment content).
      */
     public function likeable()
     {
@@ -21,5 +21,10 @@ class Like extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function target()
+    {
+        return $this->likeable->user;
     }
 }

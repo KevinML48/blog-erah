@@ -49,4 +49,9 @@ class Comment extends Model
             $comment->content()->delete();
         });
     }
+
+    public function user()
+    {
+        return $this->content()->user();
+    }
 }

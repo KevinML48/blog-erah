@@ -12,6 +12,8 @@ use App\Observers\LikeObserver;
 use App\Observers\PostObserver;
 use App\Services\CommentService;
 use App\Services\CommentServiceInterface;
+use App\Services\NotificationService;
+use App\Services\NotificationServiceInterface;
 use App\Services\ProfileService;
 use App\Services\ProfileServiceInterface;
 use Illuminate\Support\Facades\Gate;
@@ -26,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->app->singleton(ProfileServiceInterface::class, ProfileService::class);
         $this->app->singleton(CommentServiceInterface::class, CommentService::class);
+        $this->app->singleton(NotificationServiceInterface::class, NotificationService::class);
     }
 
     /**

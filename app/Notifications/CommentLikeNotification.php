@@ -56,9 +56,9 @@ class CommentLikeNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'like_ids' => $this->notificationData['like_ids'],
-            'comment_id' => $this->notificationData['comment_id'],
-            'like_count' => $this->notificationData['like_count'],
+            'ids' => $this->notificationData['ids'],
+            'context_id' => $this->notificationData['context_id'],
+            'count' => $this->notificationData['count'],
         ];
     }
 

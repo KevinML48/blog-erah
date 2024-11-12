@@ -13,33 +13,36 @@ class NotificationController extends Controller
         $notifications = auth()->user()->notifications()->latest()->get();
 
         $notifications->each(function ($notification) {
-            // Check the type of the notification
+
+            // Post Published Notifications
             if ($notification->type === 'App\Notifications\PostPublishedNotification') {
                 // Get the post related to the notification
                 $post = Post::find($notification->data['post_id']);
                 if (!$post) {
                     $notification->delete();
                 } else {
-                // Attach the post to the notification object
-                $notification->post = $post;
+                    // Attach the post to the notification object
+                    $notification->post = $post;
                 }
 
-            } elseif ($notification->type === 'App\Notifications\CommentReplyNotification') {
+            } // Comment Reply Notifications
+            elseif ($notification->type === 'App\Notifications\CommentReplyNotification') {
                 $comment = Comment::find($notification->data['comment_id']);
                 if (!$comment || !$comment->contentExists()) {
                     $notification->delete();
                 } else {
-                $notification->comment = $comment;
+                    $notification->comment = $comment;
                 }
-            } elseif ($notification->type === 'App\Notifications\CommentLikeNotification') {
-                $likeIds = $notification->data['like_ids'] ?? [];
+            } // Comment Like Notifications
+            elseif ($notification->type === 'App\Notifications\CommentLikeNotification') {
+                $likeIds = $notification->data['ids'] ?? [];
                 $likes = Like::whereIn('id', $likeIds)->get();
 
                 if ($likes->isEmpty()) {
                     $notification->delete();
                 } else {
                     $notification->likes = $likes;
-                    $notification->like_count = $notification->data['like_count'] ?? count($likeIds);
+                    $notification->like_count = $notification->data['count'] ?? count($likeIds);
                 }
             }
         });

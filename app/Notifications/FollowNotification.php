@@ -56,8 +56,8 @@ class FollowNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'follow_ids' => $this->notificationData['follow_ids'],
-            'follow_count' => $this->notificationData['follow_count'],
+            'ids' => $this->notificationData['ids'],
+            'count' => $this->notificationData['count'],
         ];
     }
 
