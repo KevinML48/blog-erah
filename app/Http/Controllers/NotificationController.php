@@ -34,6 +34,12 @@ class NotificationController extends Controller
                 }
 
             } elseif ($notification->type === 'App\Notifications\CommentLikeNotification') {
+                $comment = Comment::find($notification->data['context_id']);
+                if (!$comment || !$comment->contentExists()) {
+                    $notification->delete();
+                    return true;
+                }
+
                 $likeIds = $notification->data['ids'] ?? [];
                 $likes = Like::whereIn('id', $likeIds)->get();
 

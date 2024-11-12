@@ -1,5 +1,5 @@
 <div class="py-2 p-2 flex flex-col shadow-md rounded-2xl
-@if(request()->route('comment.id') == $content->comment->id )
+@if(request()->routeis('comments.show') && request()->route('comment.id') && request()->route('comment.id') == $content->comment->id )
  bg-red-950
  @else
  bg-gray-900
