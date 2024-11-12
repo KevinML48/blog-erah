@@ -151,4 +151,16 @@ class User extends Authenticatable
             ->where('is_enabled', true)
             ->exists();
     }
+
+    /**
+     * Get the number of unread notifications for the user.
+     *
+     * @return int
+     */
+    public function unreadNotificationsCount(): int
+    {
+        return $this->notifications()
+            ->whereNull('read_at')
+            ->count();
+    }
 }
