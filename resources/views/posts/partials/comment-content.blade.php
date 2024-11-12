@@ -1,4 +1,4 @@
-<div class="py-2 p-2 flex flex-col border-b border-gray-300 bg-gray-900">
+<div class="py-2 p-2 flex flex-col shadow-md shadow-red-950 rounded-2xl border-gray-300 bg-gray-900">
     <div class="flex justify-between items-start">
         <div class="flex items-center space-x-2">
             <!-- Profile Picture -->
@@ -60,18 +60,19 @@
 
             <!-- Creation Date -->
             <div>
+                <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}"
+                   class="hover:underline">
                     <span class="text-gray-500 text-sm convert-time"
                           data-time="{{ $content->created_at->toIso8601String() }}">
                           {{ $content->created_at->diffForHumans() }}
                     </span>
+                </a>
             </div>
         </div>
     </div>
 
     <!-- Body -->
-    <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}"
-       class="py-4">
-        <div class="hover:bg-gray-800 rounded">
+        <div class="rounded py-2">
             <div class="py-2 ml-14">
                 <div id="content-preview-{{ $content->id }}"
                      class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
@@ -86,7 +87,7 @@
             </div>
 
             <!-- Media -->
-            @if ($content->media)
+            @if ($content->media && ($showMedia ?? true))
                 <div class="py-2 ml-14">
                     @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
                         <!-- If it's a Tenor GIF URL -->
@@ -99,7 +100,6 @@
                 </div>
             @endif
         </div>
-    </a>
 </div>
 
 
