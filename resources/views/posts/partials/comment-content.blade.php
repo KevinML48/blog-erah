@@ -1,4 +1,10 @@
-<div class="py-2 p-2 flex flex-col shadow-md shadow-red-950 rounded-2xl border-gray-300 bg-gray-900">
+<div class="py-2 p-2 flex flex-col shadow-md rounded-2xl
+@if(request()->route('comment.id') == $content->comment->id )
+ bg-red-950
+ @else
+ bg-gray-900
+@endif
+">
     <div class="flex justify-between items-start">
         <div class="flex items-center space-x-2">
             <!-- Profile Picture -->

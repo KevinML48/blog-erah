@@ -27,6 +27,7 @@
     @endif
     <div class="mt-4" id="comments-container">
         @if (request()->routeIs('comments.show'))
+            <!-- Display the parent comment, if one exists -->
             @if ($comment->parent_id)
                 @include('posts.partials.comment', ['comment' => $comment->parent])
             @endif
