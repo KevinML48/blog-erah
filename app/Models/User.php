@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
@@ -99,11 +100,10 @@ class User extends Authenticatable
         return $this->hasMany(UserNotificationPreference::class);
     }
 
-    public function wantsNotification($typeName, $contextId = null, $contextType = null)
+    public function wantsNotification($typeName, $contextId = null, $contextType = 'global')
     {
         // Fetch the notification type by name
         $notificationType = NotificationType::where('name', $typeName)->first();
-
         if (!$notificationType) {
             return false; // Notification type does not exist
         }
@@ -116,14 +116,14 @@ class User extends Authenticatable
             ->first();
 
         if ($specificPreference) {
+            Log::info('specific preference');
             return $specificPreference->is_enabled;
         }
-
         // Check for a general preference if no specific context preference exists
         $generalPreference = $this->notificationPreferences()
             ->where('notification_type_id', $notificationType->id)
             ->whereNull('context_id')
-            ->whereNull('context_type')
+            ->where('context_type', 'global')
             ->first();
 
         return $generalPreference ? $generalPreference->is_enabled : true; // Default to true if no preference is found

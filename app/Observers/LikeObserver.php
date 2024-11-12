@@ -12,43 +12,7 @@ class LikeObserver
      */
     public function created(Like $like): void
     {
-        // Check if there is an existing unread notification for this comment
-        $commentId = $like->likeable->id;
-        $notification = $like->likeable->user->notifications()
-            ->where('type', CommentLikeNotification::class)
-            ->where('data->comment_id', $commentId)
-            ->where('read_at', null) // Only consider unread notifications
-            ->first();
-
-        if ($notification) {
-            // If notification exists, retrieve its data
-            $notificationData = $notification->data;
-            $likeIds = $notificationData['like_ids'] ?? [];
-
-            // Add the new like ID only if there are fewer than 3 stored IDs
-            if (count($likeIds) < 3) {
-                $likeIds[] = $like->id;
-                $notificationData['like_ids'] = $likeIds;
-            }
-
-            $notificationData['like_count'] = ($notificationData['like_count'] ?? 0) + 1;
-
-            // Update the existing notification with the new data
-            $notification->update([
-                'data' => $notificationData,
-            ]);
-
-        } else {
-            // No existing notification found, create a new one with initial data
-            $notificationData = [
-                'like_ids' => [$like->id],
-                'comment_id' => $commentId,
-                'like_count' => 1,
-            ];
-
-            // Create a new notification for the user
-            $like->likeable->user->notify(new CommentLikeNotification($notificationData));
-        }
+        $this->notifyUser($like);
     }
 
 
@@ -135,4 +99,59 @@ class LikeObserver
     {
         //
     }
+
+    private function notifyUser(Like $like)
+    {
+        $user = $like->likeable->user; // The user who will receive the notification
+        $commentId = $like->likeable->id; // The ID of the comment being liked
+
+        // Check if the user has enabled notifications globally for comment likes
+        $typeName = 'comment_like';
+        $contextType = 'comment';
+        $contextId = $commentId;
+
+        // Check specific preference for this comment
+        if (!$user->wantsNotification($typeName, $contextId, $contextType)) {
+            return; // The user has disabled notifications for likes on this specific comment
+        }
+
+        // Check if there is an existing unread notification for this comment
+        $notification = $user->notifications()
+            ->where('type', CommentLikeNotification::class)
+            ->where('data->comment_id', $commentId)
+            ->where('read_at', null) // Only consider unread notifications
+            ->first();
+
+        if ($notification) {
+            // If notification exists, retrieve its data
+            $notificationData = $notification->data;
+            $likeIds = $notificationData['like_ids'] ?? [];
+
+            // Add the new like ID only if there are fewer than 3 stored IDs
+            if (count($likeIds) < 3) {
+                $likeIds[] = $like->id;
+                $notificationData['like_ids'] = $likeIds;
+            }
+
+            $notificationData['like_count'] = ($notificationData['like_count'] ?? 0) + 1;
+
+            // Update the existing notification with the new data
+            $notification->update([
+                'data' => $notificationData,
+            ]);
+
+        } else {
+            // No existing notification found, create a new one with initial data
+            $notificationData = [
+                'like_ids' => [$like->id],
+                'comment_id' => $commentId,
+                'like_count' => 1,
+            ];
+
+            // Create a new notification for the user
+            $user->notify(new CommentLikeNotification($notificationData));
+        }
+    }
+
+
 }

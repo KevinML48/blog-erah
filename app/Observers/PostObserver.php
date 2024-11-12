@@ -59,12 +59,9 @@ class PostObserver
         if (!$notificationType) return;
 
         // Get users who have notifications enabled for this theme
-        $users = User::whereHas('notificationPreferences', function ($query) use ($post) {
-            $query->where('notification_type_id', NotificationType::where('name', 'post_published')->first()->id)
-                ->where('context_id', $post->theme_id)
-                ->where('context_type', 'theme')
-                ->where('is_enabled', true);
-        })->get();
+        $users = User::all()->filter(function ($user) use ($notificationType, $post) {
+            return $user->wantsNotification($notificationType, $post->theme_id, 'theme');
+        });
 
         // Send notification to each user
         foreach ($users as $user) {
