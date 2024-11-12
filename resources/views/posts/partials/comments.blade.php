@@ -28,7 +28,7 @@
     <div class="mt-4" id="comments-container">
         @if (request()->routeIs('comments.show'))
             @if ($comment->parent_id)
-                @include('posts.partials.comment', ['comment' => $comment->parent, 'depth' => -1])
+                @include('posts.partials.comment', ['comment' => $comment->parent])
             @endif
         @endif
         @foreach ($comments as $comment)
