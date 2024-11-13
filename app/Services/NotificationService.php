@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\BundledNotification;
 use App\Contracts\NotifiableEntityInterface;
+use App\Contracts\SingleNotification;
 use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
 
@@ -19,6 +20,8 @@ class NotificationService implements NotificationServiceInterface
     {
         if ($entity instanceof BundledNotification) {
             $this->handleBundledCreation($entity);
+        } elseif ($entity instanceof SingleNotification) {
+            $this->handleSingleCreation($entity);
         }
     }
 
@@ -55,12 +58,26 @@ class NotificationService implements NotificationServiceInterface
         }
     }
 
+
     /**
      * Handle the deletion of a notification.
      *
      * @param NotifiableEntityInterface $entity The entity that triggered the notification (like Follow or Like).
      */
     public function handleDeletion(NotifiableEntityInterface $entity): void
+    {
+        if ($entity instanceof BundledNotification) {
+            $this->handleBundledDeletion($entity);
+        } elseif ($entity instanceof SingleNotification) {
+            $this->handleSingleDeletion($entity);
+        }
+    }
+    /**
+     * Handle the deletion of a notification.
+     *
+     * @param NotifiableEntityInterface $entity The entity that triggered the notification (like Follow or Like).
+     */
+    public function handleBundledDeletion(NotifiableEntityInterface $entity): void
     {
         $contextId = $this->getContextId($entity);
         $user = $this->getUser($entity);
@@ -203,5 +220,17 @@ class NotificationService implements NotificationServiceInterface
     private function getUser(NotifiableEntityInterface $entity)
     {
         return $entity->targetUser();
+    }
+
+    private function handleSingleCreation(SingleNotification $entity)
+    {
+        $strategy = $entity->getNotificationStrategy();
+
+        // Delegate to the strategy to handle the creation logic
+        $strategy->handleCreation();
+    }
+
+    private function handleSingleDeletion(SingleNotification $entity)
+    {
     }
 }

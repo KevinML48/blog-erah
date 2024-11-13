@@ -2,13 +2,16 @@
 
 namespace App\Models;
 
+use App\Contracts\NotificationStrategy;
+use App\Contracts\SingleNotification;
+use App\Strategies\PostNotificationStrategy;
 use Database\Factories\PostFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-class Post extends Model
+class Post extends Model implements SingleNotification
 {
 
     /** @use HasFactory<PostFactory> */
@@ -59,5 +62,10 @@ class Post extends Model
         static::deleting(function ($post) {
             $post->likes()->delete();
         });
+    }
+
+    public function getNotificationStrategy(): NotificationStrategy
+    {
+        return new PostNotificationStrategy($this);
     }
 }

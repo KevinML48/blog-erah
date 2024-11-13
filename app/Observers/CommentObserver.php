@@ -3,19 +3,28 @@
 namespace App\Observers;
 
 use App\Models\Comment;
-use App\Notifications\CommentReplyNotification;
+use App\Services\NotificationServiceInterface;
 
 class CommentObserver
 {
+
+    /**
+     * Create a new observer instance.
+     *
+     * @param \App\Services\NotificationServiceInterface $notificationService
+     * @return void
+     */
+    public function __construct(NotificationServiceInterface $notificationService)
+    {
+        $this->notificationService = $notificationService;
+    }
+
     /**
      * Handle the Comment "created" event.
      */
     public function created(Comment $comment): void
     {
-        if ($comment->parent_id) {
-            $parentComment = Comment::find($comment->parent_id);
-            $parentComment->content->user->notify(new CommentReplyNotification($comment));
-        }
+        $this->notificationService->handleCreation($comment);
     }
 
     /**

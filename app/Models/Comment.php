@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use App\Contracts\NotificationStrategy;
+use App\Contracts\SingleNotification;
+use App\Strategies\CommentNotificationStrategy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Comment extends Model
+class Comment extends Model implements SingleNotification
 {
     /**
      * The table associated with the model.
@@ -53,5 +56,10 @@ class Comment extends Model
     public function user()
     {
         return $this->content()->user();
+    }
+
+    public function getNotificationStrategy(): NotificationStrategy
+    {
+        return new CommentNotificationStrategy($this);
     }
 }
