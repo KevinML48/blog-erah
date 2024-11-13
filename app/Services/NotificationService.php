@@ -2,21 +2,32 @@
 
 namespace App\Services;
 
-use App\Models\CommentContent;
-use App\Models\Like;
-use App\Notifications\CommentLikeNotification;
-use App\Notifications\FollowNotification;
-use Illuminate\Database\Eloquent\Model;
+use App\Contracts\BundledNotification;
+use App\Contracts\NotifiableEntityInterface;
+use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationService implements NotificationServiceInterface
 {
+
     /**
      * Handle the creation of a notification.
      *
-     * @param Model $entity The entity that triggered the notification (like Follow or Like).
+     * @param NotifiableEntityInterface $entity The entity that triggered the notification (like Follow or Like).
      */
-    public function handleCreation(Model $entity): void
+    public function handleCreation(NotifiableEntityInterface $entity): void
+    {
+        if ($entity instanceof BundledNotification) {
+            $this->handleBundledCreation($entity);
+        }
+    }
+
+    /**
+     * Handle the creation of a notification.
+     *
+     * @param NotifiableEntityInterface $entity The entity that triggered the notification (like Follow or Like).
+     */
+    protected function handleBundledCreation(NotifiableEntityInterface $entity): void
     {
         $user = $this->getUser($entity); // User who will receive the notification
 
@@ -47,9 +58,9 @@ class NotificationService implements NotificationServiceInterface
     /**
      * Handle the deletion of a notification.
      *
-     * @param Model $entity The entity that triggered the notification (like Follow or Like).
+     * @param NotifiableEntityInterface $entity The entity that triggered the notification (like Follow or Like).
      */
-    public function handleDeletion(Model $entity): void
+    public function handleDeletion(NotifiableEntityInterface $entity): void
     {
         $contextId = $this->getContextId($entity);
         $user = $this->getUser($entity);
@@ -71,61 +82,54 @@ class NotificationService implements NotificationServiceInterface
     /**
      * Get the notification type based on the entity.
      *
-     * @param Model $entity
+     * @param NotifiableEntityInterface $entity
      * @return string
      */
-    protected function getNotificationType(Model $entity): string
+    protected function getNotificationType(NotifiableEntityInterface $entity): string
     {
-        return $entity instanceof Like ? 'comment_like' : 'follow';
+        return $entity->getNotificationType();
     }
 
     /**
      * Get the context type (like 'comment') based on the entity.
      *
-     * @param Model $entity
+     * @param NotifiableEntityInterface $entity
      * @return string
      */
-    protected function getContextType(Model $entity)
+    protected function getContextType(NotifiableEntityInterface $entity)
     {
-        return $entity instanceof Like ? 'global' : null;
+        return $entity->getContextType();
     }
 
     /**
      * Get the context ID (like comment ID) based on the entity.
      *
-     * @param Model $entity
+     * @param NotifiableEntityInterface $entity
      * @return int
      */
-    protected function getContextId(Model $entity)
+    protected function getContextId(NotifiableEntityInterface $entity)
     {
-        if ($entity instanceof Like) {
-            // Check if the likeable model is a Comment
-            if ($entity->likeable instanceof CommentContent) {
-                return $entity->likeable->comment_id; // Return the comment_id
-            }
-        }
-
-        return null;
+        return $entity->getContextId();
     }
 
     /**
      * Get the notification class based on the entity.
      *
-     * @param Model $entity
+     * @param NotifiableEntityInterface $entity
      * @return string
      */
-    protected function getNotificationClass(Model $entity): string
+    protected function getNotificationClass(NotifiableEntityInterface $entity): string
     {
-        return $entity instanceof Like ? CommentLikeNotification::class : FollowNotification::class;
+        return $entity->getNotificationClass();
     }
 
     /**
      * Update an existing notification with the new entity data.
      *
      * @param DatabaseNotification $notification
-     * @param Model $entity
+     * @param NotifiableEntityInterface $entity
      */
-    protected function updateExistingNotification(DatabaseNotification $notification, Model $entity): void
+    protected function updateExistingNotification(DatabaseNotification $notification, NotifiableEntityInterface $entity): void
     {
         $notificationData = $notification->data;
         $entityIds = $notificationData['ids'] ?? [];
@@ -146,10 +150,10 @@ class NotificationService implements NotificationServiceInterface
     /**
      * Create a new notification for the entity.
      *
-     * @param \App\Models\User $user
-     * @param Model $entity
+     * @param User $user
+     * @param NotifiableEntityInterface $entity
      */
-    protected function createNewNotification($user, Model $entity)
+    protected function createNewNotification($user, NotifiableEntityInterface $entity)
     {
         $notificationClass = $this->getNotificationClass($entity); // Get the class name dynamically
 
@@ -172,9 +176,9 @@ class NotificationService implements NotificationServiceInterface
      * Remove a like from the notification data.
      *
      * @param DatabaseNotification $notification
-     * @param Model $entity
+     * @param NotifiableEntityInterface $entity
      */
-    protected function removeLikeFromNotification(DatabaseNotification $notification, Model $entity): void
+    protected function removeLikeFromNotification(DatabaseNotification $notification, NotifiableEntityInterface $entity): void
     {
         $notificationData = $notification->data;
         $entityIds = $notificationData['ids'] ?? [];
@@ -196,8 +200,8 @@ class NotificationService implements NotificationServiceInterface
         }
     }
 
-    private function getUser(Model $entity)
+    private function getUser(NotifiableEntityInterface $entity)
     {
-        return $entity->target();
+        return $entity->targetUser();
     }
 }
