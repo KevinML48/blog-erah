@@ -27,4 +27,17 @@ class CommentNotificationStrategy implements NotificationStrategy
             // Handle top-level comment notification
         }
     }
+
+    public function handleDeletion(): void
+    {
+        // Delete notifications related to this comment (or its replies)
+        $notifications = Notification::where('data->comment_id', $this->comment->id)
+            ->where('type', CommentReplyNotification::class)
+            ->get();
+
+        // Delete the notifications if found
+        foreach ($notifications as $notification) {
+            $notification->delete();
+        }
+    }
 }

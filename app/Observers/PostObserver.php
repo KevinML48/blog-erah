@@ -42,7 +42,7 @@ class PostObserver
      */
     public function deleted(Post $post): void
     {
-        //
+        $this->notificationService->handleDeletion($post);
     }
 
     /**

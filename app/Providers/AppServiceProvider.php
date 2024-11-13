@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Comment;
+use App\Models\CommentContent;
 use App\Models\Follow;
 use App\Models\Like;
 use App\Models\Post;
+use App\Observers\CommentContentObserver;
 use App\Observers\CommentObserver;
 use App\Observers\FollowObserver;
 use App\Observers\LikeObserver;
@@ -38,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Like::observe(LikeObserver::class);
         Comment::observe(CommentObserver::class);
+        CommentContent::observe(CommentContentObserver::class);
         Post::observe(PostObserver::class);
         Follow::observe(FollowObserver::class);
         Gate::define('administrate', function ($user) {
