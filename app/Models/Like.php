@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Contracts\BundledNotification;
+use App\Notifications\CommentLikeNotification;
 use Illuminate\Database\Eloquent\Model;
 
-class Like extends Model
+class Like extends Model implements BundledNotification
 {
     protected $fillable = [
         'user_id',
@@ -23,8 +25,28 @@ class Like extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function target()
+    public function targetUser()
     {
         return $this->likeable->user;
+    }
+
+    public function getNotificationClass(): string
+    {
+        return CommentLikeNotification::class;
+    }
+
+    public function getNotificationType(): string
+    {
+        return 'comment_like';
+    }
+
+    public function getContextId()
+    {
+        return $this->likeable->comment_id;
+    }
+
+    public function getContextType(): ?string
+    {
+        return 'global';
     }
 }
