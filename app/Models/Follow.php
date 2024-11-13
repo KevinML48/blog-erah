@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Contracts\BundledNotification;
+use App\Contracts\NotificationStrategy;
 use App\Notifications\FollowNotification;
+use App\Strategies\BundleNotificationStrategy;
 use Illuminate\Database\Eloquent\Model;
 
 class Follow extends Model implements BundledNotification
@@ -43,5 +45,10 @@ class Follow extends Model implements BundledNotification
     public function getContextType(): ?string
     {
         return null;
+    }
+
+    public function getNotificationStrategy(): NotificationStrategy
+    {
+        return new BundleNotificationStrategy($this);
     }
 }

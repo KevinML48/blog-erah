@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Contracts\BundledNotification;
+use App\Contracts\NotificationStrategy;
 use App\Notifications\CommentLikeNotification;
+use App\Strategies\BundleNotificationStrategy;
 use Illuminate\Database\Eloquent\Model;
 
 class Like extends Model implements BundledNotification
@@ -48,5 +50,10 @@ class Like extends Model implements BundledNotification
     public function getContextType(): ?string
     {
         return 'global';
+    }
+
+    public function getNotificationStrategy(): NotificationStrategy
+    {
+        return new BundleNotificationStrategy($this);
     }
 }
