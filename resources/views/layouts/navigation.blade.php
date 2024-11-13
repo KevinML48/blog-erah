@@ -63,8 +63,10 @@
                         <x-svg-bell />
                         <span class="sr-only">Notifications</span>
                         @if( Auth::user()->unreadNotificationsCount() > 0 )
-                            <div
-                                class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-1 -end-1 dark:border-gray-900">{{ Auth::user()->unreadNotificationsCount() }}</div>
+                            <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-800 border-2 border-white rounded-full -top-1 -end-1 dark:border-gray-900">
+                                <span class="-z-10 absolute inset-0 rounded-full animate-[ping_1s_ease-in-out_3] bg-red-950 opacity-75"></span>
+                                <span>{{ Auth::user()->unreadNotificationsCount() }}</span>
+                            </div>
                         @endif
                     </a>
 
