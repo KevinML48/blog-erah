@@ -4,7 +4,9 @@ namespace App\Strategies;
 
 use App\Contracts\NotificationStrategy;
 use App\Models\Comment;
+use App\Notifications\CommentLikeNotification;
 use App\Notifications\CommentReplyNotification;
+use Illuminate\Notifications\Notification;
 
 class CommentNotificationStrategy implements NotificationStrategy
 {
@@ -30,9 +32,25 @@ class CommentNotificationStrategy implements NotificationStrategy
 
     public function handleDeletion(): void
     {
-        // Delete notifications related to this comment (or its replies)
-        $notifications = Notification::where('data->comment_id', $this->comment->id)
-            ->where('type', CommentReplyNotification::class)
+        // Delete CommentReplyNotification where the comment_id matches the deleted comment's ID
+        $this->deleteNotifications(CommentReplyNotification::class, 'data->comment_id', $this->comment->id);
+
+        // Delete CommentLikeNotification where the context_id matches the deleted comment's ID
+        $this->deleteNotifications(CommentLikeNotification::class, 'data->context_id', $this->comment->id);
+    }
+
+    /**
+     * A helper method to delete notifications based on the type and context.
+     *
+     * @param string $notificationClass The notification class to search for.
+     * @param string $field The field in the notification data to match.
+     * @param mixed $value The value to match for deletion.
+     */
+    protected function deleteNotifications(string $notificationClass, string $field, $value): void
+    {
+        // Retrieve notifications by class type and matching field
+        $notifications = Notification::where('type', $notificationClass)
+            ->whereRaw("JSON_EXTRACT(data, '$.$field') = ?", [$value])
             ->get();
 
         // Delete the notifications if found
