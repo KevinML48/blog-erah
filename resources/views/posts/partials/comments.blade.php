@@ -2,10 +2,8 @@
     @if (request()->routeIs('posts.show'))
         <h4 class="font-semibold text-lg">Commentaires ({{ $totalCommentsCount }})</h4>
 
-        <!-- Comment Form -->
-        <div id="reply-form--1}" class="mb-4">
-            @include('posts.partials.comment-form', ['parentId' => -1, 'post' => $post,])
-        </div>
+        <!-- Main Comment Form -->
+        <div id="form-container--1"></div> <!-- Empty container where the form will be appended -->
     @endif
 
     <!-- Displaying Comments -->

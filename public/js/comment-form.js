@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Function to initialize listeners
+    // Function to initialize listeners on the initial contenteditable divs
     function initEventListeners() {
         const commentAreas = document.querySelectorAll('[contenteditable="true"]');
 
@@ -28,38 +28,128 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Initialize listeners for existing content-editable divs
-    initEventListeners();
-
-    // Event delegation for dynamically added content-editable divs
+    // Event delegation for dynamically added contenteditable divs
     document.addEventListener('input', function (event) {
         if (event.target.matches('[contenteditable="true"]')) {
             const parentId = event.target.dataset.parentId;
-            updateCounter(parentId);
-            updateHiddenInput(parentId);
+            if (parentId) {
+                updateCounter(parentId);
+                updateHiddenInput(parentId);
+            }
         }
     });
 
     document.addEventListener('paste', function (event) {
         if (event.target.matches('[contenteditable="true"]')) {
             const parentId = event.target.dataset.parentId;
-            handlePaste(event, parentId);
-            updateHiddenInput(parentId);
-            updateCounter(parentId);
+            if (parentId) {
+                handlePaste(event, parentId);
+                updateHiddenInput(parentId);
+                updateCounter(parentId);
+            }
         }
     });
+
+    showReplyForm(-1);
+    // Initialize listeners for existing content-editable divs when the page loads
+    initEventListeners();
 });
 
 
+
+// Function to toggle the reply form visibility
 function toggleReplyForm(commentId) {
-    const replyForm = document.getElementById(`reply-form-${commentId}`);
-    replyForm.classList.toggle('hidden');
+    const formContainer = document.getElementById(`form-container-${commentId}`);
+
+    // Check if the form already exists
+    const form = formContainer.querySelector('form');
+    if (!form) {
+        // If the form is not yet loaded, load and show it
+        showReplyForm(commentId);
+    } else {
+        // If the form is already there, toggle visibility
+        formContainer.classList.toggle('hidden');
+    }
 }
 
+// Function to show the reply form
 function showReplyForm(commentId) {
-    const replyForm = document.getElementById(`reply-form-${commentId}`);
-    replyForm.classList.remove('hidden');
+    console.log(commentId);
+
+    const formContainer = document.getElementById(`form-container-${commentId}`);
+
+    // Check if the form already exists
+    if (formContainer.querySelector('form')) {
+        console.log('Form already exists');
+        return; // If the form already exists, don't clone it again
+    }
+
+    // Get the form template from the hidden template
+    const formTemplate = document.getElementById('reply-form-template');
+
+    // Clone the form template
+    const clonedForm = formTemplate.content.cloneNode(true);  // Use content to avoid unnecessary extra wrapper div
+
+    // Update form IDs and names dynamically for the comment
+    const form = clonedForm.querySelector('form');
+    form.id = `commentForm-${commentId}`;
+
+    // Update commentBody and commentInput IDs dynamically
+    const commentBody = clonedForm.querySelector('#commentBody');
+    commentBody.id = `commentBody-${commentId}`;
+    commentBody.dataset.parentId = commentId;
+
+    const commentInput = clonedForm.querySelector('#commentInput');
+    commentInput.id = `commentInput-${commentId}`;
+    commentInput.name = `input-body-${commentId}`;
+
+    const mediaUpload = clonedForm.querySelector('#mediaUpload');
+    mediaUpload.id = `mediaUpload-${commentId}`;
+
+    const mediaLabel = clonedForm.querySelector('#media-label');
+    mediaLabel.id = `media-label-${commentId}`;
+    mediaLabel.setAttribute('for', `media-${commentId}`);
+
+    const mediaInput = clonedForm.querySelector('#media');
+    mediaInput.id = `media-${commentId}`;
+    mediaInput.setAttribute('onchange', `previewImage(${commentId})`);
+
+    const displayMediaZone = clonedForm.querySelector('#displayMediaZone');
+    displayMediaZone.id = `displayMediaZone-${commentId}`;
+
+    const gifButton = clonedForm.querySelector('#gifButton');
+    gifButton.id = `gifButton-${commentId}`; // Dynamically set the button's ID
+    gifButton.setAttribute('onclick', `toggleModal(${commentId})`);
+
+    const selectedImage = clonedForm.querySelector('#selectedImage');
+    selectedImage.id = `selectedImage-${commentId}`;
+
+    const selectedGif = clonedForm.querySelector('#selectedGif');
+    selectedGif.id = `selectedGif-${commentId}`;
+
+    const cancelButton = clonedForm.querySelector('#cancelButton');
+    cancelButton.id = `cancelButton-${commentId}`;
+    cancelButton.setAttribute('onclick', `clearMedia(${commentId})`);
+
+    const gifUrl = clonedForm.querySelector('#gifUrl');
+    gifUrl.id = `gifUrl-${commentId}`;
+
+    const counterSpan = clonedForm.querySelector('#current');
+    counterSpan.id = `current-${commentId}`;
+
+    // Set the parent_id field to the current commentId
+    const parentIdInput = clonedForm.querySelector('input[name="parent_id"]');
+    parentIdInput.value = commentId;
+
+    // Append the cloned form to the container
+    formContainer.appendChild(clonedForm);
+
+    // Optionally, scroll to the form if you want a smooth experience
+    clonedForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
+
+
+
 
 
 // Function to update the character count
@@ -88,6 +178,7 @@ function updateHiddenInput(parentId) {
 
 
 function toggleModal(parentId) {
+    event.preventDefault();
     const modal = document.getElementById('searchModal');
     modal.classList.toggle('hidden');
     modal.classList.toggle('flex');
@@ -133,6 +224,9 @@ function displayGIFs(gifs) {
 }
 
 function previewImage(parentId) {
+    event.preventDefault();
+    console.log('tick')
+    console.log(parentId)
     const fileInput = document.getElementById(`media-${parentId}`);
     const displayZone = document.getElementById(`displayMediaZone-${parentId}`);
     const selectedImage = document.getElementById(`selectedImage-${parentId}`);
@@ -166,6 +260,7 @@ function selectGIF(url, parentId) {
 }
 
 function clearMedia(parentId) {
+    event.preventDefault();
     // Clear the GIF URL input
     document.getElementById(`gifUrl-${parentId}`).value = '';
 

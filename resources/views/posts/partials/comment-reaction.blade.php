@@ -37,6 +37,4 @@
 
 </div>
 
-<div id="reply-form-{{ $comment->id }}" class="hidden mt-2">
-    @include('posts.partials.comment-form', ['parentId' => $comment->id, 'post' => $comment->post])
-</div>
+<div id="form-container-{{ $comment->id }}"></div> <!-- Empty container where the form will be appended -->

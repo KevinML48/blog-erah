@@ -54,6 +54,9 @@
             </div>
         </div>
     </div>
+    <!-- Hidden comment form layout -->
+    @include('posts.partials.comment-form', ['post' => $post])
+
 
     <script src="{{ asset('js/likes.js') }}" defer></script>
 </x-app-layout>
