@@ -86,7 +86,6 @@ class BundleNotificationStrategy implements NotificationStrategy
     }
 
 
-
     /**
      * Get the context ID (like comment ID) based on the entity.
      *
@@ -120,12 +119,8 @@ class BundleNotificationStrategy implements NotificationStrategy
         $notificationData = $notification->data;
         $entityIds = $notificationData['ids'] ?? [];
 
-        if (count($entityIds) < 3) {
-            $entityIds[] = $entity->id;
-            $notificationData['ids'] = $entityIds;
-        }
-
-        $notificationData['count'] = ($notificationData['count'] ?? 0) + 1;
+        $entityIds[] = $entity->id;
+        $notificationData['ids'] = $entityIds;
 
         // Update the notification
         $notification->update([
@@ -146,7 +141,6 @@ class BundleNotificationStrategy implements NotificationStrategy
         // Prepare the notification data
         $notificationData = [
             'ids' => [$entity->id],
-            'count' => 1,
             'context_id' => $this->getContextId($entity),
         ];
 
@@ -173,11 +167,8 @@ class BundleNotificationStrategy implements NotificationStrategy
         $entityIds = array_filter($entityIds, fn($id) => $id !== $entity->id);
         $notificationData['ids'] = $entityIds;
 
-        // Decrement the count
-        $notificationData['count'] = max(0, count($entityIds));
-
         // If no entities are left, delete the notification
-        if ($notificationData['count'] === 0) {
+        if (count($entityIds) === 0) {
             $notification->delete();
         } else {
             $notification->update([
@@ -190,7 +181,6 @@ class BundleNotificationStrategy implements NotificationStrategy
     {
         return $entity->targetUser();
     }
-
 
 
 }

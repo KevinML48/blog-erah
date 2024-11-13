@@ -58,7 +58,6 @@ class CommentLikeNotification extends Notification
         return [
             'ids' => $this->notificationData['ids'],
             'context_id' => $this->notificationData['context_id'],
-            'count' => $this->notificationData['count'],
         ];
     }
 

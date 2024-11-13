@@ -14,7 +14,7 @@ class NotificationController extends Controller
         $notifications = auth()->user()->notifications()->latest()->get();
 
         $notifications = $notifications->reject(function ($notification) {
-            // Post Published Notifications
+            // Post Published
             if ($notification->type === 'App\Notifications\PostPublishedNotification') {
                 $post = Post::find($notification->data['post_id']);
                 if (!$post) {
@@ -23,7 +23,7 @@ class NotificationController extends Controller
                 } else {
                     $notification->post = $post;
                 }
-
+                // Comment Reply
             } elseif ($notification->type === 'App\Notifications\CommentReplyNotification') {
                 $comment = Comment::find($notification->data['comment_id']);
                 if (!$comment || !$comment->contentExists()) {
@@ -32,7 +32,7 @@ class NotificationController extends Controller
                 } else {
                     $notification->comment = $comment;
                 }
-
+                // Comment Like
             } elseif ($notification->type === 'App\Notifications\CommentLikeNotification') {
                 $comment = Comment::find($notification->data['context_id']);
                 if (!$comment || !$comment->contentExists()) {
@@ -41,26 +41,30 @@ class NotificationController extends Controller
                 }
 
                 $likeIds = $notification->data['ids'] ?? [];
-                $likes = Like::whereIn('id', $likeIds)->get();
+                $likes = Like::whereIn('id', $likeIds)
+                    ->take(3)
+                    ->get();
 
                 if ($likes->isEmpty()) {
                     $notification->delete();
                     return true;
                 } else {
                     $notification->likes = $likes;
-                    $notification->like_count = $notification->data['count'] ?? count($likeIds);
+                    $notification->like_count = count($likeIds);
                 }
-
+                // Follow
             } elseif ($notification->type === 'App\Notifications\FollowNotification') {
                 $followIds = $notification->data['ids'] ?? [];
-                $follows = Follow::whereIn('id', $followIds)->get();
+                $follows = Follow::whereIn('id', $followIds)
+                    ->take(3)
+                    ->get();
 
                 if ($follows->isEmpty()) {
                     $notification->delete();
                     return true;
                 } else {
                     $notification->follows = $follows;
-                    $notification->follow_count = $notification->data['count'] ?? count($followIds);
+                    $notification->follow_count = count($followIds);
                 }
             }
 

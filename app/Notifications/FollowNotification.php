@@ -57,7 +57,6 @@ class FollowNotification extends Notification
     {
         return [
             'ids' => $this->notificationData['ids'],
-            'count' => $this->notificationData['count'],
         ];
     }
 
