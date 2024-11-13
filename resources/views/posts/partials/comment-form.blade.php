@@ -12,7 +12,7 @@
             <div
                 id="commentBody-{{ $parentId }}"
                 contenteditable="true"
-                class="w-full border rounded-md p-2 bg-white text-black comment-body"
+                class="w-full border rounded-md p-2 bg-white text-black comment-body caret-red-600 focus:outline-none focus:outline-red-500 "
                 data-parent-id="{{ $parentId }}"
             ></div>
             <input type="hidden" name="input-body-{{ $parentId }}" id="commentInput-{{ $parentId }}" value="{{ old('input-body-' . $parentId) }}"/>
@@ -84,13 +84,3 @@
         </form>
     </div>
 </div>
-
-<script>
-    function performSearch() {
-        // Your search logic here
-        const query = document.getElementById('searchQuery').value;
-        console.log('Searching for:', query);
-        // Add your search logic here...
-    }
-</script>
-
