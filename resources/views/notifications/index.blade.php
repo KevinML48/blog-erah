@@ -18,9 +18,9 @@
                                 @elseif($notification->type === 'App\Notifications\CommentReplyNotification')
                                     @include('notifications.partials.new_reply', ['comment' => $notification->comment])
                                 @elseif($notification->type === 'App\Notifications\CommentLikeNotification')
-                                    @include('notifications.partials.new_like', ['likes' => $notification->likes, 'count' => $notification->like_count])
+                                    <x-notification-bundle :type="'like'" :list="$notification->likes" :count="$notification->like_count"/>
                                 @elseif($notification->type === 'App\Notifications\FollowNotification')
-                                    @include('notifications.partials.new_follow', ['follows' => $notification->follows, 'count' => $notification->follow_count])
+                                    <x-notification-bundle :type="'follow'" :list="$notification->follows" :count="$notification->follow_count"/>
                                 @endif
                             </div>
                         @endforeach
