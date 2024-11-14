@@ -37,3 +37,28 @@ function displayComments(container, content, button, currentPage, hasMore) {
         button.style.display = 'none';
     }
 }
+
+// Function to trigger the existing loadMore function
+function triggerLoadMore(button) {
+    const url = button.getAttribute('data-url');
+    const page = button.getAttribute('data-page');
+    loadMore(button, url); // Call the existing loadMore function
+}
+
+// Check if the user is at the bottom of the page
+window.onscroll = function() {
+    // When the user scrolls to the bottom of the page
+    if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight) {
+        const loadMoreButton = document.getElementById('load-more');
+
+        // Only trigger loadMore if there are more pages (button is in the DOM)
+        if (loadMoreButton && loadMoreButton.style.display !== 'none') {
+            // Trigger the loadMore function
+            triggerLoadMore(loadMoreButton);
+
+            // Optionally update the page number after loading
+            const nextPage = parseInt(loadMoreButton.getAttribute('data-page')) + 1;
+            loadMoreButton.setAttribute('data-page', nextPage);
+        }
+    }
+};

@@ -37,7 +37,7 @@
 
 
     @if ($comments->hasMorePages())
-        <button id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}"
+        <button class="hidden" id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}"
                 data-page="{{ $comments->currentPage() }}"
                 onclick="loadMore(this, '{{ route('comments.loadMore', ['post' => $post->id]) }}')">
             Charger plus de commentaires
@@ -61,18 +61,4 @@
     </script>
 @endif
 
-@if (session()->has('failed_id'))
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const failedId = "{{ session('failed_id') }}";
-            const targetElement = document.getElementById("reply-form-" + failedId);
-            if (failedId > 0) {
-                showReplyForm(failedId);
-            }
-            if (targetElement) {
-                targetElement.scrollIntoView({behavior: "smooth", block: "center"});
-            }
-        });
-    </script>
-@endif
 
