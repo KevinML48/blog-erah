@@ -6,6 +6,7 @@ use App\Models\Comment;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 
 
 class StoreCommentRequest extends FormRequest
@@ -61,17 +62,21 @@ class StoreCommentRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(Validator $validator): void
+    protected function failedValidation(Validator $validator)
     {
-        $parentId = $this->input('parent_id');
-        $this->session()->flash('failed_id', $parentId);
-        if ($parentId > 0) {
-            $postId = $this->input('post')->id;
-            $response = redirect()->route('comments.show', [$postId, $parentId])
-                ->withInput($this->input())
-                ->withErrors($validator);
-            throw new HttpResponseException($response);
-        }
-        parent::failedValidation($validator);
+        $errors = $validator->errors();
+        Log::info($errors);
+        throw new HttpResponseException(
+            response()->json([
+                'errors' => $errors,
+                'form_id' => $this->getFormId(),
+            ], 422)
+        );
     }
+
+    protected function getFormId()
+    {
+        return 'commentForm-' . $this->input('parent_id');
+    }
+
 }

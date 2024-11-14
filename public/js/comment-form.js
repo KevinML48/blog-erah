@@ -74,13 +74,10 @@ function toggleReplyForm(commentId) {
 
 // Function to show the reply form
 function showReplyForm(commentId) {
-    console.log(commentId);
-
     const formContainer = document.getElementById(`form-container-${commentId}`);
 
     // Check if the form already exists
     if (formContainer.querySelector('form')) {
-        console.log('Form already exists');
         return; // If the form already exists, don't clone it again
     }
 
@@ -317,4 +314,85 @@ function handlePaste(event, parentId) {
     if (!imageFound) {
         return; // let the event continue, allowing the default paste
     }
+}
+
+document.addEventListener('submit', function(event) {
+    if (event.target.matches('form[id^="commentForm-"]')) {
+        event.preventDefault(); // Prevent the form from submitting the normal way
+
+        const form = event.target;
+        const formId = form.id;
+        const formData = new FormData(form);
+
+        fetch(form.action, {  // Use the form's action attribute for the URL
+            method: form.method, // Use the form's method (POST/PUT, etc.)
+            body: formData,
+        })
+            .then(response => {
+                if (!response.ok) {
+                    // Check if the response status is 413 (Payload Too Large)
+                    if (response.status === 413) {
+                        // Display a specific error for file size limit
+                        displayFileSizeError(form);
+                        return;
+                    }
+
+                    // If the response status is another error (e.g., 422 for validation)
+                    return response.json().then(data => {
+                        if (data.errors) {
+                            // If there are validation errors, display them
+                            displayValidationErrors(data.errors, formId);
+                        }
+                    });
+                }
+
+                return response.json(); // If the response is okay, continue parsing JSON
+            })
+            .then(data => {
+                if (data && data.redirect_url) {
+                    // If successful, redirect the user to the provided URL
+                    window.location.href = data.redirect_url;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+});
+
+function displayFileSizeError(form) {
+    const errorContainer = form.querySelector('.error-messages') || createErrorContainer(form);
+
+    // Clear previous errors
+    errorContainer.innerHTML = '';
+
+    // Create and append the file size error message
+    const errorElement = document.createElement('p');
+    errorElement.classList.add('error-message');
+    errorElement.textContent = 'Le fichier téléchargé dépasse la limite de taille du serveur (2 Mo). Veuillez télécharger un fichier plus petit.';
+    errorContainer.appendChild(errorElement);
+}
+function displayValidationErrors(errors, formId) {
+    const form = document.getElementById(formId);
+    const errorContainer = form.querySelector('.error-messages') || createErrorContainer(form);
+
+    // Clear previous errors
+    errorContainer.innerHTML = '';
+
+    // Display new errors
+    Object.keys(errors).forEach(field => {
+        errors[field].forEach(message => {
+            const errorElement = document.createElement('p');
+            errorElement.classList.add('error-message');
+            errorElement.textContent = message;
+            errorContainer.appendChild(errorElement);
+        });
+    });
+}
+
+function createErrorContainer(form) {
+    const errorContainer = document.createElement('div');
+    errorContainer.classList.add('error-messages');
+    form.prepend(errorContainer);  // Place the error container at the top of the form
+    return errorContainer;
 }
