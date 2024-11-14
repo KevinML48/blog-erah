@@ -18,7 +18,7 @@ class CommentService implements CommentServiceInterface
 
         $parentId = $parentId == -1 ? null : $parentId;
         $comment = Comment::create([
-            'post_id' => $postId,
+            'post_id' => (int) $postId,
             'parent_id' => $parentId,
         ]);
 
@@ -36,7 +36,7 @@ class CommentService implements CommentServiceInterface
         return $comment;
     }
 
-    public function show(Post $post, Comment $comment): LengthAwarePaginator
+    public function show(Comment $comment): LengthAwarePaginator
     {
         return Comment::with(['content.user', 'replies.content.user'])
             ->where('id', $comment->id)

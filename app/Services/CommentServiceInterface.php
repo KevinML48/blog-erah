@@ -10,7 +10,7 @@ interface CommentServiceInterface
 {
     public function store($userId, $postId, $parentId, $body, $mediaPath, $gifUrl): Comment;
 
-    public function show(Post $post, Comment $comment): LengthAwarePaginator;
+    public function show(Comment $comment): LengthAwarePaginator;
 
     public function loadMoreComments(Post $post, $currentPage): LengthAwarePaginator;
 

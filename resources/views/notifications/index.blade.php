@@ -31,6 +31,11 @@
         </div>
     </div>
 
+    <!-- Hidden comment form layout -->
+    @include('posts.partials.comment-form')
+    <!-- Hidden GIF Modal -->
+    @include('posts.partials.gif-modal')
+
     <script src="{{ asset('js/comment-form.js') }}" defer></script>
     <script src="{{ asset('js/likes.js') }}" defer></script>
 </x-app-layout>

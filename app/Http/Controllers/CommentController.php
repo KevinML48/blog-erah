@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -20,10 +21,13 @@ class CommentController extends Controller
         $this->commentService = $commentService;
     }
 
-    public function store(StoreCommentRequest $request, Post $post): RedirectResponse
+    public function store(StoreCommentRequest $request): RedirectResponse
     {
+        Log::info('STORE');
+        Log::info($request->input('post_id'));
+
         $userId = auth()->id();
-        $postId = $post->id;
+        $postId = $request->input('post_id') ??  Comment::find($request->parent_id)->post->id;
         $body = $request->input("input-body-$request->parent_id");
         $parentId = $request->parent_id == -1 ? null : $request->parent_id;
         $mediaPath = null;
@@ -35,14 +39,14 @@ class CommentController extends Controller
         }
 
         $newComment = $this->commentService->store($userId, $postId, $parentId, $body, $mediaPath, $request->gif_url);
-
+        Log::info($newComment);
         return redirect()->route('comments.show', [$newComment->post->id, $newComment->id])
             ->with('success', 'Commentaire ajouté.');
     }
 
     public function show(Post $post, Comment $comment): View
     {
-        $comments = $this->commentService->show($post, $comment);
+        $comments = $this->commentService->show($comment);
         return view('posts.show', compact('post', 'comments', 'comment'));
     }
 

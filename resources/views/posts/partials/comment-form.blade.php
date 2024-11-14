@@ -1,8 +1,10 @@
 <template id="reply-form-template" style="display: none;">
-    <form id="commentForm" action="{{ route('comments.store', $post->id) }}" method="POST"
+    <form id="commentForm" action="{{ route('comments.store') }}" method="POST"
           enctype="multipart/form-data">
         @csrf
-
+        @if(request()->route('post'))
+            <input type="hidden" name="post_id" value="{{ request()->route('post')->id }}">
+        @endif
         {{-- Comment Body --}}
         @error('input-body')
         <span class="text-red-600 text-sm">{{ $message }}</span>
@@ -55,7 +57,6 @@
     </form>
 </template>
 
-<!-- Modal Structure -->
 <div id="searchModal" class="fixed inset-0 bg-gray-800 bg-opacity-75 hidden items-center justify-center">
     <div class="rounded-lg p-6 max-w-[66%] max-h-[66%] overflow-auto flex flex-col erah-box">
         <div class="flex justify-between items-center mb-4">
@@ -73,3 +74,4 @@
         </form>
     </div>
 </div>
+

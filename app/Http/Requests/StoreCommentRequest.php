@@ -46,10 +46,6 @@ class StoreCommentRequest extends FormRequest
                             $fail("Commentaire supprimé ou introuvable.");
                             return;
                         }
-
-                        if ($parentComment->post_id !== $this->route('post')->id) {
-                            $fail();
-                        }
                     }
                 },
             ],
@@ -70,7 +66,7 @@ class StoreCommentRequest extends FormRequest
         $parentId = $this->input('parent_id');
         $this->session()->flash('failed_id', $parentId);
         if ($parentId > 0) {
-            $postId = $this->route('post')->id;
+            $postId = $this->input('post')->id;
             $response = redirect()->route('comments.show', [$postId, $parentId])
                 ->withInput($this->input())
                 ->withErrors($validator);
