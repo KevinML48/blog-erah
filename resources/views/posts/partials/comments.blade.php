@@ -23,7 +23,7 @@
             @endif
         </div>
     @endif
-    <div class="mt-4" id="comments-container">
+    <div class="mt-4" id="replies-container--1">
         @if (request()->routeIs('comments.show'))
             <!-- Display the parent comment, if one exists -->
             @if ($comment->parent_id)

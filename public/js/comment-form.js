@@ -140,9 +140,6 @@ function showReplyForm(commentId) {
 
     // Append the cloned form to the container
     formContainer.appendChild(clonedForm);
-
-    // Optionally, scroll to the form if you want a smooth experience
-    clonedForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 
@@ -336,7 +333,6 @@ document.addEventListener('submit', function(event) {
                         displayFileSizeError(form);
                         return;
                     }
-
                     // If the response status is another error (e.g., 422 for validation)
                     return response.json().then(data => {
                         if (data.errors) {
@@ -349,9 +345,9 @@ document.addEventListener('submit', function(event) {
                 return response.json(); // If the response is okay, continue parsing JSON
             })
             .then(data => {
-                if (data && data.redirect_url) {
-                    // If successful, redirect the user to the provided URL
-                    window.location.href = data.redirect_url;
+                if (data.comment) {
+                    // If successful, insert the new comment into the replies container
+                    addCommentToReplies(data.comment, formId);
                 }
             })
             .catch(error => {
@@ -359,6 +355,21 @@ document.addEventListener('submit', function(event) {
             });
     }
 });
+
+function addCommentToReplies(commentHtml, formId) {
+    const repliesContainer = document.getElementById(`replies-container-${formId.replace('commentForm-', '')}`);
+    if (repliesContainer) {
+        repliesContainer.insertAdjacentHTML('afterbegin', commentHtml);
+    }
+
+    // Remove the submitted form entirely
+    const form = document.getElementById(formId);
+    if (form) {
+        form.remove(); // Remove the form element from the DOM
+    }
+}
+
+
 
 function displayFileSizeError(form) {
     const errorContainer = form.querySelector('.error-messages') || createErrorContainer(form);

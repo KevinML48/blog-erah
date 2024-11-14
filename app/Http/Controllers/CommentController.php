@@ -38,7 +38,7 @@ class CommentController extends Controller
 
         return response()->json([
             'message' => 'Commentaire ajouté.',
-            'redirect_url' => route('comments.show', [$newComment->post->id, $newComment->id]),
+            'comment' => view('posts.partials.comment-structure', ['comment' => $newComment, 'depth' => -1])->render(),
         ]);
     }
 
