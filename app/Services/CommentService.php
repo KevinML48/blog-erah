@@ -18,7 +18,7 @@ class CommentService implements CommentServiceInterface
 
         $parentId = $parentId == -1 ? null : $parentId;
         $comment = Comment::create([
-            'post_id' => (int) $postId,
+            'post_id' => (int)$postId,
             'parent_id' => $parentId,
         ]);
 
@@ -31,8 +31,6 @@ class CommentService implements CommentServiceInterface
             'comment_id' => $comment->id,
         ]);
 
-
-
         return $comment;
     }
 
@@ -43,18 +41,34 @@ class CommentService implements CommentServiceInterface
             ->paginate(5);
     }
 
-    public function loadMoreComments(Post $post, $currentPage): LengthAwarePaginator
+    public function loadMoreComments(Post $post, $currentPage, array $existingCommentIds): LengthAwarePaginator
     {
-        return Comment::with(['content.user', 'replies.content.user'])
+        $comments = Comment::with(['content.user', 'replies.content.user'])
             ->where('post_id', $post->id)
             ->whereNull('parent_id')
             ->paginate(5, ['*'], 'page', $currentPage + 1);
+
+        $filteredComments = $comments->getCollection()->reject(function ($comment) use ($existingCommentIds) {
+            return in_array($comment->id, $existingCommentIds);
+        });
+
+        $comments->setCollection($filteredComments);
+
+        return $comments;
     }
 
-    public function loadMoreReplies(Comment $comment, $currentPage): LengthAwarePaginator
+
+    public function loadMoreReplies(Comment $comment, $currentPage, array $existingReplyIds): LengthAwarePaginator
     {
-        return $comment->replies()
-            ->paginate(2, ['*'], 'page', $currentPage + 1);
+        $comments = $comment->replies()->paginate(2, ['*'], 'page', $currentPage + 1);
+
+        $filteredReplies = $comments->getCollection()->reject(function ($reply) use ($existingReplyIds) {
+            return in_array($reply->id, $existingReplyIds);
+        });
+
+        $comments->setCollection($filteredReplies);
+
+        return $comments;
     }
 
     public function destroy(Comment $comment): ?Comment

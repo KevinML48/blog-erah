@@ -12,9 +12,9 @@ interface CommentServiceInterface
 
     public function show(Comment $comment): LengthAwarePaginator;
 
-    public function loadMoreComments(Post $post, $currentPage): LengthAwarePaginator;
+    public function loadMoreComments(Post $post, $currentPage, array $existingCommentIds): LengthAwarePaginator;
 
-    public function loadMoreReplies(Comment $comment, $currentPage): LengthAwarePaginator;
+    public function loadMoreReplies(Comment $comment, $currentPage, array $existingReplyIds): LengthAwarePaginator;
 
     public function destroy(Comment $comment): ?Comment;
 

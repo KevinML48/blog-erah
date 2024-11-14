@@ -52,10 +52,12 @@ class CommentController extends Controller
     public function loadMoreComments(Post $post, Request $request): JsonResponse
     {
         $currentPage = $request->input('page', 1);
-        $comments = $this->commentService->loadMoreComments($post, $currentPage);
+        $existingCommentIds = json_decode($request->input('existing_comment_ids', '[]'));
+
+        $comments = $this->commentService->loadMoreComments($post, $currentPage, $existingCommentIds);
 
         return response()->json([
-            'comments' => view('posts.partials.comments-loop', compact('comments'))->render(),
+            'comments' => view('posts.partials.comment-structure-loop', compact('comments'))->render(),
             'hasMore' => $comments->hasMorePages(),
         ]);
     }
@@ -63,7 +65,9 @@ class CommentController extends Controller
     public function loadMoreReplies(Comment $comment, Request $request): JsonResponse
     {
         $currentPage = $request->input('page', 1);
-        $comments = $this->commentService->loadMoreReplies($comment, $currentPage);
+        $existingReplyIds = json_decode($request->input('existing_comment_ids', '[]'));
+
+        $comments = $this->commentService->loadMoreReplies($comment, $currentPage, $existingReplyIds);
 
         return response()->json([
             'commentId' => $comment->id,
