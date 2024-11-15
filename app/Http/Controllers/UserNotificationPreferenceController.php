@@ -77,7 +77,7 @@ class UserNotificationPreferenceController extends Controller
                 'notification_type_id' => $replyNotificationType->id,
                 'context_id' => null,
                 'context_type' => 'global',
-                'is_enabled' => true,
+                'is_enabled' => false,
             ]);
         }
 
