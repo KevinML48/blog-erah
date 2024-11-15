@@ -3,6 +3,7 @@
 namespace App\Strategies;
 
 use App\Contracts\NotificationStrategy;
+use App\Models\NotificationType;
 use App\Models\Post;
 use App\Models\User;
 use App\Notifications\PostPublishedNotification;
@@ -20,7 +21,7 @@ class PostNotificationStrategy implements NotificationStrategy
     public function handleCreation(): void
     {
         // Logic for handling post creation
-        $notificationType = PostPublishedNotification::where('name', 'post_published')->first();
+        $notificationType = NotificationType::where('name', 'post_published')->first();
 
         if (!$notificationType) {
             return;

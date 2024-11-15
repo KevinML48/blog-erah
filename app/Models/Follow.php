@@ -6,10 +6,15 @@ use App\Contracts\BundledNotification;
 use App\Contracts\NotificationStrategy;
 use App\Notifications\FollowNotification;
 use App\Strategies\BundleNotificationStrategy;
+use Database\Factories\FollowFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Follow extends Model implements BundledNotification
 {
+    /** @use HasFactory<FollowFactory> */
+    use HasFactory;
+
     protected $fillable = ['follower_id', 'followed_id'];
 
     public function follower()

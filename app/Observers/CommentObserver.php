@@ -24,7 +24,7 @@ class CommentObserver
      */
     public function created(Comment $comment): void
     {
-        $this->notificationService->handleCreation($comment);
+        
     }
 
     /**

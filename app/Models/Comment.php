@@ -5,6 +5,8 @@ namespace App\Models;
 use App\Contracts\NotificationStrategy;
 use App\Contracts\SingleNotification;
 use App\Strategies\CommentNotificationStrategy;
+use Database\Factories\CommentFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -12,6 +14,10 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Comment extends Model implements SingleNotification
 {
+
+    /** @use HasFactory<CommentFactory> */
+    use HasFactory;
+    
     /**
      * The table associated with the model.
      *
