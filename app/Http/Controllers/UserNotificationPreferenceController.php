@@ -8,39 +8,6 @@ use Illuminate\Http\Request;
 
 class UserNotificationPreferenceController extends Controller
 {
-    public function index()
-    {
-        $themes = Theme::all();
-
-        // Get the specific notification types for post publication, reply, and like
-        $postPublishedType = NotificationType::where('name', 'post_published')->first();
-        $replyNotificationType = NotificationType::where('name', 'comment_reply')->first();
-        $likeNotificationType = NotificationType::where('name', 'comment_like')->first();
-
-        // Fetch user's preferences for post publication notifications, keyed by theme ID
-        $postPreferences = auth()->user()
-            ->notificationPreferences()
-            ->where('notification_type_id', $postPublishedType->id)
-            ->where('context_type', 'theme')
-            ->get()
-            ->keyBy('context_id');
-
-        // Fetch user's preferences for replies (global setting)
-        $replyPreferences = auth()->user()
-            ->notificationPreferences()
-            ->where('notification_type_id', $replyNotificationType->id)
-            ->get()
-            ->keyBy('context_id');
-
-        // Fetch user's preferences for likes (global setting)
-        $likePreferences = auth()->user()
-            ->notificationPreferences()
-            ->where('notification_type_id', $likeNotificationType->id)
-            ->get()
-            ->keyBy('context_id');
-
-        return view('notifications.preferences', compact('themes', 'postPreferences', 'replyPreferences', 'likePreferences'));
-    }
 
     public function update(Request $request)
     {
@@ -96,6 +63,6 @@ class UserNotificationPreferenceController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Préférences mises à jour avec succès !');
+        return redirect()->back()->with('success', 'Préférences mises à jour');
     }
 }

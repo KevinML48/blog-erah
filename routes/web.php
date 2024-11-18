@@ -52,7 +52,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
 
     // Notification Settings
-    Route::get('/notifications/preferences', [UserNotificationPreferenceController::class, 'index'])->name('notifications.preferences');
     Route::put('/notifications/preferences', [UserNotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
 
     // Profile Picture Update

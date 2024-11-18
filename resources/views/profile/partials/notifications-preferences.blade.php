@@ -8,7 +8,5 @@
             {{ __("Mettez à jour vos préférences de notifications.") }}
         </p>
     </header>
-    <a href="{{ route('notifications.preferences') }}" class="erah-link-amnesic">
-        Préférences →
-    </a>
+    @include('notifications.partials.preferences')
 </section>

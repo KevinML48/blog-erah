@@ -11,7 +11,7 @@
 
     @if(Auth::user()->profile_picture)
         <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture"
-             class="w-24 h-24 rounded-full object-fill">
+             class="w-48 h-48 rounded-full object-fill">
     @endif
 
     <form action="{{ route('profile.update.picture') }}" method="POST" enctype="multipart/form-data">
