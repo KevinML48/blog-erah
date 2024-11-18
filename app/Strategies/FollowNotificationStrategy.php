@@ -5,6 +5,7 @@ namespace App\Strategies;
 use App\Contracts\BundledNotification;
 use App\Contracts\NotificationStrategy;
 use App\Models\Follow;
+use Illuminate\Support\Facades\Blade;
 
 class FollowNotificationStrategy implements NotificationStrategy
 {
@@ -36,8 +37,13 @@ class FollowNotificationStrategy implements NotificationStrategy
             $notification->delete(); // If no follows, delete the notification
             return null;
         } else {
-            $notification->follows = $follows; // Attach the follows to the notification
-            $notification->follow_count = count($followIds); // Add the follow count to the notification
+            $notification->body = Blade::render(
+                '<x-notification-bundle :type="\'follow\'" :list="$list" :count="$count"/>',
+                [
+                    'list' => $follows,
+                    'count' => count($followIds),
+                ]
+            );
         }
     }
 }

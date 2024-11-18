@@ -67,7 +67,7 @@ class CommentNotificationStrategy implements NotificationStrategy
             $notification->delete();
             return null;
         } else {
-            $notification->comment = $comment;
+            $notification->body = view('notifications.partials.new_reply', ['comment' => $comment])->render();
         }
     }
 }

@@ -6,6 +6,7 @@ use App\Contracts\BundledNotification;
 use App\Contracts\NotificationStrategy;
 use App\Models\Comment;
 use App\Models\Like;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Log;
 
 class LikeNotificationStrategy implements NotificationStrategy
@@ -46,8 +47,13 @@ class LikeNotificationStrategy implements NotificationStrategy
             $notification->delete();
             return null;
         } else {
-            $notification->likes = $likes;
-            $notification->like_count = count($likeIds);
+            $notification->body = Blade::render(
+                '<x-notification-bundle :type="\'like\'" :list="$list" :count="$count"/>',
+                [
+                    'list' => $likes,
+                    'count' => count($likeIds),
+                ]
+            );
         }
     }
 }
