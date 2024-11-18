@@ -1,4 +1,7 @@
 <x-app-layout>
+    <x-slot name="title">
+        {{ __('Modifier Post') }}
+    </x-slot>
     <x-slot name="header">
         {{ __('Modifier Post') }}
     </x-slot>

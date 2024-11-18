@@ -1,4 +1,7 @@
 <x-app-layout>
+    <x-slot name="title">
+        {{ __('Notifications') }}
+    </x-slot>
     <x-slot name="header">
         <h2>{{ __('Notifications') }}</h2>
     </x-slot>

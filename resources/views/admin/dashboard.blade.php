@@ -1,4 +1,7 @@
 <x-app-layout>
+    <x-slot name="title">
+        {{ __('Admin Dashboard') }}
+    </x-slot>
     <x-slot name="header">
         {{ __('Admin Dashboard') }}
     </x-slot>

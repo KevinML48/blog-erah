@@ -1,4 +1,7 @@
 <x-app-layout>
+    <x-slot name="title">
+        Votre Fil
+    </x-slot>
     <x-slot name="header">
         Votre Fil
     </x-slot>

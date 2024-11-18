@@ -1,4 +1,7 @@
 <x-app-layout>
+    <x-slot name="title">
+        {{ __('Créer Post') }}
+    </x-slot>
     <x-slot name="header">
         {{ __('Créer Post') }}
     </x-slot>
