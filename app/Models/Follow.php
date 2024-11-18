@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Contracts\BundledNotification;
 use App\Contracts\NotificationStrategy;
 use App\Notifications\FollowNotification;
-use App\Strategies\BundleNotificationStrategy;
+use App\Strategies\FollowNotificationStrategy;
 use Database\Factories\FollowFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -54,6 +54,6 @@ class Follow extends Model implements BundledNotification
 
     public function getNotificationStrategy(): NotificationStrategy
     {
-        return new BundleNotificationStrategy($this);
+        return new FollowNotificationStrategy($this);
     }
 }

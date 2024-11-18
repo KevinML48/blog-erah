@@ -7,7 +7,7 @@ use App\Contracts\NotificationStrategy;
 use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
 
-class BundleNotificationStrategy implements NotificationStrategy
+class BundledNotificationStrategy implements NotificationStrategy
 {
     protected $entity;
 

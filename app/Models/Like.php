@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Contracts\BundledNotification;
 use App\Contracts\NotificationStrategy;
 use App\Notifications\CommentLikeNotification;
-use App\Strategies\BundleNotificationStrategy;
+use App\Strategies\LikeNotificationStrategy;
 use Database\Factories\LikeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -59,6 +59,6 @@ class Like extends Model implements BundledNotification
 
     public function getNotificationStrategy(): NotificationStrategy
     {
-        return new BundleNotificationStrategy($this);
+        return new LikeNotificationStrategy($this);
     }
 }
