@@ -12,9 +12,9 @@ class CommentNotificationStrategy implements NotificationStrategy
 {
     protected $comment;
 
-    public function __construct(Comment $comment)
+    public function __construct(Comment $comment=null)
     {
-        $this->comment = $comment;
+        $this->comment = $comment ?? new Comment();
     }
 
     public function handleCreation(): void
@@ -23,7 +23,7 @@ class CommentNotificationStrategy implements NotificationStrategy
         if ($this->comment->parent_id) {
             $parentComment = Comment::find($this->comment->parent_id);
             if ($parentComment) {
-                $parentComment->content->user->notify(new CommentReplyNotification($this->comment));
+                $parentComment->content->user->notify(new CommentReplyNotification(['comment_id' => $this->comment->id]));
             }
         } else {
             // Handle top-level comment notification
@@ -56,6 +56,18 @@ class CommentNotificationStrategy implements NotificationStrategy
         // Delete the notifications if found
         foreach ($notifications as $notification) {
             $notification->delete();
+        }
+    }
+
+    public function processNotification($notification)
+    {
+        $comment = Comment::find($notification->data['comment_id']);
+
+        if (!$comment || !$comment->contentExists()) {
+            $notification->delete();
+            return null;
+        } else {
+            $notification->comment = $comment;
         }
     }
 }

@@ -2,11 +2,13 @@
 
 namespace App\Notifications;
 
+use App\Contracts\NotificationStrategy;
+use App\Strategies\LikeNotificationStrategy;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CommentLikeNotification extends Notification
+class CommentLikeNotification extends Notification implements NotificationWithStrategyInterface
 {
     use Queueable;
     protected $notificationData;
@@ -61,4 +63,8 @@ class CommentLikeNotification extends Notification
         ];
     }
 
+    public function getNotificationStrategy(): NotificationStrategy
+    {
+        return new LikeNotificationStrategy();
+    }
 }

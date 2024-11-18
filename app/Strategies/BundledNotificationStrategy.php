@@ -4,6 +4,7 @@ namespace App\Strategies;
 
 use App\Contracts\BundledNotification;
 use App\Contracts\NotificationStrategy;
+use App\Models\Like;
 use App\Models\User;
 use Illuminate\Notifications\DatabaseNotification;
 
@@ -11,9 +12,9 @@ class BundledNotificationStrategy implements NotificationStrategy
 {
     protected $entity;
 
-    public function __construct(BundledNotification $entity)
+    public function __construct(BundledNotification $entity = null)
     {
-        $this->entity = $entity;
+        $this->entity = $entity ?? new Like();
     }
 
     public function handleCreation(): void
@@ -183,4 +184,8 @@ class BundledNotificationStrategy implements NotificationStrategy
     }
 
 
+    public function processNotification(DatabaseNotification $notification)
+    {
+        // TODO: Implement processNotification() method.
+    }
 }

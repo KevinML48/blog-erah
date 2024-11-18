@@ -2,23 +2,26 @@
 
 namespace App\Notifications;
 
+use App\Contracts\NotificationStrategy;
 use App\Models\Post;
+use App\Strategies\PostNotificationStrategy;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PostPublishedNotification extends Notification
+class PostPublishedNotification extends Notification implements NotificationWithStrategyInterface
 {
     use Queueable;
 
-    protected $post;
+    public $post;
+    protected $notificationData;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct(Post $post)
+    public function __construct($notificationData)
     {
-        $this->post = $post;
+        $this->notificationData = $notificationData;
     }
 
     /**
@@ -57,13 +60,18 @@ class PostPublishedNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'type' => 'new_post',
-            'post_id' => $this->post->id,
+            'post_id' => $this->notificationData['post_id'],
         ];
     }
 
     public function post()
     {
-        return Post::find($this->data['post_id']);
+
+        return Post::find($this->notificationData['post_id']);
+    }
+
+    public function getNotificationStrategy(): NotificationStrategy
+    {
+        return new PostNotificationStrategy();
     }
 }

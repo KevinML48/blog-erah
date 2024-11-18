@@ -4,15 +4,18 @@ namespace App\Strategies;
 
 use App\Contracts\BundledNotification;
 use App\Contracts\NotificationStrategy;
+use App\Models\Comment;
+use App\Models\Like;
+use Illuminate\Support\Facades\Log;
 
 class LikeNotificationStrategy implements NotificationStrategy
 {
     protected BundledNotification $entity;
     protected BundledNotificationStrategy $strategy;
 
-    public function __construct(BundledNotification $entity)
+    public function __construct(BundledNotification $entity =null)
     {
-        $this->entity = $entity;
+        $this->entity = $entity ?? new Like();
         $this->strategy = new BundledNotificationStrategy($entity);
     }
 
@@ -24,5 +27,27 @@ class LikeNotificationStrategy implements NotificationStrategy
     public function handleDeletion(): void
     {
         $this->strategy->handleDeletion();
+    }
+
+    public function processNotification($notification)
+    {
+        Log::info('in like strategy');
+        $comment = Comment::find($notification->data['context_id']);
+
+        if (!$comment || !$comment->contentExists()) {
+            $notification->delete();
+            return null;
+        }
+
+        $likeIds = $notification->data['ids'] ?? [];
+        $likes = Like::whereIn('id', $likeIds)->take(3)->get();
+
+        if ($likes->isEmpty()) {
+            $notification->delete();
+            return null;
+        } else {
+            $notification->likes = $likes;
+            $notification->like_count = count($likeIds);
+        }
     }
 }

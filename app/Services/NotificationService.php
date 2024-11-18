@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Contracts\NotifiableEntityInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class NotificationService implements NotificationServiceInterface
 {
@@ -33,4 +34,29 @@ class NotificationService implements NotificationServiceInterface
         // Delegate to the strategy to handle the creation logic
         $strategy->handleDeletion();
     }
+
+
+    public function processNotifications(LengthAwarePaginator $notifications): void
+    {
+        $notifications->getCollection()->transform(function ($notification) {
+            $notification->unread = $notification->read_at ? '' : true;
+            $notificationClass = $notification->type;
+
+            if (class_exists($notificationClass)) {
+                $notificationInstance = new $notificationClass($notification);
+                $strategy = $notificationInstance->getNotificationStrategy();
+                $strategy->processNotification($notification);
+            } else {
+                $notification->delete();
+                return null;
+            }
+
+            return $notification; // Returning the modified notification
+        });
+
+        $notifications->getCollection()->reject(function ($notification) {
+            return $notification === null;
+        });
+    }
+
 }

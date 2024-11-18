@@ -2,21 +2,23 @@
 
 namespace App\Notifications;
 
-use App\Models\Comment;
+use App\Contracts\NotificationStrategy;
+use App\Strategies\CommentNotificationStrategy;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CommentReplyNotification extends Notification
+class CommentReplyNotification extends Notification implements NotificationWithStrategyInterface
 {
     use Queueable;
 
+    protected $notificationData;
     /**
      * Create a new notification instance.
      */
-    public function __construct(Comment $comment)
+    public function __construct($notificationData)
     {
-        $this->comment = $comment;
+        $this->notificationData = $notificationData;
     }
 
     /**
@@ -55,7 +57,12 @@ class CommentReplyNotification extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'comment_id' => $this->comment->id,
+            'comment_id' => $this->notificationData['comment_id'],
         ];
+    }
+
+    public function getNotificationStrategy(): NotificationStrategy
+    {
+        return new CommentNotificationStrategy();
     }
 }

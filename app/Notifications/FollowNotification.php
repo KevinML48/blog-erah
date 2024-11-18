@@ -2,11 +2,13 @@
 
 namespace App\Notifications;
 
+use App\Contracts\NotificationStrategy;
+use App\Strategies\FollowNotificationStrategy;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class FollowNotification extends Notification
+class FollowNotification extends Notification implements NotificationWithStrategyInterface
 {
     use Queueable;
 
@@ -60,4 +62,8 @@ class FollowNotification extends Notification
         ];
     }
 
+    public function getNotificationStrategy(): NotificationStrategy
+    {
+        return new FollowNotificationStrategy();
+    }
 }

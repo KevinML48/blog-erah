@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Log;
 
 class User extends Authenticatable
 {
@@ -116,7 +115,6 @@ class User extends Authenticatable
             ->first();
 
         if ($specificPreference) {
-            Log::info('specific preference');
             return $specificPreference->is_enabled;
         }
         // Check for a general preference if no specific context preference exists
@@ -125,7 +123,6 @@ class User extends Authenticatable
             ->whereNull('context_id')
             ->where('context_type', 'global')
             ->first();
-
         return $generalPreference ? $generalPreference->is_enabled : true; // Default to true if no preference is found
     }
 

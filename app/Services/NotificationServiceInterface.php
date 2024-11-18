@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Contracts\NotifiableEntityInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface NotificationServiceInterface
 {
@@ -22,4 +23,12 @@ interface NotificationServiceInterface
      * @return void
      */
     public function handleDeletion(NotifiableEntityInterface $entity): void;
+
+    /**
+     * Process the notification to remove any obsolete ones.
+     *
+     * @param LengthAwarePaginator $notifications A paginated list of notifications
+     * @return void
+     */
+    public function processNotifications(LengthAwarePaginator $notifications): void;
 }
