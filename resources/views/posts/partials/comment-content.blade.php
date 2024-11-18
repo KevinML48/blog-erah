@@ -29,39 +29,8 @@
         </div>
 
         <div class="flex space-x-2 ml-auto">
-            <!-- Delete Link -->
-            <div>
-                @if (auth()->user() && (auth()->user()->id === $content->user->id || auth()->user()->isAdmin()))
-                    <form action="{{ route('comments.destroy', $content->comment) }}" method="POST" class="inline"
-                          onsubmit="return confirmDelete();">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="text-red-600 hover:underline">
-                            Supprimer
-                        </button>
-                    </form>
-                @endif
-            </div>
-
             @auth
-                @if(auth()->user() != $content->user)
-                    <div>
-                        <button id="unfollow-button-{{ $content->user->id }}"
-                                class="follow-button {{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}"
-                                data-following="true"
-                                onclick="unfollowUser({{ $content->user->id }})"
-                                data-user-id="{{ $content->user->id }}">
-                            Se désabonner
-                        </button>
-                        <button id="follow-button-{{ $content->user->id }}"
-                                class="follow-button {{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }}"
-                                data-following="false"
-                                onclick="followUser({{ $content->user->id }})"
-                                data-user-id="{{ $content->user->id }}">
-                            S'abonner
-                        </button>
-                    </div>
-                @endif
+
             @endauth
 
             <!-- Creation Date -->
@@ -70,42 +39,97 @@
                    class="hover:underline">
                     <span class="text-gray-500 text-sm convert-time"
                           data-time="{{ $content->created_at->toIso8601String() }}">
-                          {{ $content->created_at->diffForHumans() }}
                     </span>
                 </a>
             </div>
+            <!-- Dropdown menu -->
+            @auth
+                <x-dropdown align="right" width="48">
+                    <!-- Dropdown button -->
+                    <x-slot name="trigger">
+                        <div class="ms-1">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                 viewBox="0 0 20 20">
+                                <path fill-rule="evenodd"
+                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                      clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                    </x-slot>
+
+                    <!-- Dropdown content -->
+                    <x-slot name="content">
+                        @if (auth()->user()->id === $content->user->id || auth()->user()->isAdmin())
+                            <!-- Delete button -->
+                            <form action="{{ route('comments.destroy', $content->comment) }}" method="POST"
+                                  class="inline ml-1"
+                                  onsubmit="return confirmDelete();">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="text-red-600 hover:underline">
+                                    <b>Supprimer</b>
+                                </button>
+                            </form>
+
+                            <!-- Mute/Unmute comment -->
+                            @if(auth()->user()->id === $content->user->id)
+                            @endif
+                        @endif
+
+                        <!-- Follow/Unfollow button -->
+                        @if(auth()->user() != $content->user)
+                            <div class="ml-1">
+                                <button id="unfollow-button-{{ $content->user->id }}"
+                                        class="follow-button {{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}"
+                                        data-following="true"
+                                        onclick="unfollowUser({{ $content->user->id }})"
+                                        data-user-id="{{ $content->user->id }}">
+                                    Arrêter de suivre {{ $content->user->name }}
+                                </button>
+                                <button id="follow-button-{{ $content->user->id }}"
+                                        class="follow-button {{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }}"
+                                        data-following="false"
+                                        onclick="followUser({{ $content->user->id }})"
+                                        data-user-id="{{ $content->user->id }}">
+                                    Suivre {{ $content->user->name }}
+                                </button>
+                            </div>
+                        @endif
+                    </x-slot>
+                </x-dropdown>
+            @endauth
         </div>
     </div>
 
     <!-- Body -->
-        <div class="rounded py-2">
-            <div class="py-2 ml-14">
-                <div id="content-preview-{{ $content->id }}"
-                     class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
-                    {!! nl2br(e($content->body)) !!}
-                </div>
-                <span id="toggle-container-{{ $content->id }}" class="hidden">
+    <div class="rounded py-2">
+        <div class="py-2 ml-14">
+            <div id="content-preview-{{ $content->id }}"
+                 class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
+                {!! nl2br(e($content->body)) !!}
+            </div>
+            <span id="toggle-container-{{ $content->id }}" class="hidden">
                 <button id="toggle-button-more-{{ $content->id }}" class="mt-2 text-blue-600 hover:underline"
                         onclick="showMore({{ $content->id }})">Dérouler</button>
                 <button id="toggle-button-less-{{ $content->id }}" class="mt-2 text-blue-600 hover:underline hidden"
                         onclick="showLess({{ $content->id }})">Cacher</button>
             </span>
-            </div>
-
-            <!-- Media -->
-            @if ($content->media && ($showMedia ?? true))
-                <div class="py-2 ml-14">
-                    @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
-                        <!-- If it's a Tenor GIF URL -->
-                        <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
-                    @else
-                        <!-- If it's an uploaded image -->
-                        <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
-                             class="object-contain h-48 w-48">
-                    @endif
-                </div>
-            @endif
         </div>
+
+        <!-- Media -->
+        @if ($content->media && ($showMedia ?? true))
+            <div class="py-2 ml-14">
+                @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
+                    <!-- If it's a Tenor GIF URL -->
+                    <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
+                @else
+                    <!-- If it's an uploaded image -->
+                    <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
+                         class="object-contain h-48 w-48">
+                @endif
+            </div>
+        @endif
+    </div>
 </div>
 
 
