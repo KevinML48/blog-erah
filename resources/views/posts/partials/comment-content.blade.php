@@ -1,137 +1,146 @@
-<div class="py-2 p-2 flex flex-col shadow-md rounded-2xl
+<!-- Dropdown menu -->
+<x-dropdown align="right" width="fit" triggerType="hover" flex="row">
+    <!-- Dropdown button -->
+    <x-slot name="trigger">
+        <!-- Dropdown content -->
+        <x-slot name="content">
+
+            <!-- Follow/Unfollow button -->
+            @if(auth()->user() != $content->user)
+                <div class="ml-1">
+                    <div id="unfollow-button-{{ $content->user->id }}" class="{{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}">
+                        <button
+                                class="peer follow-button"
+                                data-following="true"
+                                aria-describedby="tooltip-unfollow"
+                                onclick="unfollowUser({{ $content->user->id }})"
+                                data-user-id="{{ $content->user->id }}">
+                            <x-svg-user option="minus"></x-svg-user>
+                        </button>
+                        <div id="tooltip-unfollow" role="tooltip"
+                             class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 start-auto -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                            Arrêter de suivre {{ $content->user->name }}
+                        </div>
+                    </div>
+                    <div id="follow-button-{{ $content->user->id }}" class="{{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }}">
+                        <button
+                                class="peer follow-button"
+                                data-following="false"
+                                aria-describedby="tooltip-follow"
+                                onclick="followUser({{ $content->user->id }})"
+                                data-user-id="{{ $content->user->id }}">
+                            <x-svg-user option="plus"></x-svg-user>
+                        </button>
+                        <div id="tooltip-follow" role="tooltip"
+                             class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                            Suivre {{ $content->user->name }}
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+            @auth
+                @if (auth()->user()->id === $content->user->id || auth()->user()->isAdmin())
+                    <!-- Delete button -->
+                    <form action="{{ route('comments.destroy', $content->comment) }}" method="POST"
+                          class="inline ml-1"
+                          onsubmit="return confirmDelete();">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="peer text-red-600" aria-describedby="tooltip-delete">
+                            <x-svg-bin></x-svg-bin>
+                        </button>
+                        <div id="tooltip-delete" role="tooltip"
+                             class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                            Supprimer ce commentaire
+                        </div>
+                    </form>
+                @endif
+
+            @endauth
+        </x-slot>
+
+
+        <div class="py-2 p-2 flex flex-col shadow-md rounded-2xl
 @if(request()->routeis('comments.show') && request()->route('comment.id') && request()->route('comment.id') == $content->comment->id )
  bg-red-950
  @else
  bg-gray-900
 @endif
 ">
-    <div class="flex justify-between items-start">
-        <div class="flex items-center space-x-2">
-            <!-- Profile Picture -->
-            <div>
-                @if($content->user->profile_picture)
-                    <img src="{{ asset('storage/' . $content->user->profile_picture) }}" alt="Profile Picture"
-                         class="w-12 h-12 rounded-full object-cover">
-                @else
-                    <img src="{{ asset('storage/profile_pictures/default.png')}}" alt="Default Profile Picture"
-                         class="w-12 h-12 rounded-full object-cover">
-                @endif
-            </div>
-            <!-- Name -->
-            <div>
-                <a href="{{ route('profile.show', $content->user->name) }}"
-                   class="erah-link font-bold text-left focus:outline-none">
-                    <x-role-span :role="$content->user->role">
-                        {{ $content->user->name }}
-                    </x-role-span>
-                </a>
-            </div>
-        </div>
+            <div class="flex justify-between items-start">
+                <div class="flex items-center space-x-2">
+                    <!-- Profile Picture -->
+                    <div>
+                        @if($content->user->profile_picture)
+                            <img src="{{ asset('storage/' . $content->user->profile_picture) }}" alt="Profile Picture"
+                                 class="w-12 h-12 rounded-full object-cover">
+                        @else
+                            <img src="{{ asset('storage/profile_pictures/default.png')}}" alt="Default Profile Picture"
+                                 class="w-12 h-12 rounded-full object-cover">
+                        @endif
+                    </div>
+                    <!-- Name -->
+                    <div>
+                        <a href="{{ route('profile.show', $content->user->name) }}"
+                           class="erah-link font-bold text-left focus:outline-none">
+                            <x-role-span :role="$content->user->role">
+                                {{ $content->user->name }}
+                            </x-role-span>
+                        </a>
+                    </div>
+                </div>
 
-        <div class="flex space-x-2 ml-auto">
-            @auth
+                <div class="flex space-x-2 ml-auto">
+                    @auth
 
-            @endauth
+                    @endauth
 
-            <!-- Creation Date -->
-            <div>
-                <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}"
-                   class="hover:underline">
+                    <!-- Creation Date -->
+                    <div>
+                        <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}"
+                           class="hover:underline">
                     <span class="text-gray-500 text-sm convert-time"
                           data-time="{{ $content->created_at->toIso8601String() }}">
                     </span>
-                </a>
+                        </a>
+                    </div>
+
+                </div>
             </div>
-            <!-- Dropdown menu -->
-            @auth
-                <x-dropdown align="right" width="48">
-                    <!-- Dropdown button -->
-                    <x-slot name="trigger">
-                        <div class="ms-1">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                 viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                      clip-rule="evenodd"/>
-                            </svg>
-                        </div>
-                    </x-slot>
 
-                    <!-- Dropdown content -->
-                    <x-slot name="content">
-                        @if (auth()->user()->id === $content->user->id || auth()->user()->isAdmin())
-                            <!-- Delete button -->
-                            <form action="{{ route('comments.destroy', $content->comment) }}" method="POST"
-                                  class="inline ml-1"
-                                  onsubmit="return confirmDelete();">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="text-red-600 hover:underline">
-                                    <b>Supprimer</b>
-                                </button>
-                            </form>
-
-                            <!-- Mute/Unmute comment -->
-                            @if(auth()->user()->id === $content->user->id)
-                            @endif
-                        @endif
-
-                        <!-- Follow/Unfollow button -->
-                        @if(auth()->user() != $content->user)
-                            <div class="ml-1">
-                                <button id="unfollow-button-{{ $content->user->id }}"
-                                        class="follow-button {{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}"
-                                        data-following="true"
-                                        onclick="unfollowUser({{ $content->user->id }})"
-                                        data-user-id="{{ $content->user->id }}">
-                                    Arrêter de suivre {{ $content->user->name }}
-                                </button>
-                                <button id="follow-button-{{ $content->user->id }}"
-                                        class="follow-button {{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }}"
-                                        data-following="false"
-                                        onclick="followUser({{ $content->user->id }})"
-                                        data-user-id="{{ $content->user->id }}">
-                                    Suivre {{ $content->user->name }}
-                                </button>
-                            </div>
-                        @endif
-                    </x-slot>
-                </x-dropdown>
-            @endauth
-        </div>
-    </div>
-
-    <!-- Body -->
-    <div class="rounded py-2">
-        <div class="py-2 ml-14">
-            <div id="content-preview-{{ $content->id }}"
-                 class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
-                {!! nl2br(e($content->body)) !!}
-            </div>
-            <span id="toggle-container-{{ $content->id }}" class="hidden">
+            <!-- Body -->
+            <div class="rounded py-2">
+                <div class="py-2 ml-14">
+                    <div id="content-preview-{{ $content->id }}"
+                         class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
+                        {!! nl2br(e($content->body)) !!}
+                    </div>
+                    <span id="toggle-container-{{ $content->id }}" class="hidden">
                 <button id="toggle-button-more-{{ $content->id }}" class="mt-2 text-blue-600 hover:underline"
                         onclick="showMore({{ $content->id }})">Dérouler</button>
                 <button id="toggle-button-less-{{ $content->id }}" class="mt-2 text-blue-600 hover:underline hidden"
                         onclick="showLess({{ $content->id }})">Cacher</button>
             </span>
-        </div>
+                </div>
 
-        <!-- Media -->
-        @if ($content->media && ($showMedia ?? true))
-            <div class="py-2 ml-14">
-                @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
-                    <!-- If it's a Tenor GIF URL -->
-                    <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
-                @else
-                    <!-- If it's an uploaded image -->
-                    <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
-                         class="object-contain h-48 w-48">
+                <!-- Media -->
+                @if ($content->media && ($showMedia ?? true))
+                    <div class="py-2 ml-14">
+                        @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
+                            <!-- If it's a Tenor GIF URL -->
+                            <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
+                        @else
+                            <!-- If it's an uploaded image -->
+                            <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
+                                 class="object-contain h-48 w-48">
+                        @endif
+                    </div>
                 @endif
             </div>
-        @endif
-    </div>
-</div>
-
+        </div>
+    </x-slot>
+</x-dropdown>
 
 <script>
     function confirmDelete() {
