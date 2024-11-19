@@ -7,7 +7,6 @@ use App\Contracts\NotificationStrategy;
 use App\Models\Comment;
 use App\Models\Like;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Log;
 
 class LikeNotificationStrategy implements NotificationStrategy
 {
@@ -32,7 +31,6 @@ class LikeNotificationStrategy implements NotificationStrategy
 
     public function processNotification($notification)
     {
-        Log::info('in like strategy');
         $comment = Comment::find($notification->data['context_id']);
 
         if (!$comment || !$comment->contentExists()) {

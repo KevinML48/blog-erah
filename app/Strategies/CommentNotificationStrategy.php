@@ -23,7 +23,10 @@ class CommentNotificationStrategy implements NotificationStrategy
         if ($this->comment->parent_id) {
             $parentComment = Comment::find($this->comment->parent_id);
             if ($parentComment) {
-                $parentComment->content->user->notify(new CommentReplyNotification(['comment_id' => $this->comment->id]));
+                $parentUser = $parentComment->content->user;
+                if ($parentUser->wantsNotification('comment-reply', $parentComment->content->id, 'single')) {
+                    $parentUser->notify(new CommentReplyNotification(['comment_id' => $this->comment->id]));
+                }
             }
         } else {
             // Handle top-level comment notification

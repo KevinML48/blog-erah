@@ -126,27 +126,13 @@ class User extends Authenticatable
         return $generalPreference ? $generalPreference->is_enabled : true; // Default to true if no preference is found
     }
 
-    public function wantsCategoryNotifications($category)
+    public function hasMuted(CommentContent $content): bool
     {
-        $notificationTypes = NotificationType::where('category', $category)->pluck('id');
+        $wantsReplyNotification = $this->wantsNotification('comment_reply', $content->id, 'single');
 
-        return $this->notificationPreferences()
-            ->whereIn('notification_type_id', $notificationTypes)
-            ->where('is_enabled', true)
-            ->exists();
-    }
+        $wantsLikeNotification = $this->wantsNotification('comment_like', $content->id, 'single');
 
-    public function wantsThemeNotification($themeId)
-    {
-        // 'theme_posts' is the notification type for theme-related updates
-        $notificationType = NotificationType::where('name', 'theme_posts')->first();
-
-        return $this->notificationPreferences()
-            ->where('notification_type_id', $notificationType->id)
-            ->where('context_id', $themeId)
-            ->where('context_type', 'theme')
-            ->where('is_enabled', true)
-            ->exists();
+        return !$wantsReplyNotification || !$wantsLikeNotification;
     }
 
     /**

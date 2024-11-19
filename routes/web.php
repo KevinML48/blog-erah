@@ -53,6 +53,8 @@ Route::middleware('auth')->group(function () {
 
     // Notification Settings
     Route::put('/notifications/preferences', [UserNotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
+    Route::post('/notifications/preferences/mute/{comment_content}', [UserNotificationPreferenceController::class, 'muteComment'])->name('notifications.preferences.mute');
+    Route::post('/notifications/preferences/unmute/{comment_content}', [UserNotificationPreferenceController::class, 'unmuteComment'])->name('notifications.preferences.unmute');
 
     // Profile Picture Update
     Route::put('/profile/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');

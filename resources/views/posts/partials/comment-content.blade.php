@@ -41,6 +41,45 @@
 
             @auth
                 @if (auth()->user()->id === $content->user->id || auth()->user()->isAdmin())
+                    <!-- Mute/Unmute comment -->
+                    @if(auth()->user()->id === $content->user->id)
+                        <div class="ml-1">
+                            <div id="mute-button-{{ $content->id }}" class="{{ auth()->user()->hasMuted($content) ? 'hidden' : '' }}">
+                                <button
+                                    class="peer follow-button"
+                                    data-following="true"
+                                    aria-describedby="tooltip-mute"
+                                    onclick="muteComment({{ $content->id }})"
+                                    data-user-id="{{ auth()->user()->id }}">
+                                    <x-svg-volume :mute="true"></x-svg-volume>
+                                </button>
+                                <div id="tooltip-mute" role="tooltip"
+                                     class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 start-auto -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                                    Ne plus recevoir de notifications pour ce commentaire
+                                </div>
+                            </div>
+                            <div id="unmute-button-{{ $content->id }}" class="{{ auth()->user()->hasMuted($content) ? '' : 'hidden' }}">
+                                <button
+                                    class="peer follow-button"
+                                    data-following="false"
+                                    aria-describedby="tooltip-follow"
+                                    onclick="unmuteComment({{ $content->id }})"
+                                    data-user-id="{{ auth()->user()->id }}">
+                                    <x-svg-volume option="plus"></x-svg-volume>
+                                </button>
+                                <div id="tooltip-follow" role="tooltip"
+                                     class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                                    Recevoir des notifications pour ce commentaire
+                                </div>
+                            </div>
+                        </div>
+                        @if(auth()->user()->hasMuted($content))
+
+                        @endif
+
+                    @else
+                    @endif
+
                     <!-- Delete button -->
                     <form action="{{ route('comments.destroy', $content->comment) }}" method="POST"
                           class="inline ml-1"

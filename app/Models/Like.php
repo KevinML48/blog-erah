@@ -54,7 +54,7 @@ class Like extends Model implements BundledNotification
 
     public function getContextType(): ?string
     {
-        return 'global';
+        return 'single';
     }
 
     public function getNotificationStrategy(): NotificationStrategy
