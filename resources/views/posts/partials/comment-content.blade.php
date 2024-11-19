@@ -4,99 +4,7 @@
     <x-slot name="trigger">
         <!-- Dropdown content -->
         <x-slot name="content">
-
-            <!-- Follow/Unfollow button -->
-            @if(auth()->user() && auth()->user() != $content->user)
-                <div class="ml-1">
-                    <div id="unfollow-button-{{ $content->user->id }}" class="{{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}">
-                        <button
-                                class="peer follow-button"
-                                data-following="true"
-                                aria-describedby="tooltip-unfollow"
-                                onclick="unfollowUser({{ $content->user->id }})"
-                                data-user-id="{{ $content->user->id }}">
-                            <x-svg-user option="minus"></x-svg-user>
-                        </button>
-                        <div id="tooltip-unfollow" role="tooltip"
-                             class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 start-auto -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
-                            Arrêter de suivre {{ $content->user->name }}
-                        </div>
-                    </div>
-                    <div id="follow-button-{{ $content->user->id }}" class="{{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }}">
-                        <button
-                                class="peer follow-button"
-                                data-following="false"
-                                aria-describedby="tooltip-follow"
-                                onclick="followUser({{ $content->user->id }})"
-                                data-user-id="{{ $content->user->id }}">
-                            <x-svg-user option="plus"></x-svg-user>
-                        </button>
-                        <div id="tooltip-follow" role="tooltip"
-                             class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
-                            Suivre {{ $content->user->name }}
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            @auth
-                @if (auth()->user()->id === $content->user->id || auth()->user()->isAdmin())
-                    <!-- Mute/Unmute comment -->
-                    @if(auth()->user()->id === $content->user->id)
-                        <div class="ml-1">
-                            <div id="mute-button-{{ $content->id }}" class="{{ auth()->user()->hasMuted($content) ? 'hidden' : '' }}">
-                                <button
-                                    class="peer follow-button"
-                                    data-following="true"
-                                    aria-describedby="tooltip-mute"
-                                    onclick="muteComment({{ $content->id }})"
-                                    data-user-id="{{ auth()->user()->id }}">
-                                    <x-svg-volume :mute="true"></x-svg-volume>
-                                </button>
-                                <div id="tooltip-mute" role="tooltip"
-                                     class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 start-auto -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
-                                    Ne plus recevoir de notifications pour ce commentaire
-                                </div>
-                            </div>
-                            <div id="unmute-button-{{ $content->id }}" class="{{ auth()->user()->hasMuted($content) ? '' : 'hidden' }}">
-                                <button
-                                    class="peer follow-button"
-                                    data-following="false"
-                                    aria-describedby="tooltip-follow"
-                                    onclick="unmuteComment({{ $content->id }})"
-                                    data-user-id="{{ auth()->user()->id }}">
-                                    <x-svg-volume option="plus"></x-svg-volume>
-                                </button>
-                                <div id="tooltip-follow" role="tooltip"
-                                     class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
-                                    Recevoir des notifications pour ce commentaire
-                                </div>
-                            </div>
-                        </div>
-                        @if(auth()->user()->hasMuted($content))
-
-                        @endif
-
-                    @else
-                    @endif
-
-                    <!-- Delete button -->
-                    <form action="{{ route('comments.destroy', $content->comment) }}" method="POST"
-                          class="inline ml-1"
-                          onsubmit="return confirmDelete();">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="peer text-red-600" aria-describedby="tooltip-delete">
-                            <x-svg-bin></x-svg-bin>
-                        </button>
-                        <div id="tooltip-delete" role="tooltip"
-                             class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
-                            Supprimer ce commentaire
-                        </div>
-                    </form>
-                @endif
-
-            @endauth
+            @include('posts.partials.dropdown-content', ['withDetails' => false])
         </x-slot>
 
 
@@ -131,10 +39,6 @@
                 </div>
 
                 <div class="flex space-x-2 ml-auto">
-                    @auth
-
-                    @endauth
-
                     <!-- Creation Date -->
                     <div>
                         <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}"

@@ -46,7 +46,7 @@
          class="absolute z-50 {{ $positioningClasses }} {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
          style="display: none;"
     >
-        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }} {{ $flexClass }}">
+        <div class="rounded-md ring-1 ring-black ring-opacity-5 {{ $contentClasses }} {{ $flexClass }} items-end">
             {{ $content }}
         </div>
     </div>
