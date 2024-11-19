@@ -7,27 +7,27 @@
         default => 'ltr:origin-top-right rtl:origin-top-left end-0',
     };
 
-    $width = match ($width) {
+    $width = match($width) {
         '48' => 'w-48',
         'fit' => 'w-fit',
         'full' => 'w-full',
         default => $width,
     };
 
-    $triggerEvents = match ($triggerType) {
-        'hover' => '@mouseover="open = true" @mouseleave="open = false" @click="open = !open"',
+    $triggerEvents = match($triggerType) {
+        'hover' => '@click.outside="open = false" @click="if (window.innerWidth < 768) { open = !open }" @mouseover="open = true" @mouseleave="open = false"',
         default => '@click="open = !open" @click.outside="open = false" @close.stop="open = false"',
     };
 
-    $positioningClasses = match ($triggerType) {
-    'hover' => 'bottom-full mt-2',
-    default => 'mt-2',
+    $positioningClasses = match($triggerType) {
+        'hover' => 'bottom-full mt-2',
+        default => 'mt-2',
     };
 
-    $flexClass = match ($flex) {
-    'row' => 'flex flex-row',
-    'col' => 'flex flex-col',
-    default => '',
+    $flexClass = match($flex) {
+        'row' => 'flex flex-row',
+        'col' => 'flex flex-col',
+        default => '',
     };
 @endphp
 
@@ -37,12 +37,12 @@
     </div>
 
     <div x-show="open"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         x-transition:leave="transition ease-in duration-75"
-         x-transition:leave-start="opacity-100 scale-100"
-         x-transition:leave-end="opacity-0 scale-95"
+         x-transition:enter="transition-opacity ease-out duration-200"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         x-transition:leave="transition-opacity ease-in duration-300"
+         x-transition:leave-start="opacity-100"
+         x-transition:leave-end="opacity-0"
          class="absolute z-50 {{ $positioningClasses }} {{ $width }} rounded-md shadow-lg {{ $alignmentClasses }}"
          style="display: none;"
     >
