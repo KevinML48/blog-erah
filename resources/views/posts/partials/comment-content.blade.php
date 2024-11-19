@@ -6,7 +6,7 @@
         <x-slot name="content">
 
             <!-- Follow/Unfollow button -->
-            @if(auth()->user() != $content->user)
+            @if(auth()->user() && auth()->user() != $content->user)
                 <div class="ml-1">
                     <div id="unfollow-button-{{ $content->user->id }}" class="{{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}">
                         <button
