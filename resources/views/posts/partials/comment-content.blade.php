@@ -57,7 +57,7 @@
                 <div class="py-2 ml-14">
                     <div id="content-preview-{{ $content->id }}"
                          class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
-                        {!! \App\Helpers\UrlHelper::convertUrlsToLinks($content->body) !!}
+                        {!! nl2br(\App\Helpers\UrlHelper::convertUrlsToLinks($content->body)) !!}
                     </div>
                     <span id="toggle-container-{{ $content->id }}" class="hidden">
                 <button id="toggle-button-more-{{ $content->id }}" class="mt-2 text-blue-600 hover:underline"

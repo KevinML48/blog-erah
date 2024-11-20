@@ -50,7 +50,7 @@
                 </p>
 
                 <div class="mt-4">
-                    {!! \App\Helpers\UrlHelper::convertUrlsToLinks($post->body) !!}
+                    {!! nl2br(\App\Helpers\UrlHelper::convertUrlsToLinks($post->body)) !!}
                 </div>
 
                 @include('posts.partials.comments', ['comments' => $comments])
