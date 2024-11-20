@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="flex items-center">
-                    <div class="counter mr-2">
+                    <div class="counter flex-none m-2">
                         <span id="current">0</span>
                         <span id="maximum">/ 255</span>
                     </div>
