@@ -10,50 +10,79 @@
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
         <div>
-            <div id="commentBody"
-                 contenteditable="true"
-                 data-parent-id=""
-                 class="w-full border rounded-md p-2 bg-white text-black comment-body caret-red-600 focus:outline-none focus:outline-red-500"></div>
-            <input type="hidden" name="input-body" id="commentInput" value="{{ old('input-body') }}"/>
-        </div>
+            <textarea id="commentInput"
+                      name="input-body"
+                      class="w-full border rounded-md p-2 bg-white text-black caret-red-600 focus:outline-none focus:ring focus:ring-red-500"
+                      rows="5"
+                      data-parent-id=""
+                      placeholder="Écrivez votre commentaire ici..."
+                      x-data="{
+                  files: [],
+                  handlePaste(event) {
+                      const clipboardData = event.clipboardData || window.clipboardData;
+                      if (!clipboardData) return;
 
-        <div class="flex justify-between items-center mt-2">
-            <div class="flex justify-between items-center">
-                <!-- GIF Button -->
-                <button
-                    class="inline-flex items-center px-4 py-2 bg-red-800 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150"
-                    id="gifButton">GIF
-                </button>
+                      const items = clipboardData.items;
+                      for (let item of items) {
+                          if (item.kind === 'file' && item.type.startsWith('image/')) {
+                              const file = item.getAsFile();
+                              if (file) {
+                                  this.files.push(file);
+                                  this.updateFileInput();
+                              }
+                          }
+                      }
+                  },
+                  updateFileInput() {
+                      const parentId = this.$el.dataset.parentId;
+                      const fileInput = document.getElementById(`media-${parentId}`);
+                      if (fileInput) {
+                          const dataTransfer = new DataTransfer();
+                          this.files.forEach(file => dataTransfer.items.add(file));
+                          fileInput.files = dataTransfer.files;
+
+                          previewImage(parentId);
+                      }
+                  }
+              }"
+                      @paste="handlePaste($event)"></textarea>
+            <div class="flex justify-between items-center mt-2">
+                <div class="flex justify-between items-center">
+                    <!-- GIF Button -->
+                    <button
+                        class="inline-flex items-center px-4 py-2 bg-red-800 border border-transparent rounded-md font-semibold text-xs text-white tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 transition ease-in-out duration-150"
+                        id="gifButton">GIF
+                    </button>
 
 
-                <!-- Image Upload -->
-                <div id="mediaUpload" class="media-upload ml-2">
-                    <input type="file" name="media" id="media" class="hidden" accept="image/*">
-                    <label for="media" id="media-label" class="erah-button"> Télécharger une Image </label>
-                    @error('media')
-                    <span class="text-red-600 text-sm">{{ $message }}</span>
-                    @enderror
+                    <!-- Image Upload -->
+                    <div id="mediaUpload" class="media-upload ml-2">
+                        <input type="file" name="media" id="media" class="hidden" accept="image/*">
+                        <label for="media" id="media-label" class="erah-button"> Télécharger une Image </label>
+                        @error('media')
+                        <span class="text-red-600 text-sm">{{ $message }}</span>
+                        @enderror
+                    </div>
+                </div>
+
+                <div class="flex items-center">
+                    <div class="counter mr-2">
+                        <span id="current">0</span>
+                        <span id="maximum">/ 255</span>
+                    </div>
+                    <x-primary-button>{{ __('Poster') }}</x-primary-button>
                 </div>
             </div>
 
-            <div class="flex items-center">
-                <div class="counter mr-2">
-                    <span id="current">0</span>
-                    <span id="maximum">/ 255</span>
-                </div>
-                <x-primary-button>{{ __('Poster') }}</x-primary-button>
+            <!-- Display media zone -->
+            <div id="displayMediaZone" class="mt-2 hidden">
+                <img id="selectedImage" src="" alt="Selected Image" class="w-32 h-32 rounded-md hidden">
+                <img id="selectedGif" src="" alt="Selected GIF" class="w-32 h-32 rounded-md hidden">
+                <x-cancel-button id="cancelButton" onclick="clearMedia()"> Annuler</x-cancel-button>
             </div>
-        </div>
 
-        <!-- Display media zone -->
-        <div id="displayMediaZone" class="mt-2 hidden">
-            <img id="selectedImage" src="" alt="Selected Image" class="w-32 h-32 rounded-md hidden">
-            <img id="selectedGif" src="" alt="Selected GIF" class="w-32 h-32 rounded-md hidden">
-            <x-cancel-button id="cancelButton" onclick="clearMedia()"> Annuler</x-cancel-button>
-        </div>
-
-        <input type="hidden" name="parent_id" value="">
-        <input type="hidden" name="gif_url" id="gifUrl" value="">
+            <input type="hidden" name="parent_id" value="">
+            <input type="hidden" name="gif_url" id="gifUrl" value="">
     </form>
 </template>
 

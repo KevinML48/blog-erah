@@ -1,61 +1,28 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // Function to initialize listeners on the initial contenteditable divs
+    // Function to initialize listeners for textarea elements
     function initEventListeners() {
-        const commentAreas = document.querySelectorAll('[contenteditable="true"]');
-
+        const commentAreas = document.querySelectorAll('textarea[data-parent-id]');
         commentAreas.forEach((commentArea) => {
-            const parentId = commentArea.dataset.parentId; // Get parentId from data attribute
-            const hiddenInput = document.getElementById(`commentInput-${parentId}`);
+            const parentId = commentArea.dataset.parentId;
 
-            // Set initial values for counter and hidden input
-            if (hiddenInput && hiddenInput.value) {
-                commentArea.innerHTML = hiddenInput.value;
-                if (parentId > 0) showReplyForm(parentId);
-            }
-            updateCounter(parentId);
-            updateHiddenInput(parentId);
-
-            // Attach input and paste listeners to update counter and hidden input as the user types/pastes
+            // Update counter on input
             commentArea.addEventListener('input', () => {
                 updateCounter(parentId);
-                updateHiddenInput(parentId);
             });
+
+            // Optionally handle paste if needed
             commentArea.addEventListener('paste', (event) => {
-                handlePaste(event, parentId);
-                updateHiddenInput(parentId);
                 updateCounter(parentId);
             });
         });
     }
 
-    // Event delegation for dynamically added contenteditable divs
-    document.addEventListener('input', function (event) {
-        if (event.target.matches('[contenteditable="true"]')) {
-            const parentId = event.target.dataset.parentId;
-            if (parentId) {
-                updateCounter(parentId);
-                updateHiddenInput(parentId);
-            }
-        }
-    });
-
-    document.addEventListener('paste', function (event) {
-        if (event.target.matches('[contenteditable="true"]')) {
-            const parentId = event.target.dataset.parentId;
-            if (parentId) {
-                handlePaste(event, parentId);
-                updateHiddenInput(parentId);
-                updateCounter(parentId);
-            }
-        }
-    });
-
+    // Automatically show the form with ID -1 on page load
     showReplyForm(-1);
-    // Initialize listeners for existing content-editable divs when the page loads
+
+    // Initialize listeners for existing textareas
     initEventListeners();
 });
-
-
 
 // Function to toggle the reply form visibility
 function toggleReplyForm(commentId) {
@@ -85,20 +52,17 @@ function showReplyForm(commentId) {
     const formTemplate = document.getElementById('reply-form-template');
 
     // Clone the form template
-    const clonedForm = formTemplate.content.cloneNode(true);  // Use content to avoid unnecessary extra wrapper div
+    const clonedForm = formTemplate.content.cloneNode(true);
 
     // Update form IDs and names dynamically for the comment
     const form = clonedForm.querySelector('form');
     form.id = `commentForm-${commentId}`;
 
-    // Update commentBody and commentInput IDs dynamically
-    const commentBody = clonedForm.querySelector('#commentBody');
-    commentBody.id = `commentBody-${commentId}`;
-    commentBody.dataset.parentId = commentId;
-
+    // Update textarea ID dynamically
     const commentInput = clonedForm.querySelector('#commentInput');
     commentInput.id = `commentInput-${commentId}`;
     commentInput.name = `input-body-${commentId}`;
+    commentInput.dataset.parentId = commentId;
 
     const mediaUpload = clonedForm.querySelector('#mediaUpload');
     mediaUpload.id = `mediaUpload-${commentId}`;
@@ -115,7 +79,7 @@ function showReplyForm(commentId) {
     displayMediaZone.id = `displayMediaZone-${commentId}`;
 
     const gifButton = clonedForm.querySelector('#gifButton');
-    gifButton.id = `gifButton-${commentId}`; // Dynamically set the button's ID
+    gifButton.id = `gifButton-${commentId}`;
     gifButton.setAttribute('onclick', `toggleModal(${commentId})`);
 
     const selectedImage = clonedForm.querySelector('#selectedImage');
@@ -140,6 +104,14 @@ function showReplyForm(commentId) {
 
     // Append the cloned form to the container
     formContainer.appendChild(clonedForm);
+
+    commentInput.addEventListener('input', () => {
+        updateCounter(commentId);
+    });
+
+    commentInput.addEventListener('paste', (event) => {
+        updateCounter(commentId);
+    });
 }
 
 
@@ -157,19 +129,6 @@ function updateCounter(parentId) {
         currentCount.textContent = textContentLength;
     }
 }
-
-// Function to update the hidden input without extra HTML tags
-function updateHiddenInput(parentId) {
-    const commentBody = document.getElementById(`commentBody-${parentId}`);
-    const hiddenInput = document.getElementById(`commentInput-${parentId}`);
-
-    if (commentBody && hiddenInput) {
-        // Use textContent to get plain text, converting newlines properly
-        const plainText = commentBody.innerText.replace(/\n/g, '\n').trim();
-        hiddenInput.value = plainText;
-    }
-}
-
 
 function toggleModal(parentId) {
     event.preventDefault();
@@ -275,44 +234,6 @@ function clearMedia(parentId) {
     document.getElementById(`mediaUpload-${parentId}`).classList.remove('hidden');
 }
 
-
-// Function to handle the paste event
-function handlePaste(event, parentId) {
-    const clipboardData = event.clipboardData || window.clipboardData;
-    const items = clipboardData.items;
-    let imageFound = false;
-
-    // Loop through clipboard items to find images
-    for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-
-        // Check if the pasted item is an image
-        if (item.kind === 'file' && item.type.startsWith('image/')) {
-            event.preventDefault(); // Prevent the default paste behavior for images
-            imageFound = true;
-
-            const file = item.getAsFile();
-            const fileInput = document.getElementById(`media-${parentId}`);
-            const dataTransfer = new DataTransfer();
-
-            // Add the file to the DataTransfer
-            dataTransfer.items.add(file);
-
-            // Set the file input's files property
-            fileInput.files = dataTransfer.files;
-
-            // Call the previewImage function
-            previewImage(parentId);
-            break; // Exit the loop after finding the first image
-        }
-    }
-
-    // Allow normal paste behavior if no image is found
-    if (!imageFound) {
-        return; // let the event continue, allowing the default paste
-    }
-}
-
 document.addEventListener('submit', function(event) {
     if (event.target.matches('form[id^="commentForm-"]')) {
         event.preventDefault(); // Prevent the form from submitting the normal way
@@ -361,12 +282,13 @@ function addCommentToReplies(commentHtml, formId) {
     if (repliesContainer) {
         repliesContainer.insertAdjacentHTML('afterbegin', commentHtml);
     }
-
     // Remove the submitted form entirely
     const form = document.getElementById(formId);
     if (form) {
         form.remove(); // Remove the form element from the DOM
     }
+
+    convertTimes()
 }
 
 
