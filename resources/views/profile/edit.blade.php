@@ -16,29 +16,38 @@
             </div>
 
             <div class="flex flex-wrap lg:flex-nowrap space-x-6">
-                <!-- Profile Picture -->
-                <div class="erah-box max-w-xl lg:w-1/3">
-                    <div class="max-w-xl">
-                        @include('profile.partials.profile-picture')
+                <div class="lg:w-1/3 flex flex-col space-y-6">
+                    <!-- Profile Picture -->
+                    <div class="erah-box flex-1">
+                        <div class="max-w-xl">
+                            @include('profile.partials.profile-picture')
+                        </div>
+                    </div>
+                    <!-- Description -->
+                    <div class="erah-box flex-1">
+                        <div class="max-w-xl">
+                            @include('profile.partials.update-profile-description-form')
+                        </div>
                     </div>
                 </div>
 
                 <div class="flex flex-col space-y-6 lg:w-2/3">
                     <!-- Profile Informations -->
-                    <div class="erah-box">
+                    <div class="erah-box flex-1">
                         <div class="max-w-xl">
                             @include('profile.partials.update-profile-information-form')
                         </div>
                     </div>
 
                     <!-- Password -->
-                    <div class="erah-box">
+                    <div class="erah-box flex-1">
                         <div class="max-w-xl">
                             @include('profile.partials.update-password-form')
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <!-- Notification Preferences -->
             <div class="erah-box">

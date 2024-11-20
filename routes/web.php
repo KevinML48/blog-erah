@@ -46,7 +46,10 @@ Route::middleware('auth')->group(function () {
     // Profile Settings
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profile/update-description', [ProfileController::class, 'updateDescription'])->name('profile.update.description');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    // Profile Picture Update
+    Route::put('/profile/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');
 
     // Notifications Page
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
@@ -55,9 +58,6 @@ Route::middleware('auth')->group(function () {
     Route::put('/notifications/preferences', [UserNotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
     Route::post('/notifications/preferences/mute/{comment_content}', [UserNotificationPreferenceController::class, 'muteComment'])->name('notifications.preferences.mute');
     Route::post('/notifications/preferences/unmute/{comment_content}', [UserNotificationPreferenceController::class, 'unmuteComment'])->name('notifications.preferences.unmute');
-
-    // Profile Picture Update
-    Route::put('/profile/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');
 
     // Thread page
     Route::get('/profile/thread', [ProfileController::class, 'thread'])->name('profile.thread');

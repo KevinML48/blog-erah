@@ -137,6 +137,20 @@ class ProfileController extends Controller
         return Redirect::route('profile.edit')->with('success', 'Profil nis à jour');
     }
 
+    public function updateDescription(Request $request)
+    {
+        $request->validate([
+            'description' => ['required', 'string', 'max:255'],
+        ]);
+
+        $user = Auth::user();
+
+        $user->description = $request->input('description');
+        $user->save();
+
+        return back()->with('status', 'profile-updated');
+    }
+
     /**
      * Delete the user's account.
      */
