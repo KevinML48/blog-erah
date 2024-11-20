@@ -34,7 +34,7 @@ class CommentController extends Controller
             $mediaPath = $request->gif_url;
         }
 
-        $newComment = $this->commentService->store($userId, $postId, $parentId, $body, $mediaPath, $request->gif_url);
+        $newComment = $this->commentService->store($userId, $postId, $parentId, $body, $mediaPath);
 
         return response()->json([
             'message' => 'Commentaire ajouté.',

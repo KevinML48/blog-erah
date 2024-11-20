@@ -12,18 +12,14 @@ use Illuminate\Support\Facades\Storage;
 
 class CommentService implements CommentServiceInterface
 {
-    public function store($userId, $postId, $parentId, $body, $mediaPath, $gifUrl): Comment
+    public function store($userId, $postId, $parentId, $body, $mediaPath): Comment
     {
-        // Handle file uploads or gifs
-
         $parentId = $parentId == -1 ? null : $parentId;
         $comment = Comment::create([
             'post_id' => (int)$postId,
             'parent_id' => $parentId,
         ]);
 
-
-        $mediaPath = $mediaPath ?? $gifUrl;
         CommentContent::create([
             'user_id' => $userId,
             'body' => $body,

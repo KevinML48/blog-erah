@@ -8,7 +8,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface CommentServiceInterface
 {
-    public function store($userId, $postId, $parentId, $body, $mediaPath, $gifUrl): Comment;
+    public function store($userId, $postId, $parentId, $body, $mediaPath): Comment;
 
     public function show(Comment $comment): LengthAwarePaginator;
 
