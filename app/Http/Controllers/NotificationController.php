@@ -25,7 +25,7 @@ class NotificationController extends Controller
             ]);
         }
         $this->notificationService->processNotifications($notifications);
-        auth()->user()->unreadNotifications->markAsRead();
+//        auth()->user()->unreadNotifications->markAsRead();
 
         return view('notifications.index', compact('notifications'));
     }
