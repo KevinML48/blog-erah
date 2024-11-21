@@ -2,8 +2,8 @@
     <!-- Follow/Unfollow button -->
     @if(auth()->user() != $content->user)
         <div class="ml-1">
-            <div id="unfollow-button-{{ $content->user->id }}"
-                 class="{{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }}">
+            <div id="{{$withDetails ? 'detailed-' : 'simple-'}}unfollow-button-{{ $content->user->id }}"
+                 class="{{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unfollow-button-{{ $content->user->id }}">
                 <button
                     class="peer follow-button"
                     data-following="true"
@@ -24,8 +24,8 @@
                     </div>
                 @endif
             </div>
-            <div id="follow-button-{{ $content->user->id }}"
-                 class="{{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }}">
+            <div id="{{$withDetails? 'detailed-' : 'simple-'}}follow-button-{{ $content->user->id }}"
+                 class="{{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }} {{$withDetails? 'detailed-' : 'simple-'}}follow-button-{{ $content->user->id }}">
                 <button
                     class="peer follow-button"
                     data-following="false"
@@ -54,7 +54,7 @@
         @if(auth()->user()->id === $content->user->id)
             <div class="ml-1">
                 <div id="mute-button-{{ $content->id }}"
-                     class="{{ auth()->user()->hasMuted($content) ? 'hidden' : '' }}">
+                     class="{{ auth()->user()->hasMuted($content) ? 'hidden' : '' }} {{$withDetails ? 'detailed-' : 'simple-'}}mute-button-{{ $content->id }}">
                     <button
                         class="peer follow-button"
                         data-following="true"
@@ -76,7 +76,7 @@
                     @endif
                 </div>
                 <div id="unmute-button-{{ $content->id }}"
-                     class="{{ auth()->user()->hasMuted($content) ? '' : 'hidden' }}">
+                     class="{{ auth()->user()->hasMuted($content) ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unmute-button-{{ $content->id }}">
                     <button
                         class="peer follow-button"
                         data-following="false"

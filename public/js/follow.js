@@ -35,29 +35,45 @@ function unmuteComment(contentId) {
 }
 
 function toggleFollowButtons(userId, isFollowing) {
-    const followButton = document.getElementById(`follow-button-${userId}`);
-    const unfollowButton = document.getElementById(`unfollow-button-${userId}`);
+    const followButtons = document.querySelectorAll(`.follow-button-${userId}, .simple-follow-button-${userId}, .detailed-follow-button-${userId}`);
+    const unfollowButtons = document.querySelectorAll(`.unfollow-button-${userId}, .simple-unfollow-button-${userId}, .detailed-unfollow-button-${userId}`);
 
-    if (isFollowing) {
-        followButton.classList.add('hidden');
-        unfollowButton.classList.remove('hidden');
-    } else {
-        followButton.classList.remove('hidden');
-        unfollowButton.classList.add('hidden');
-    }
+    followButtons.forEach(followButton => {
+        if (isFollowing) {
+            followButton.classList.add('hidden');
+        } else {
+            followButton.classList.remove('hidden');
+        }
+    });
+
+    unfollowButtons.forEach(unfollowButton => {
+        if (isFollowing) {
+            unfollowButton.classList.remove('hidden');
+        } else {
+            unfollowButton.classList.add('hidden');
+        }
+    });
 }
 
 function toggleMuteButtons(contentId, hasMuted) {
     console.log('toggleMuteButtons');
-    const muteButton = document.getElementById(`mute-button-${contentId}`);
-    const unmuteButton = document.getElementById(`unmute-button-${contentId}`);
+    const muteButtons = document.querySelectorAll(`.simple-mute-button-${contentId}, .detailed-mute-button-${contentId}`);
+    const unmuteButtons = document.querySelectorAll(`.simple-unmute-button-${contentId}, .detailed-unmute-button-${contentId}`);
 
-    if (hasMuted) {
-        muteButton.classList.add('hidden');
-        unmuteButton.classList.remove('hidden');
-    } else {
-        muteButton.classList.remove('hidden');
-        unmuteButton.classList.add('hidden');
-    }
+    muteButtons.forEach(muteButton => {
+        if (hasMuted) {
+            muteButton.classList.add('hidden');
+        } else {
+            muteButton.classList.remove('hidden');
+        }
+    });
+
+    unmuteButtons.forEach(unmuteButton => {
+        if (hasMuted) {
+            unmuteButton.classList.remove('hidden');
+        } else {
+            unmuteButton.classList.add('hidden');
+        }
+    });
 }
 
