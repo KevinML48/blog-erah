@@ -1,4 +1,7 @@
 <x-app-layout>
+    <x-slot name="title">
+        {{ __('Édition de Profil') }}
+    </x-slot>
     <x-slot name="header">
         {{ __('Édition de Profil') }}
     </x-slot>
