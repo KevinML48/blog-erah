@@ -15,80 +15,19 @@
 
             <!-- Navigation for Small Screens -->
             <div class="md:hidden">
-                <div x-data="{ activeSection: 'profile' }">
-                    <!-- Navigation Buttons -->
-                    <div class="flex space-x-2 mb-4">
-                        <button
-                            @click="activeSection = 'profile'"
-                            :class="{ 'ring-2 ring-white ring-offset-2': activeSection === 'profile' }"
-                            class="erah-button">
-                            Profil
-                        </button>
-                        <button
-                            @click="activeSection = 'account'"
-                            :class="{ 'ring-2 ring-white ring-offset-2': activeSection === 'account' }"
-                            class="erah-button">
-                            Compte
-                        </button>
-                        <button
-                            @click="activeSection = 'notifications'"
-                            :class="{ 'ring-2 ring-white ring-offset-2': activeSection === 'notifications' }"
-                            class="erah-button">
-                            Notifications
-                        </button>
-                    </div>
-
-                    <!-- Profile Section -->
-                    <div x-show="activeSection === 'profile'" class="space-y-6">
-                        <!-- Profile Picture -->
-                        <div class="erah-box">
-                            <div class="max-w-xl">
-                                @include('profile.partials.profile-picture')
-                            </div>
-                        </div>
-
-                        <!-- Description -->
-                        <div class="erah-box mt-6">
-                            <div class="max-w-xl">
-                                @include('profile.partials.update-profile-description-form')
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Account Section -->
-                    <div x-show="activeSection === 'account'" class="space-y-6">
-                        <!-- Profile Information -->
-                        <div class="erah-box">
-                            <div class="max-w-xl">
-                                @include('profile.partials.update-profile-information-form')
-                            </div>
-                        </div>
-
-                        <!-- Password -->
-                        <div class="erah-box mt-6">
-                            <div class="max-w-xl">
-                                @include('profile.partials.update-password-form')
-                            </div>
-                        </div>
-
-                        <!-- Account Deletion -->
-                        <div class="erah-box mt-6">
-                            <div class="max-w-xl">
-                                @include('profile.partials.delete-user-form')
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Notifications Section (Hidden on small screens by default) -->
-                    <div x-show="activeSection === 'notifications'" class="space-y-6">
-                        <!-- Notification Preferences -->
-                        <div class="erah-box">
-                            <div class="max-w-xl">
-                                @include('profile.partials.notifications-preferences')
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <x-navigator
+                    :default="'profile'"
+                    :triggers="[
+                        'profile' => view('components.navigator-trigger', ['trigger' => 'profile'])->with('label', 'Profil'),
+                        'account' => view('components.navigator-trigger', ['trigger' => 'account'])->with('label', 'Compte'),
+                        'notifications' => view('components.navigator-trigger', ['trigger' => 'notifications'])->with('label', 'Notifications'),
+                    ]"
+                    :sections="[
+                        'profile' => view('profile.partials.section-profile', ['user' => $user]),
+                        'account' => view('profile.partials.section-account', ['user' => $user]),
+                        'notifications' => view('profile.partials.section-notifications-settings', ['themes' => $themes]),
+                    ]"
+                />
             </div>
 
             <!-- Main Content for Larger Screens -->
