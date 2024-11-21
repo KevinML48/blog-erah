@@ -8,6 +8,22 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            @if(Auth::user()->unreadNotificationsCount() > 0)
+                <div class="erah-box">
+                    <div class="max-w-xl">
+                        <section>
+                            <header>
+                                <p class="mt-1 text-sm text-gray-400">
+                                    {{ __("Marquer toutes vos notifications comme lues.") }}
+                                </p>
+                            </header>
+                            <a href="{{ route('notifications.read', Auth::user()->name) }}" class="erah-link-amnesic">
+                                Marquer comme lues →
+                            </a>
+                        </section>
+                    </div>
+                </div>
+            @endif
             <div class="shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     @if($notifications->isEmpty())

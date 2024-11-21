@@ -29,4 +29,10 @@ class NotificationController extends Controller
 
         return view('notifications.index', compact('notifications'));
     }
+
+    public function markAllAsRead()
+    {
+        auth()->user()->unreadNotifications->markAsRead();
+        return redirect()->back();
+    }
 }

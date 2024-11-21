@@ -54,6 +54,9 @@ Route::middleware('auth')->group(function () {
 
     // Notifications Page
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    // Mark notifications as read
+    Route::get('/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('notifications.read');
+
 
     // Notification Settings
     Route::put('/notifications/preferences', [UserNotificationPreferenceController::class, 'update'])->name('notifications.preferences.update');
