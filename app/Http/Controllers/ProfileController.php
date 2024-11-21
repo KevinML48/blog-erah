@@ -42,47 +42,70 @@ class ProfileController extends Controller
         ]);
     }
 
-    /**
-     * Display the specified user's comment content list.
-     */
-    public function comments($username): View
+    public function fetchMoreComments($username, Request $request): JsonResponse
     {
+        // Get the user based on the username
         $user = $this->profileService->getUserProfile($username);
-        $contents = $this->profileService->getUserCommentContents($user, 15);
 
-        return view('profile.comments', [
-            'user' => $user,
-            'contents' => $contents,
+        // Get the current page from the request (default to 1 if not provided)
+        $page = $request->query('page', 1);
+
+        // Get the next set of comment contents, paginated
+        $comments = $this->profileService->getUserCommentContents($user);
+
+        // Check if there are more comments available (pagination)
+        $hasMorePages = $comments->hasMorePages();
+
+        // Return the new content and pagination info as JSON
+        return response()->json([
+            'content' => view('posts.partials.content-loop', ['contents' => $comments])->render(),
+            'has_more_pages' => $hasMorePages  // Explicitly send has_more_pages for clarity
         ]);
     }
 
-    /**
-     * Display the specified user's liked comments.
-     */
-    public function commentLikes($username): View
+    public function fetchMoreLikedComments($username, Request $request): JsonResponse
     {
+        // Get the user based on the username
         $user = $this->profileService->getUserProfile($username);
-        $contents = $this->profileService->getUserLikedComments($user, 15);
 
-        return view('profile.likes.comments', [
-            'user' => $user,
-            'contents' => $contents,
+        // Get the current page from the request (default to 1 if not provided)
+        $page = $request->query('page', 1);
+
+        // Get the next set of liked comments, paginated
+        $likedComments = $this->profileService->getUserLikedComments($user);
+
+        // Check if there are more liked comments available (pagination)
+        $hasMorePages = $likedComments->hasMorePages();
+
+        // Return the new content and pagination info as JSON
+        return response()->json([
+            'content' => view('posts.partials.content-loop', ['contents' => $likedComments])->render(),
+            'next_page_url' => $hasMorePages ? $likedComments->nextPageUrl() : null,
         ]);
     }
 
-    /**
-     * Display the specified user's liked posts.
-     */
-    public function postLikes($username): View
+    public function fetchMoreLikedPosts($username, Request $request): JsonResponse
     {
+        // Get the user based on the username
         $user = $this->profileService->getUserProfile($username);
-        $posts = $this->profileService->getUserLikedPosts($user, 15);
 
-        return view('profile.likes.posts', [
-            'user' => $user,
-            'posts' => $posts,
+        // Get the current page from the request (default to 1 if not provided)
+        $page = $request->query('page', 1);
+
+        // Get the next set of liked posts, paginated
+        $likedPosts = $this->profileService->getUserLikedPosts($user);
+
+        // Check if there are more liked posts available (pagination)
+        $hasMorePages = $likedPosts->hasMorePages();
+
+        // Return the new content and pagination info as JSON
+        return response()->json([
+            'content' => view('posts.partials.posts-loop', ['posts' => $likedPosts])->render(),
+            'next_page_url' => $hasMorePages ? $likedPosts->nextPageUrl() : null,
         ]);
     }
+
+
 
     /**
      * Display the user's profile form.
@@ -271,7 +294,7 @@ class ProfileController extends Controller
     /**
      * Display the followed threads.
      */
-    public function thread(Request $request): View | JsonResponse
+    public function thread(Request $request): View|JsonResponse
     {
         $user = Auth::user();
         $contents = CommentContent::whereIn('user_id', function ($query) use ($user) {

@@ -16,9 +16,7 @@
         <div class="space-y-4">
             <div class="mt-6">
                 <div class="space-y-4 mt-4">
-                    @foreach($posts as $post)
-                        @include('posts.partials.post', ['post' => $post])
-                    @endforeach
+                    @include('posts.partials.posts-loop', ['posts' => $posts])
                 </div>
             </div>
         </div>

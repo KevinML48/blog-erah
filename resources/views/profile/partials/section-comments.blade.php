@@ -4,13 +4,13 @@
         <h2 class="font-bold text-lg">Commentaires</h2>
 
         <div id="comments-container">
-            @foreach ($contents as $content)
-                @include('posts.partials.comment', ['comment' => $content->comment])
-            @endforeach
+            @include('posts.partials.content-loop')
+        </div>
+        <div id="loader" class="hidden flex justify-center items-center space-x-2">
+            <div class="w-8 h-8 border-4 border-t-4 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+            <span class="text-gray-500">Charge...</span>
         </div>
 
-        <!-- Pagination Links -->
-        {{ $contents->links() }}
 
     </div>
 </div>

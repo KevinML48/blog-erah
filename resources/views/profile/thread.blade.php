@@ -46,6 +46,7 @@
                 .then(data => {
                     document.getElementById('loading').style.display = 'none';
                     document.getElementById('comments-container').insertAdjacentHTML('beforeend', data.html);
+                    convertTimes();
                     nextPageUrl = data.next_page_url;
                     loading = false;
                 })
