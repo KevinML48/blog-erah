@@ -2,7 +2,7 @@
 
 @php
     $scroll = match ($scroll) {
-        true => 'h-[calc(100vh-40rem)] overflow-y-auto',
+        true => 'md:h-[calc(100vh-40rem)] h-[calc(100vh-7rem)] overflow-y-auto',
         default => '',
     };
 @endphp
