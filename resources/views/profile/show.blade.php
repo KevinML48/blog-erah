@@ -39,49 +39,26 @@
                 @endif
             </div>
 
-            <!-- Section for Latest Comments -->
-            <div class="erah-box">
-                <div class="p-6">
-                    <h2 class="font-bold text-lg">Derniers commentaires</h2>
-                    <div class="space-y-4">
-                        @foreach ($comments as $comment)
-                            @include('posts.partials.comment-content', ['content' => $comment])
-                        @endforeach
-
-                        @if ($comments->isEmpty())
-                            <p>Aucun commentaire trouvé.</p>
-                        @endif
-                    </div>
-
-                    <!-- Link to View All Comments -->
-                    <div class="mt-4">
-                        <a href="{{ route('profile.comments', ['username' => $user->name]) }}"
-                           class="text-blue-600 hover:underline">
-                            Voir tous les commentaires
-                        </a>
-                    </div>
-
-                    <!-- Link to View All Comment Likes -->
-                    <div class="mt-4">
-                        <a href="{{ route('profile.likes.comments', ['username' => $user->name]) }}"
-                           class="text-blue-600 hover:underline">
-                            Voir tous les commentaires likés
-                        </a>
-                    </div>
-
-                    <!-- Link to View All Post Likes -->
-                    <div class="mt-4">
-                        <a href="{{ route('profile.likes.posts', ['username' => $user->name]) }}"
-                           class="text-blue-600 hover:underline">
-                            Voir tous les posts likés
-                        </a>
-                    </div>
-
-                </div>
+            <div class="erah-boxh">
+                <x-navigator
+                    :default="'comments'"
+                    :scroll="true"
+                    :triggers="[
+                        'comments' => view('components.navigator-trigger', ['trigger' => 'comments'])->with('label', 'Commentaires'),
+                        'likes' => view('components.navigator-trigger', ['trigger' => 'account'])->with('label', 'J\'aimes'),
+                        'post-likes' => view('components.navigator-trigger', ['trigger' => 'post-likes'])->with('label', 'Posts aimés'),
+                    ]"
+                    :sections="[
+                        'comments' => view('profile.partials.section-comments', ['contents' => $contents]),
+                        'likes' => view('profile.partials.section-likes', ['contents' => $likes]),
+                        'post-likes' => view('profile.partials.section-post-likes', ['posts' => $postLikes]),
+                    ]"
+                />
             </div>
-
         </div>
     </div>
 
+    <script src="{{ asset('js/comment-form.js') }}" defer></script>
     <script src="{{ asset('js/follow.js') }}" defer></script>
+    <script src="{{ asset('js/likes.js') }}" defer></script>
 </x-app-layout>

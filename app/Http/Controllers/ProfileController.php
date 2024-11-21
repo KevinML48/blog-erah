@@ -30,11 +30,15 @@ class ProfileController extends Controller
     public function show($username): View
     {
         $user = $this->profileService->getUserProfile($username);
-        $contents = $this->profileService->getUserComments($user, 5);
+        $contents = $this->profileService->getUserCommentContents($user);
+        $likes = $this->profileService->getUserLikedComments($user);
+        $postLikes = $this->profileService->getUserLikedPosts($user);
 
         return view('profile.show', [
             'user' => $user,
-            'comments' => $contents,
+            'contents' => $contents,
+            'likes' => $likes,
+            'postLikes' => $postLikes,
         ]);
     }
 
@@ -44,7 +48,7 @@ class ProfileController extends Controller
     public function comments($username): View
     {
         $user = $this->profileService->getUserProfile($username);
-        $contents = $this->profileService->getUserComments($user, 15);
+        $contents = $this->profileService->getUserCommentContents($user, 15);
 
         return view('profile.comments', [
             'user' => $user,

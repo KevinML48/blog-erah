@@ -13,7 +13,7 @@ class ProfileService implements ProfileServiceInterface
         return User::where('name', $username)->firstOrFail();
     }
 
-    public function getUserComments(User $user, int $limit = 15): LengthAwarePaginator
+    public function getUserCommentContents(User $user, int $limit = 15): LengthAwarePaginator
     {
         return $user->commentContents()->latest()->paginate($limit);
     }

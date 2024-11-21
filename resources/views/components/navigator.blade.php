@@ -1,4 +1,11 @@
-@props(['default' => '', 'sections', 'triggers'])
+@props(['default' => '', 'sections', 'triggers', 'scroll' => false])
+
+@php
+    $scroll = match ($scroll) {
+        true => 'h-[calc(100vh-35rem)] overflow-y-auto',
+        default => '',
+    };
+@endphp
 
 <div x-data="{ activeSection: '{{ $default }}' }">
     <!-- Navigation Buttons -->
@@ -14,9 +21,13 @@
     </div>
 
     <!-- Sections -->
-    @foreach ($sections as $key => $content)
-        <div x-show="activeSection === '{{ $key }}'" class="space-y-6">
-            {{ $content }}
-        </div>
-    @endforeach
+    <div>
+        @foreach ($sections as $key => $content)
+            <div x-show="activeSection === '{{ $key }}'" class="space-y-6 {{ $scroll }}">
+                <div class="h-full overflow-y-auto">
+                    {{ $content }}
+                </div>
+            </div>
+        @endforeach
+    </div>
 </div>

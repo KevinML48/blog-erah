@@ -9,7 +9,7 @@ interface ProfileServiceInterface
 {
     public function getUserProfile(string $username): User;
 
-    public function getUserComments(User $user, int $limit = 15): LengthAwarePaginator;
+    public function getUserCommentContents(User $user, int $limit = 15): LengthAwarePaginator;
 
     public function getUserLikedComments(User $user, int $limit = 15): LengthAwarePaginator;
 
