@@ -18,7 +18,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Automatically show the form with ID -1 on page load
-    showReplyForm(-1);
+    const formContainer = document.querySelector('#form-container'); // Your selector
+
+    // Check if formContainer is not null
+    if (formContainer !== null) {
+        showReplyForm(-1);
+    }
 
     // Initialize listeners for existing textareas
     initEventListeners();
@@ -113,9 +118,6 @@ function showReplyForm(commentId) {
         updateCounter(commentId);
     });
 }
-
-
-
 
 
 // Function to update the character count
@@ -234,7 +236,7 @@ function clearMedia(parentId) {
     document.getElementById(`mediaUpload-${parentId}`).classList.remove('hidden');
 }
 
-document.addEventListener('submit', function(event) {
+document.addEventListener('submit', function (event) {
     if (event.target.matches('form[id^="commentForm-"]')) {
         event.preventDefault(); // Prevent the form from submitting the normal way
 
@@ -292,7 +294,6 @@ function addCommentToReplies(commentHtml, formId) {
 }
 
 
-
 function displayFileSizeError(form) {
     const errorContainer = form.querySelector('.error-messages') || createErrorContainer(form);
 
@@ -305,6 +306,7 @@ function displayFileSizeError(form) {
     errorElement.textContent = 'Le fichier téléchargé dépasse la limite de taille du serveur (2 Mo). Veuillez télécharger un fichier plus petit.';
     errorContainer.appendChild(errorElement);
 }
+
 function displayValidationErrors(errors, formId) {
     const form = document.getElementById(formId);
     const errorContainer = form.querySelector('.error-messages') || createErrorContainer(form);
