@@ -11,6 +11,7 @@ class SendFuturePostNotification implements ShouldQueue
 {
     use Queueable;
     protected Post $post;
+    public $jobId;
 
     /**
      * Create a new job instance.
@@ -20,12 +21,12 @@ class SendFuturePostNotification implements ShouldQueue
         $this->post = $post;
     }
 
-
     /**
      * Execute the job.
      */
     public function handle(NotificationServiceInterface $notificationService): void
     {
+        $this->jobId = $this->job->getJobId();
         $notificationService->handleCreation($this->post);
     }
 }
