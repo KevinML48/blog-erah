@@ -10,16 +10,14 @@
 <div x-data="{
     activeSection: '{{ $default }}',
     functions: @js($functions),  // Make sure this is properly passed as a JS array
-    username: '{{ $functionsAttribute }}',  // Add username as a variable
+    attribute: '{{ $functionsAttribute }}',
     checkScrollToBottom(sectionName) {
         const section = this.$refs[`section${sectionName}`];
         if (section.scrollHeight - section.scrollTop === section.clientHeight) {
-            console.log(`Scrolled to the bottom of the section: ${sectionName}`);
             // Trigger the corresponding function if it exists
             const functionName = this.functions[sectionName];
             if (functionName && typeof window[functionName] === 'function') {
-                // Pass the username to the function
-                window[functionName](this.username);
+                window[functionName](this.attribute);
             }
         }
     }
