@@ -175,7 +175,7 @@ class ProfileController extends Controller
         $user->description = $request->input('description');
         $user->save();
 
-        return back()->with('status', 'profile-updated');
+        return back()->with('status', 'description-updated');
     }
 
     /**
@@ -230,7 +230,7 @@ class ProfileController extends Controller
 
         $this->profileService->updateUserProfilePicture($user, $path);
 
-        return redirect()->back()->with('success', 'Image de profil téléchargée');
+        return redirect()->back()->with('status', 'profile-picture-updated');
     }
 
     /**

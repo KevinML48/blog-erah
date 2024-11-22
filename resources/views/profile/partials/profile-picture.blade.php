@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium">
-            {{ __('Profile Picture') }}
+            {{ __('Image de profil') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-400">
-            {{ __("Update your account's profile picture.") }}
+            {{ __("Mettez à jour votre image de profil.") }}
         </p>
     </header>
 
@@ -26,6 +26,18 @@
             @enderror
         </div>
 
-        <x-primary-button>{{ __('Upload') }}</x-primary-button>
+        <div class="flex items-center gap-4">
+            <x-primary-button>{{ __('Enregistrer') }}</x-primary-button>
+
+            @if (session('status') === 'profile-picture-updated')
+                <p
+                    x-data="{ show: true }"
+                    x-show="show"
+                    x-transition
+                    x-init="setTimeout(() => show = false, 2000)"
+                    class="text-sm text-gray-600"
+                >{{ __('Image de profil changée.') }}</p>
+            @endif
+        </div>
     </form>
 </section>
