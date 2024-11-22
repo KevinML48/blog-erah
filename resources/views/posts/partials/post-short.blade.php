@@ -1,14 +1,14 @@
-<div class="flex border-b pb-4 mb-4">
+<div class="flex flex-col md:flex-row border-b pb-4 mb-4">
 
     <!-- Media Display -->
-    <div class="w-1/3 pr-4">
+    <div class="md:w-1/3 pr-4">
         <div class="w-64 bg-gray-200 flex items-center justify-center overflow-hidden">
             @include('posts.partials.media', ['post' => $post])
         </div>
     </div>
 
     <!-- Post -->
-    <div class="w-2/3 pl-4">
+    <div class="md:w-2/3 pl-4">
 
         <!-- Title -->
         <a href="{{ route('posts.show', $post->id) }}">

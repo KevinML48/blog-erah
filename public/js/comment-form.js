@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Automatically show the form with ID -1 on page load
-    const formContainer = document.querySelector('#form-container'); // Your selector
+    const formContainer = document.querySelector('#form-container--1'); // Your selector
 
     // Check if formContainer is not null
     if (formContainer !== null) {

@@ -5,7 +5,8 @@
     <x-slot name="header">
         <div class="flex justify-center space-x-8">
             @foreach ($themes as $theme)
-                <x-theme-link :href="route('posts.theme', $theme->id)" :active="request()->routeIs('posts.theme') && request()->route('id') == $theme->id">
+                <x-theme-link :href="route('posts.theme', $theme->id)"
+                              :active="request()->routeIs('posts.theme') && request()->route('id') == $theme->id">
                     {{ $theme->name }}
                 </x-theme-link>
             @endforeach
@@ -17,7 +18,7 @@
             <div class="mt-6">
                 <div class="space-y-4 mt-4">
                     @foreach($posts as $post)
-                        @include('posts.partials.post', ['post' => $post])
+                        @include('posts.partials.post-short', ['post' => $post])
                     @endforeach
                 </div>
             </div>

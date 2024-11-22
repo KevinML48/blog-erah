@@ -38,7 +38,7 @@ class PostController extends Controller
             ->orderBy('publication_time', 'desc')
             ->paginate(15);
 
-        return view('posts.theme', compact('posts', 'themes'));
+        return view('posts.index', compact('posts', 'themes'));
     }
 
 

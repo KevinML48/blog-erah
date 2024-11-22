@@ -1,4 +1,4 @@
-<div class="mt-6 comment-section">
+<div class="mt-6 comment-section" id="comment-section">
     @if (request()->routeIs('posts.show'))
         <h4 class="font-semibold text-lg">Commentaires ({{ $totalCommentsCount }})</h4>
 

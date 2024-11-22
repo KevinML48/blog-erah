@@ -5,7 +5,7 @@
 
         <div id="posts-container">
             @foreach($posts as $post)
-                @include('posts.partials.post', ['post' => $post])
+                @include('posts.partials.post-short', ['post' => $post])
             @endforeach
         </div>
         <div id="loader" class="hidden flex justify-center items-center space-x-2">

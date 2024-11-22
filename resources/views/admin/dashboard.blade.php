@@ -22,12 +22,12 @@
                 <div class="p-6">
                     <form id="searchForm">
                         <x-text-input
-                            id="search"
-                            name="search"
-                            type="text"
-                            placeholder="nom ou email"
-                            :value="old('search')"
-                            autocomplete="search"
+                                id="search"
+                                name="search"
+                                type="text"
+                                placeholder="nom ou email"
+                                :value="old('search')"
+                                autocomplete="search"
                         />
 
                         <select name="role" id="role" class="mt-1 border-gray-300 rounded-md shadow-sm">
@@ -64,8 +64,6 @@
             </div>
 
 
-
-
             <!-- Posts -->
             <div class="erah-box">
                 <h2 class="mt-6 text-lg font-semibold">Posts</h2>
@@ -79,7 +77,7 @@
                     <h3 class="text-lg font-semibold">10 Derniers Posts</h3>
                     <div class="space-y-4 mt-4">
                         @foreach($posts as $post)
-                            @include('posts.partials.post', ['post' => $post])
+                            @include('posts.partials.post-short', ['post' => $post])
                         @endforeach
                     </div>
                 </div>
@@ -88,7 +86,7 @@
                     <h3 class="text-lg bg-black font-semibold">Posts non publiés</h3>
                     <div class="space-y-4 mt-4">
                         @foreach($unpublishedPosts as $post)
-                            @include('posts.partials.post', ['post' => $post])
+                            @include('posts.partials.post-short', ['post' => $post])
                         @endforeach
                     </div>
                 </div>
