@@ -15,17 +15,23 @@
                 <span id="likes-post-count-{{ $post->id }}"></span>
             @endif
 
-            <!-- Unliked Button -->
-            <button onclick="likePost({{ $post->id }})" id="like-post-button-{{ $post->id }}"
-                    class="flex items-center {{ $post->likes()->where('user_id', auth()->id())->exists() ? 'hidden' : '' }}">
-                <x-svg-heart id="unfilled-icon-{{ $post->id }}" :filled="false"/>
-            </button>
+            @auth
+                <!-- Unliked Button -->
+                <button onclick="likePost({{ $post->id }})" id="like-post-button-{{ $post->id }}"
+                        class="flex items-center {{ $post->likes()->where('user_id', auth()->id())->exists() ? 'hidden' : '' }}">
+                    <x-svg-heart id="unfilled-icon-{{ $post->id }}" :filled="false"/>
+                </button>
 
-            <!-- Liked Button -->
-            <button onclick="unlikePost({{ $post->id }})" id="unlike-post-button-{{ $post->id }}"
-                    class="flex items-center text-red-600 {{ $post->likes()->where('user_id', auth()->id())->exists() ? '' : 'hidden' }}">
-                <x-svg-heart id="filled-icon-{{ $post->id }}" :filled="true"/>
-            </button>
+                <!-- Liked Button -->
+                <button onclick="unlikePost({{ $post->id }})" id="unlike-post-button-{{ $post->id }}"
+                        class="flex items-center text-red-600 {{ $post->likes()->where('user_id', auth()->id())->exists() ? '' : 'hidden' }}">
+                    <x-svg-heart id="filled-icon-{{ $post->id }}" :filled="true"/>
+                </button>
+            @else
+                <a href="{{ route('login') }}" class="flex items-center text-red-600">
+                    <x-svg-heart id="filled-icon-{{ $post->id }}" :filled="true"/>
+                </a>
+            @endauth
         </div>
     </div>
 

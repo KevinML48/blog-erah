@@ -2,8 +2,15 @@
     @if (request()->routeIs('posts.show'))
         <h4 class="font-semibold text-lg">Commentaires ({{ $totalCommentsCount }})</h4>
 
-        <!-- Main Comment Form -->
-        <div id="form-container--1"></div> <!-- Empty container where the form will be appended -->
+        @auth
+            <!-- Main Comment Form -->
+            <div id="form-container--1"></div> <!-- Empty container where the form will be appended -->
+        @else
+            <a href="{{ route('login') }}" class="erah-link-amnesic">
+                Connectez-vous pour réagir
+            </a>
+
+        @endauth
     @endif
 
     <!-- Displaying Comments -->

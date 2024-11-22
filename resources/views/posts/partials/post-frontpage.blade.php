@@ -1,9 +1,10 @@
 @include('posts.partials.post-full')
 
-    <div class="mb-2">
-        <a href="{{ route('posts.show', $post->id) }}#comment-section">
-            <h4 class="erah-link text-right">Commenter →</h4>
-        </a>
-    </div>
-
+    @auth
+        <div class="mb-2">
+            <a href="{{ route('posts.show', $post->id) }}#comment-section">
+                <h4 class="erah-link text-right">Commenter →</h4>
+            </a>
+        </div>
+    @endauth
 <script src="{{ asset('js/likes.js') }}" defer></script>
