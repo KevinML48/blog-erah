@@ -89,7 +89,7 @@
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profile') }}
+                                {{ __('Profil') }}
                             </x-dropdown-link>
 
                             <!-- Authentication -->
@@ -98,7 +98,7 @@
                                 <x-dropdown-link :href="route('logout')"
                                                  onclick="event.preventDefault();
                                                     this.closest('form').submit();">
-                                    {{ __('Log Out') }}
+                                    {{ __('Se déconnecter') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -110,12 +110,12 @@
                 <div class="flex">
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('login')" :active="request()->routeIs('login')">
-                            {{ __('Log in') }}
+                            {{ __('Se connecter') }}
                         </x-nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('register')" :active="request()->routeIs('register')">
-                            {{ __('Register') }}
+                            {{ __('S\'inscrire') }}
                         </x-nav-link>
                     </div>
                 </div>
@@ -150,7 +150,7 @@
 
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Profile') }}
+                        {{ __('Profil') }}
                     </x-responsive-nav-link>
 
                     <!-- Authentication -->
@@ -159,7 +159,7 @@
                         <x-responsive-nav-link :href="route('logout')"
                                                onclick="event.preventDefault();
                                             this.closest('form').submit();">
-                            {{ __('Log Out') }}
+                            {{ __('Se déconnecter') }}
                         </x-responsive-nav-link>
                     </form>
                 </div>
@@ -168,10 +168,10 @@
                     <div class="font-medium text-base text-gray-800">{{ __('Guest') }}</div>
                     <div class="mt-3 space-y-1">
                         <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')">
-                            {{ __('Log In') }}
+                            {{ __('Se connecter') }}
                         </x-responsive-nav-link>
                         <x-responsive-nav-link :href="route('register')" :active="request()->routeIs('register')">
-                            {{ __('Register') }}
+                            {{ __('S\'inscrire') }}
                         </x-responsive-nav-link>
                     </div>
                 </div>
