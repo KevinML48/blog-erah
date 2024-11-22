@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Models\CommentContent;
 use App\Models\Like;
 use App\Services\NotificationServiceInterface;
 
@@ -25,7 +26,9 @@ class LikeObserver
      */
     public function created(Like $like): void
     {
-        $this->notificationService->handleCreation($like);
+        if ($like->likeable_type == CommentContent::class) {
+            $this->notificationService->handleCreation($like);
+        }
     }
 
     /**
