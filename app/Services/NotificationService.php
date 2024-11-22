@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Contracts\NotifiableEntityInterface;
+use App\Models\NotificationType;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class NotificationService implements NotificationServiceInterface
@@ -59,6 +61,24 @@ class NotificationService implements NotificationServiceInterface
         $notifications->getCollection()->reject(function ($notification) {
             return $notification === null;
         });
+    }
+
+    public function updateNotificationPreferences(Authenticatable $user, string $notificationTypeName, string $contextType, ?int $contextId, bool $isEnabled): void
+    {
+        $notificationType = NotificationType::where('name', $notificationTypeName)->first();
+
+        $user->notificationPreferences()
+            ->where('notification_type_id', $notificationType->id)
+            ->where('context_type', $contextType)
+            ->where('context_id', $contextId)
+            ->delete();
+
+        $user->notificationPreferences()->create([
+            'notification_type_id' => $notificationType->id,
+            'context_id' => $contextId,
+            'context_type' => $contextType,
+            'is_enabled' => $isEnabled,
+        ]);
     }
 
 }
