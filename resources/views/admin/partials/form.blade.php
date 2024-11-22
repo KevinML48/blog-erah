@@ -13,7 +13,7 @@
     <!-- Body -->
     <div>
         <x-input-label for="body" :value="__('Contenu')" />
-        <x-text-area id="body" name="body" rows="5" class="mt-1 block w-full" required autofocus autocomplete="body">{{ old('body', $post->body ?? '') }}</x-text-area>
+        <x-text-area id="body" name="body" rows="5" class="mt-1 block w-full" required autofocus autocomplete="body" :value="old('body', $post->body ?? '')"></x-text-area>
         @error('body')
         <span class="text-red-600 text-sm">{{ $message }}</span>
         @enderror
