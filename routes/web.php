@@ -21,9 +21,11 @@ Route::get('/posts/theme/{id}', [PostController::class, 'showByTheme'])->name('p
 
 // Display a Single Post
 Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/posts/{post}/redirect', [PostController::class, 'showRedirect'])->name('posts.show.redirect')->middleware('auth');
 
 // Display a Single Comment on a Post
 Route::get('/posts/{post}/comment/{comment}', [CommentController::class, 'show'])->name('comments.show');
+Route::get('/posts/{post}/comment/{comment}/redirect', [CommentController::class, 'showRedirect'])->name('comments.show.redirect')->middleware('auth');
 
 // Load more comments for a post
 Route::get('/posts/{post}/comments/load-more-comments', [CommentController::class, 'loadMoreComments'])->name('comments.loadMore');

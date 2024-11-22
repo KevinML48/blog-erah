@@ -1,4 +1,18 @@
 <div class="mt-6 comment-section" id="comment-section">
+    @if(session('fragment'))
+        <script>
+            window.onload = function() {
+                // Add the fragment to the URL
+                window.location.hash = "{{ session('fragment') }}";
+
+                // Optionally scroll to the section directly
+                var section = document.getElementById("{{ session('fragment') }}");
+                if (section) {
+                    section.scrollIntoView({behavior: "smooth"});
+                }
+            };
+        </script>
+    @endif
     @if (request()->routeIs('posts.show'))
         <h4 class="font-semibold text-lg">Commentaires ({{ $totalCommentsCount }})</h4>
 
@@ -6,7 +20,7 @@
             <!-- Main Comment Form -->
             <div id="form-container--1"></div> <!-- Empty container where the form will be appended -->
         @else
-            <a href="{{ route('login') }}" class="erah-link-amnesic">
+            <a href="{{ route('posts.show.redirect', $post) }}" class="erah-link-amnesic">
                 Connectez-vous pour réagir
             </a>
 

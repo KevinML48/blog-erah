@@ -6,7 +6,7 @@
                 <x-svg-speech-bubble/>
             </button>
         @else
-            <a href="{{ route('login') }}" class="cursor-pointer">
+            <a href="{{ route('comments.show.redirect', [$post, $comment]) }}" class="cursor-pointer">
                 <x-svg-speech-bubble/>
             </a>
         @endauth
@@ -33,7 +33,7 @@
             </div>
         @else
             <!-- Display filled heart with link to login -->
-            <a href="{{ route('login') }}" class="flex items-center text-red-600">
+            <a href="{{ route('comments.show.redirect', [$post, $comment]) }}" class="flex items-center text-red-600">
                 <x-svg-heart id="filled-icon-{{ $comment->id }}" :filled="true"/>
                 @if ($comment->content->likes()->count() > 0)
                     <span id="likes-comment-count-{{ $comment->id }}" class="ml-1">

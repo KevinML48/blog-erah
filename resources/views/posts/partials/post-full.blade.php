@@ -28,7 +28,7 @@
                     <x-svg-heart id="filled-icon-{{ $post->id }}" :filled="true"/>
                 </button>
             @else
-                <a href="{{ route('login') }}" class="flex items-center text-red-600">
+                <a href="{{ route('posts.show.redirect', $post) }}" class="flex items-center text-red-600">
                     <x-svg-heart id="filled-icon-{{ $post->id }}" :filled="true"/>
                 </a>
             @endauth

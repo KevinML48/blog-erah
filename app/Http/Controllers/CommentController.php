@@ -49,6 +49,11 @@ class CommentController extends Controller
         return view('posts.show', compact('post', 'comments', 'comment'));
     }
 
+    public function showRedirect(Post $post, Comment $comment): RedirectResponse
+    {
+        return redirect()->route('comments.show', ['post' => $post, 'comment' => $comment]);
+    }
+
     public function loadMoreComments(Post $post, Request $request): JsonResponse
     {
         $currentPage = $request->input('page', 1);

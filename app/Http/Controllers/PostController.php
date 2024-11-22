@@ -97,6 +97,11 @@ class PostController extends Controller
         return view('posts.show', compact('post', 'comments', 'totalCommentsCount'));
     }
 
+    public function showRedirect(Post $post)
+    {
+        return redirect()->route('posts.show', ['post' => $post])->with('fragment', 'comment-section');
+    }
+
 
     /**
      * Show the form for editing the specified resource.
