@@ -35,7 +35,6 @@ class PostNotificationStrategy implements NotificationStrategy
         });
 
         foreach ($users as $user) {
-            Log::info('notofy: ' . $user->name);
             $user->notify(new PostPublishedNotification(['post_id' => $this->post->id,]));
         }
     }

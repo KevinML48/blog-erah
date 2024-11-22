@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Jobs\SendFuturePostNotification;
 use App\Models\Post;
 use App\Services\NotificationServiceInterface;
 
@@ -26,6 +27,10 @@ class PostObserver
     {
         if ($post->publication_time && $post->publication_time->isPast()) {
             $this->notificationService->handleCreation($post);
+        } elseif ($post->publication_time && $post->publication_time->isFuture()) {
+            $delay = now()->diffInSeconds($post->publication_time, true);
+            SendFuturePostNotification::dispatch($post)
+            ->delay(now()->addSeconds($delay));
         }
     }
 
