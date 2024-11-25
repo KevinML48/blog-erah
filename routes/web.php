@@ -14,24 +14,27 @@ use Illuminate\Support\Facades\Route;
 // =======================================
 
 // Main Page: Display all posts
-Route::get('/', [PostController::class, 'index'])->name('posts.index');
+Route::get('/blog', [PostController::class, 'index'])->name('posts.index');
+Route::get('/', function () {
+    return redirect()->route('posts.index');
+});
 
 // Filtered Main Page: Display posts by theme
-Route::get('/posts/theme/{id}', [PostController::class, 'showByTheme'])->name('posts.theme');
+Route::get('/blog/theme/{id}', [PostController::class, 'showByTheme'])->name('posts.theme');
 
 // Display a Single Post
-Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-Route::get('/posts/{post}/redirect', [PostController::class, 'showRedirect'])->name('posts.show.redirect')->middleware('auth');
+Route::get('/blog/{post}', [PostController::class, 'show'])->name('posts.show');
+Route::get('/blog/{post}/redirect', [PostController::class, 'showRedirect'])->name('posts.show.redirect')->middleware('auth');
 
 // Display a Single Comment on a Post
-Route::get('/posts/{post}/comment/{comment}', [CommentController::class, 'show'])->name('comments.show');
-Route::get('/posts/{post}/comment/{comment}/redirect', [CommentController::class, 'showRedirect'])->name('comments.show.redirect')->middleware('auth');
+Route::get('/blog/{post}/commentaire/{comment}', [CommentController::class, 'show'])->name('comments.show');
+Route::get('/blog/{post}/commentaire/{comment}/redirect', [CommentController::class, 'showRedirect'])->name('comments.show.redirect')->middleware('auth');
 
 // Load more comments for a post
-Route::get('/posts/{post}/comments/load-more-comments', [CommentController::class, 'loadMoreComments'])->name('comments.loadMore');
+Route::get('/blog/{post}/comments/load-more-comments', [CommentController::class, 'loadMoreComments'])->name('comments.loadMore');
 
 // Load more replies for a comment
-Route::get('/comments/{comment}/load-more-replies', [CommentController::class, 'loadMoreReplies'])->name('comments.loadMoreReplies');
+Route::get('/commentaires/{comment}/load-more-replies', [CommentController::class, 'loadMoreReplies'])->name('comments.loadMoreReplies');
 
 
 // =======================================
@@ -40,24 +43,24 @@ Route::get('/comments/{comment}/load-more-replies', [CommentController::class, '
 Route::middleware('auth')->group(function () {
 
     // User Profile Routes
-    Route::get('/user/{username}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profil/{username}', [ProfileController::class, 'show'])->name('profile.show');
     // Routes to fetch more comments or posts for a user
-    Route::get('/user/{username}/comments', [ProfileController::class, 'fetchMoreComments']);
-    Route::get('/user/{username}/liked-comments', [ProfileController::class, 'fetchMoreLikedComments']);
-    Route::get('/user/{username}/liked-posts', [ProfileController::class, 'fetchMoreLikedPosts']);
+    Route::get('/profil/{username}/commentaires', [ProfileController::class, 'fetchMoreComments'])->name('profile.fetchMoreComments');
+    Route::get('/profil/{username}/commentaires-aimes', [ProfileController::class, 'fetchMoreLikedComments'])->name('profile.fetchMoreLikedComments');
+    Route::get('/profil/{username}/posts-aimes', [ProfileController::class, 'fetchMoreLikedPosts'])->name('profile.fetchMoreLikedPosts');
 
     // Profile Settings
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::patch('/profile/update-description', [ProfileController::class, 'updateDescription'])->name('profile.update.description');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/profil', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profil', [ProfileController::class, 'update'])->name('profile.update');
+    Route::patch('/profil/description', [ProfileController::class, 'updateDescription'])->name('profile.update.description');
+    Route::delete('/mon-profil', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // Profile Picture Update
-    Route::put('/profile/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');
+    Route::put('/mon-profil/update-picture', [ProfileController::class, 'updateProfilePicture'])->name('profile.update.picture');
 
     // Notifications Page
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     // Mark notifications as read
-    Route::get('/notifications/read', [NotificationController::class, 'markAllAsRead'])->name('notifications.read');
+    Route::get('/notifications/lu', [NotificationController::class, 'markAllAsRead'])->name('notifications.read');
 
 
     // Notification Settings
@@ -69,14 +72,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile/thread', [ProfileController::class, 'thread'])->name('profile.thread');
 
     // Comment Actions
-    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-    Route::post('/comments/{comment}/like', [CommentController::class, 'like'])->name('comments.like');
-    Route::delete('/comments/{comment}/unlike', [CommentController::class, 'unlike'])->name('comments.unlike');
+    Route::post('/commentaires', [CommentController::class, 'store'])->name('comments.store');
+    Route::delete('/commentaires/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::post('/commentaires/{comment}/like', [CommentController::class, 'like'])->name('comments.like');
+    Route::delete('/commentaires/{comment}/unlike', [CommentController::class, 'unlike'])->name('comments.unlike');
 
     // Post Actions
-    Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
-    Route::delete('/posts/{post}/unlike', [PostController::class, 'unlike'])->name('posts.unlike');
+    Route::post('/blog/{post}/like', [PostController::class, 'like'])->name('posts.like');
+    Route::delete('/blog/{post}/unlike', [PostController::class, 'unlike'])->name('posts.unlike');
 
     // Follow Actions
     Route::post('/follow/{user}', [FollowController::class, 'follow'])->name('user.follow');
@@ -97,15 +100,15 @@ Route::middleware('can:administrate')->group(function () {
     Route::get('/admin/orphans', [AdminController::class, 'deleteOrphanedContents'])->name('admin.delete.orphans');
 
     // Post Management in Admin Zone
-    Route::get('/admin/posts/create', [PostController::class, 'create'])->name('admin.posts.create');
-    Route::post('/admin/posts/store', [PostController::class, 'store'])->name('admin.posts.store');
-    Route::get('/admin/posts/{post}/edit', [PostController::class, 'edit'])->name('admin.posts.edit');
+    Route::get('/admin/posts/creer', [PostController::class, 'create'])->name('admin.posts.create');
+    Route::post('/admin/posts/creer', [PostController::class, 'store'])->name('admin.posts.store');
+    Route::get('/admin/posts/{post}/editer', [PostController::class, 'edit'])->name('admin.posts.edit');
     Route::put('/admin/posts/{post}', [PostController::class, 'update'])->name('admin.posts.update');
 
     // User Management in Admin Zone
-    Route::get('/admin/users/search', [ProfileController::class, 'search'])->name('admin.users.search');
-    Route::get('/admin/users/{user}/change-role/{role}', [ProfileController::class, 'changeRole'])->name('admin.users.changeRole');
-    Route::get('/admin/users/{user}/delete', [ProfileController::class, 'adminDestroy'])->name('admin.users.delete');
+    Route::get('/admin/profils/chercher', [ProfileController::class, 'search'])->name('admin.users.search');
+    Route::get('/admin/profils/{user}/changer-role/{role}', [ProfileController::class, 'changeRole'])->name('admin.users.changeRole');
+    Route::get('/admin/profils/{user}/supprimer', [ProfileController::class, 'adminDestroy'])->name('admin.users.delete');
 
 });
 
