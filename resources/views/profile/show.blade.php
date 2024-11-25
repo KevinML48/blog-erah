@@ -63,11 +63,23 @@
                         'post-likes' => view('profile.partials.section-post-likes', ['posts' => $postLikes]),
                     ]"
                     :functions="[
-                        'comments' => 'profileLoadMoreComments',
-                        'likes' => 'profileLoadMoreLikedComments',
-                        'post-likes' => 'profileLoadMoreLikedPosts',
+                        'comments' => [
+                            'functionName' => 'profileLoadMoreComments',
+                            'attributes' => [
+                                route('profile.fetchMoreComments',['username' => $user->name])]
+                        ],
+                        'likes' => [
+                            'functionName' => 'profileLoadMoreLikedComments',
+                            'attributes' => [
+                                route('profile.fetchMoreLikedComments', ['username' => $user->name])]
+                            ],
+
+                        'post-likes' => [
+                            'functionName' => 'profileLoadMoreLikedPosts',
+                            'attributes' => [
+                                route('profile.fetchMoreLikedPosts', ['username' => $user->name])]
+                            ],
                     ]"
-                    :functionsAttribute="$user->name"
                 />
             </div>
         </div>

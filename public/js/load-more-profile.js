@@ -47,31 +47,31 @@ function loadMoreData(url, sectionId, pageKey) {
 }
 
 // Specific function for loading more comments (will use loadMoreData)
-function profileLoadMoreComments(username) {
+function profileLoadMoreComments(url) {
     const pageKey = 'comments'; // The key for the comments section in window.pages
     if (!window.pages[pageKey].has_more_pages) return;  // If no more pages, stop immediately
 
     // Call the generic loadMoreData function for comments
-    loadMoreData(`/user/${username}/comments`, 'comments-container', pageKey);
+    loadMoreData(url, 'comments-container', pageKey);
 }
 
 
 // Function to load more liked comments
-function profileLoadMoreLikedComments(username) {
+function profileLoadMoreLikedComments(url) {
     const pageKey = 'likes'; // The key for the likes section in window.pages
     if (!window.pages[pageKey].has_more_pages) return;  // If no more pages, stop immediately
 
     // Call the generic loadMoreData function for liked comments
-    loadMoreData(`/user/${username}/liked-comments`, 'likes-container', pageKey);
+    loadMoreData(url, 'likes-container', pageKey);
 }
 
 
 // Function to load more liked posts
-function profileLoadMoreLikedPosts(username) {
+function profileLoadMoreLikedPosts(url) {
     const pageKey = 'post-likes'; // The key for the post-likes section in window.pages
     if (!window.pages[pageKey].has_more_pages) return;  // If no more pages, stop immediately
 
     // Call the generic loadMoreData function for liked posts
-    loadMoreData(`/user/${username}/liked-posts`, 'posts-container', pageKey);
+    loadMoreData(url, 'posts-container', pageKey);
 }
 
