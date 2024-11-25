@@ -60,7 +60,10 @@ class PostNotificationStrategy implements NotificationStrategy
             $notification->delete();
             return null;
         } else {
-            $notification->body = view('notifications.partials.new_post', ['post' => $post])->render();
+            $notification->view = 'notifications.partials.new_post';
+            $notification->args = [
+                'post' => $post,
+            ];
         }
     }
 }
