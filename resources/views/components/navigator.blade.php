@@ -1,4 +1,4 @@
-@props(['default' => '', 'sections', 'triggers', 'scroll' => false, 'functions' => [], 'functionsAttribute' => ''])
+@props(['default' => '', 'sections', 'triggers', 'scroll' => false, 'functions' => []])
 
 @php
     $scroll = match ($scroll) {
@@ -9,19 +9,19 @@
 
 <div x-data="{
     activeSection: '{{ $default }}',
-    functions: @js($functions),  // Make sure this is properly passed as a JS array
-    attribute: '{{ $functionsAttribute }}',
+    functions: @js($functions), // Pass functions as an array of objects
     checkScrollToBottom(sectionName) {
         const section = this.$refs[`section${sectionName}`];
         if (section.scrollHeight - section.scrollTop === section.clientHeight) {
-            // Trigger the corresponding function if it exists
-            const functionName = this.functions[sectionName];
+            // Retrieve the function and attributes from the object
+            const { functionName, attributes } = this.functions[sectionName] || {};
             if (functionName && typeof window[functionName] === 'function') {
-                window[functionName](this.attribute);
+                window[functionName](...(attributes || [])); // Spread attributes array as arguments
             }
         }
     }
 }">
+
     <!-- Navigation Buttons -->
     <div class="flex space-x-2 mb-4">
         @foreach ($triggers as $key => $trigger)
