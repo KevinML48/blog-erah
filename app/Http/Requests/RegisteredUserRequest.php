@@ -79,7 +79,7 @@ class RegisteredUserRequest extends FormRequest
             'password.letters' => 'Le mot de passe doit contenir au moins une lettre.',
             'password.numbers' => 'Le mot de passe doit contenir au moins un chiffre.',
             'password.symbols' => 'Le mot de passe doit contenir au moins un symbole.',
-            'password.mixedCase' => 'Le mot de passe doit contenir à la fois des lettres majuscules et minuscules.',
+            'password.mixed' => 'Le mot de passe doit contenir au moins un lettre majuscule et minuscule.',
             'password.uncompromised' => 'Le mot de passe a été compromis dans une violation de données connue.',
 
         ];
