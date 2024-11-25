@@ -9,7 +9,7 @@
             'name' => $user->name,
             'role' => $user->role,
             'profile_picture' => $user->profile_picture ?: 'profile_pictures/default.png',
-            'profile_link' => route('profile.show', $user->name)
+            'profile_link' => route('profile.show', $user->username)
         ];
     });
 @endphp

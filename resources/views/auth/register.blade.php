@@ -5,12 +5,20 @@
             <form method="POST" action="{{ route('register') }}">
                 @csrf
 
-                <!-- Name -->
+                <!-- Display Name -->
                 <div>
-                    <x-input-label for="name" :value="__('Nom d\'utilisateur')"/>
+                    <x-input-label for="name" :value="__('Nom d\'affichage (le nom que les autres utilisateurs verront)')"/>
                     <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
                                   required autofocus autocomplete="name"/>
                     <x-input-error :messages="$errors->get('name')" class="mt-2"/>
+                </div>
+
+                <!-- Username -->
+                <div class="mt-4">
+                    <x-input-label for="username" :value="__('Nom d\'utilisateur unique')"/>
+                    <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('name')"
+                                  required autofocus autocomplete="name"/>
+                    <x-input-error :messages="$errors->get('username')" class="mt-2"/>
                 </div>
 
                 <!-- Email Address -->

@@ -29,16 +29,23 @@ class RegisteredUserRequest extends FormRequest
 
         return [
             'name' => [
-                'unique:users,name',
                 'required',
                 'string',
                 'min:3',
                 'max:35',
+            ],
+            'username' => [
+                'unique:users,username',
+                'required',
+                'string',
+                'min:3',
+                'max:15',
                 function ($attribute, $value, $fail) use ($reservedUsernames) {
                     if (in_array(strtolower($value), $reservedUsernames)) {
                         $fail("Ce nom d\'utilisateur n'est pas disponible.");
                     }
                 },
+                'regex:/^[a-zA-Z0-9_-]+$/',
             ],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed',
@@ -60,11 +67,17 @@ class RegisteredUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.unique' => 'Ce nom n\'est pas disponible.',
             'name.required' => 'Le nom est obligatoire.',
             'name.string' => 'Le nom doit être une chaîne de caractères.',
-            'name.min' => 'Le nom d\'utilisateur doit faire au moins :min caractères.',
-            'name.max' => 'Le nom d\'utilisateur ne peut pas dépasser :max caractères.',
+            'name.min' => 'Le nom doit comporter au moins :min caractères.',
+            'name.max' => 'Le nom ne peut pas dépasser :max caractères.',
+
+            'username.unique' => 'Ce nom n\'est pas disponible.',
+            'username.required' => 'Le nom est obligatoire.',
+            'username.string' => 'Le nom doit être une chaîne de caractères.',
+            'username.min' => 'Le nom d\'utilisateur doit faire au moins :min caractères.',
+            'username.max' => 'Le nom d\'utilisateur ne peut pas dépasser :max caractères.',
+            'username.regex' => 'Le nom d\'utilisateur ne peut contenir que des lettres, des chiffres, des tirets (-) et des underscores (_).',
 
             'email.required' => 'L\'email est obligatoire.',
             'email.string' => 'L\'email doit être une chaîne de caractères.',

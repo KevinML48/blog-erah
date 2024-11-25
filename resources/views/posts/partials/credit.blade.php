@@ -1,5 +1,5 @@
 <span>Par</span>
-<a href="{{ route('profile.show', ['username' => $post->user->name]) }}" class="erah-link">
+<a href="{{ route('profile.show', ['username' => $post->user->username]) }}" class="erah-link">
     {{ $post->user->name }}
 </a>
 <span>le</span>

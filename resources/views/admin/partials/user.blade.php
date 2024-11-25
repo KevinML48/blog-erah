@@ -2,7 +2,7 @@
     {{--  Name  --}}
     <td class="py-2 px-4 border-b">
         <x-role-span :role="$user->role">
-            <a href="{{ route('profile.show', ['username' => $user->name]) }}" class="hover:underline">
+            <a href="{{ route('profile.show', ['username' => $user->username]) }}" class="hover:underline">
                 {{ $user->name }}
             </a>
         </x-role-span>

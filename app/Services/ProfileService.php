@@ -10,7 +10,7 @@ class ProfileService implements ProfileServiceInterface
 {
     public function getUserProfile(string $username): User
     {
-        return User::where('name', $username)->firstOrFail();
+        return User::where('username', $username)->firstOrFail();
     }
 
     public function getUserCommentContents(User $user, int $limit = 15): LengthAwarePaginator

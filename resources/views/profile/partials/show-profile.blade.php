@@ -8,7 +8,7 @@
             {{ __("Affiche votre profil.") }}
         </p>
     </header>
-    <a href="{{ route('profile.show', Auth::user()->name) }}" class="erah-link-amnesic">
+    <a href="{{ route('profile.show', Auth::user()->username) }}" class="erah-link-amnesic">
         Profil →
     </a>
 </section>
