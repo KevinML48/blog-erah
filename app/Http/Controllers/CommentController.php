@@ -54,6 +54,12 @@ class CommentController extends Controller
         return redirect()->route('comments.show', ['post' => $post, 'comment' => $comment]);
     }
 
+    public function showRedirectLike(Post $post, Comment $comment): RedirectResponse
+    {
+        $this->commentService->like($comment);
+        return redirect()->route('comments.show', ['post' => $post, 'comment' => $comment]);
+    }
+
     public function loadMoreComments(Post $post, Request $request): JsonResponse
     {
         $currentPage = $request->input('page', 1);

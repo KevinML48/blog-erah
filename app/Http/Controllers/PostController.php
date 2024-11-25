@@ -97,9 +97,17 @@ class PostController extends Controller
         return view('posts.show', compact('post', 'comments', 'totalCommentsCount'));
     }
 
-    public function showRedirect(Post $post)
+    public function showRedirectComment(Post $post)
     {
         return redirect()->route('posts.show', ['post' => $post])->with('fragment', 'comment-section');
+    }
+
+    public function showRedirectLike(Post $post)
+    {
+        if (!$post->likes()->where('user_id', Auth::id())->exists()) {
+            $post->likes()->create(['user_id' => Auth::id()]);
+        }
+        return redirect()->route('posts.show', ['post' => $post]);
     }
 
 

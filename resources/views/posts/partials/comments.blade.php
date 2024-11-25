@@ -20,7 +20,7 @@
             <!-- Main Comment Form -->
             <div id="form-container--1"></div> <!-- Empty container where the form will be appended -->
         @else
-            <a href="{{ route('posts.show.redirect', $post) }}" class="erah-link-amnesic">
+            <a href="{{ route('posts.show.redirect.comments', $post) }}" class="erah-link-amnesic">
                 Connectez-vous pour réagir
             </a>
 

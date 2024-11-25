@@ -24,11 +24,14 @@ Route::get('/blog/theme/{id}', [PostController::class, 'showByTheme'])->name('po
 
 // Display a Single Post
 Route::get('/blog/{post}', [PostController::class, 'show'])->name('posts.show');
-Route::get('/blog/{post}/redirect', [PostController::class, 'showRedirect'])->name('posts.show.redirect')->middleware('auth');
+// Routes to redirect an unauthenticated user to the right section after login
+Route::get('/blog/{post}/redirection/commentaires', [PostController::class, 'showRedirectComment'])->name('posts.show.redirect.comments')->middleware('auth');
+Route::get('/blog/{post}/redirection/jaime', [PostController::class, 'showRedirectLike'])->name('posts.show.redirect.like')->middleware('auth');
 
 // Display a Single Comment on a Post
 Route::get('/blog/{post}/commentaire/{comment}', [CommentController::class, 'show'])->name('comments.show');
-Route::get('/blog/{post}/commentaire/{comment}/redirect', [CommentController::class, 'showRedirect'])->name('comments.show.redirect')->middleware('auth');
+Route::get('/blog/{post}/commentaire/{comment}/redirection', [CommentController::class, 'showRedirect'])->name('comments.show.redirect')->middleware('auth');
+Route::get('/blog/{post}/commentaire/{comment}/redirection/jaime', [CommentController::class, 'showRedirectLike'])->name('comments.show.redirect.like')->middleware('auth');
 
 // Load more comments for a post
 Route::get('/blog/{post}/comments/load-more-comments', [CommentController::class, 'loadMoreComments'])->name('comments.loadMore');
@@ -74,12 +77,12 @@ Route::middleware('auth')->group(function () {
     // Comment Actions
     Route::post('/commentaires', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/commentaires/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
-    Route::post('/commentaires/{comment}/like', [CommentController::class, 'like'])->name('comments.like');
-    Route::delete('/commentaires/{comment}/unlike', [CommentController::class, 'unlike'])->name('comments.unlike');
+    Route::post('/comments/{comment}/like', [CommentController::class, 'like'])->name('comments.like');
+    Route::delete('/comments/{comment}/unlike', [CommentController::class, 'unlike'])->name('comments.unlike');
 
     // Post Actions
-    Route::post('/blog/{post}/like', [PostController::class, 'like'])->name('posts.like');
-    Route::delete('/blog/{post}/unlike', [PostController::class, 'unlike'])->name('posts.unlike');
+    Route::post('/posts/{post}/like', [PostController::class, 'like'])->name('posts.like');
+    Route::delete('/posts/{post}/unlike', [PostController::class, 'unlike'])->name('posts.unlike');
 
     // Follow Actions
     Route::post('/follow/{user}', [FollowController::class, 'follow'])->name('user.follow');

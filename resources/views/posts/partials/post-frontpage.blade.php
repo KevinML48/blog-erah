@@ -7,7 +7,7 @@
             </a>
         </div>
     @else
-        <a href="{{ route('posts.show.redirect', $post) }}" class="erah-link-amnesic">
+        <a href="{{ route('posts.show.redirect.comments', $post) }}" class="erah-link-amnesic">
             <h4 class="erah-link text-right">Connectez-vous pour réagir →</h4>
         </a>
     @endauth
