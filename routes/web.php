@@ -20,7 +20,7 @@ Route::get('/', function () {
 });
 
 // Filtered Main Page: Display posts by theme
-Route::get('/blog/theme/{id}', [PostController::class, 'showByTheme'])->name('posts.theme');
+Route::get('/blog/theme/{slug}', [PostController::class, 'showByTheme'])->name('posts.theme');
 
 // Display a Single Post
 Route::get('/blog/{post}', [PostController::class, 'show'])->name('posts.show');

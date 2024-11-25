@@ -29,11 +29,12 @@ class PostController extends Controller
         return view('posts.index', compact('themes', 'posts'));
     }
 
-    public function showByTheme($id): View
+    public function showByTheme($slug): View
     {
         $themes = Theme::all();
+        $theme = $themes->firstWhere('slug', $slug);
 
-        $posts = Post::where('theme_id', $id)
+        $posts = Post::where('theme_id', $theme->id)
             ->where('publication_time', '<=', now())
             ->orderBy('publication_time', 'desc')
             ->paginate(15);

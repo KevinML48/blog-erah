@@ -5,8 +5,8 @@
     <x-slot name="header">
         <div class="flex justify-center space-x-8">
             @foreach ($themes as $theme)
-                <x-theme-link :href="route('posts.theme', $theme->id)"
-                              :active="request()->routeIs('posts.theme') && request()->route('id') == $theme->id">
+                <x-theme-link :href="route('posts.theme', $theme->slug)"
+                              :active="request()->routeIs('posts.theme') && request()->route('name') == $theme->slug">
                     {{ $theme->name }}
                 </x-theme-link>
             @endforeach
