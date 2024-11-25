@@ -39,6 +39,7 @@ class LikeNotificationStrategy implements NotificationStrategy
 
         $likeIds = $notification->data['ids'] ?? [];
         $likes = Like::whereIn('id', $likeIds)->take(3)->get();
+        $users = $likes->pluck('user');
 
         if ($likes->isEmpty()) {
             $notification->delete();
@@ -47,8 +48,9 @@ class LikeNotificationStrategy implements NotificationStrategy
             $notification->view = 'components.notification-bundle';
             $notification->args = [
                 'type' => 'like',
-                'list' => $likes,
+                'users' => $users,
                 'count' => count($likeIds),
+                'like' => $likes->first()->likeable,
             ];
         }
     }

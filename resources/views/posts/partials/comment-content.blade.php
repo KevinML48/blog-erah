@@ -31,9 +31,7 @@
                     <div>
                         <a href="{{ route('profile.show', $content->user->username) }}"
                            class="erah-link font-bold text-left focus:outline-none">
-                            <x-role-span :role="$content->user->role">
-                                {{ $content->user->name }}
-                            </x-role-span>
+                            <x-username :user="$content->user"/>
                         </a>
                     </div>
                 </div>

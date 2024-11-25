@@ -31,6 +31,7 @@ class FollowNotificationStrategy implements NotificationStrategy
     {
         $followIds = $notification->data['ids'] ?? [];
         $follows = Follow::whereIn('id', $followIds)->take(3)->get(); // Retrieve up to 3 follow records
+        $users = $follows->pluck('follower');
 
         if ($follows->isEmpty()) {
             $notification->delete(); // If no follows, delete the notification
@@ -39,7 +40,7 @@ class FollowNotificationStrategy implements NotificationStrategy
             $notification->view = 'components.notification-bundle';
             $notification->args = [
                 'type' => 'follow',
-                'list' => $follows,
+                'users' => $users,
                 'count' => count($followIds),
             ];
         }

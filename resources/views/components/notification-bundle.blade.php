@@ -1,18 +1,4 @@
-@props(['type', 'list', 'count'])
-
-{{--Map the variables--}}
-@php
-    $userList = $list->map(function($element) use ($type) {
-        $user = $type === 'follow' ? $element->follower : $element->user;
-
-        return [
-            'name' => $user->name,
-            'role' => $user->role,
-            'profile_picture' => $user->profile_picture ?: 'profile_pictures/default.png',
-            'profile_link' => route('profile.show', $user->username)
-        ];
-    });
-@endphp
+@props(['type', 'users', 'count', 'like'])
 
 <div class="new-{{ $type }}-notification py-2">
     <div class="py-2 flex items-center">
@@ -26,9 +12,9 @@
         </div>
         {{-- Profile Pictures --}}
         <div class="ml-2 flex">
-            @foreach($userList as $user)
-                <img src="{{ asset('storage/' . $user['profile_picture']) }}"
-                     alt="{{ $user['name'] }}'s Profile Picture"
+            @foreach($users as $user)
+                <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('storage/profile_pictures/default.png')}}"
+                     alt="{{ $user->name }}'s Profile Picture"
                      class="w-8 h-8 rounded-full object-cover">
             @endforeach
         </div>
@@ -38,12 +24,8 @@
         {{-- If more than 3 likes or follows --}}
         @if ($count > 3)
             {{-- Take the 3 first users --}}
-            @foreach($userList->take(3) as $index => $user)
-                <x-role-span :role="$user['role']">
-                    <a href="{{ $user['profile_link'] }}" class="font-bold text-left focus:outline-none">
-                        {{ $user['name'] }}
-                    </a>
-                </x-role-span>
+            @foreach($users->take(3) as $user)
+                <x-username :user="$user"/>
                 {{-- If the current index is not 2 (i.e., not the third and last user), use a comma --}}
                 @if ($index !== 2)
                     ,
@@ -53,12 +35,8 @@
             et <strong>{{ $count - 3 }}</strong> autres
         @else
             {{-- If 3 or fewer likes or follows --}}
-            @foreach($userList as $index => $user)
-                <x-role-span :role="$user['role']">
-                    <a href="{{ $user['profile_link'] }}" class="font-bold text-left focus:outline-none">
-                        {{ $user['name'] }}
-                    </a>
-                </x-role-span>
+            @foreach($users as $index => $user)
+                <x-username :user="$user"/>
                 {{-- If the index is the second-to-last user, insert "et" --}}
                 @if ($index === $count - 2)
                     et
@@ -86,7 +64,7 @@
         @endif
 
         @if($type === 'like')
-            @include('posts.partials.comment-content', ['content' => $list->first()->likeable, 'showMedia' => false])
+            @include('posts.partials.comment-content', ['content' => $like, 'showMedia' => false])
         @endif
     </div>
 </div>
