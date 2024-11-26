@@ -37,7 +37,7 @@
             <div class="hidden md:block overflow-x-auto space-y-6 md:overflow-visible mx-auto md:max-w-7xl">
                 <div class="flex space-x-6 snap-proximity snap-x scroll-smooth">
 
-                    <div class=" shrink-0 md:shrink w-screen md:w-1/3 flex flex-col">
+                    <div class=" shrink-0 md:shrink w-screen md:w-2/3 flex flex-col">
                         <!-- Profile Picture -->
                         <div class="erah-box flex-1">
                             <div class="max-w-xl">
@@ -53,7 +53,7 @@
                         </div>
                     </div>
 
-                    <div class=" flex-shrink-0 w-screen md:w-2/3 flex flex-col">
+                    <div class=" flex-shrink-0 w-screen md:w-1/3 flex flex-col">
                         <!-- Profile Information -->
                         <div class="erah-box flex-1">
                             <div class="max-w-xl">
