@@ -161,22 +161,30 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('success', 'Profil nis à jour');
+        return Redirect::route('profile.edit')->with('success', 'Profil mis à jour');
     }
 
     public function updateDescription(Request $request)
     {
         $request->validate([
-            'description' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:30'],
+            'description' => ['max:255'],
         ]);
 
         $user = Auth::user();
 
+        $user->name = $request->input('name');
         $user->description = $request->input('description');
-        $user->save();
 
-        return back()->with('status', 'description-updated');
+        if ($user->isDirty('name') || $user->isDirty('description')) {
+            $user->save();
+            return back()->with('success', 'Profil mis à jour');
+        }
+
+        return back()->with('status', 'no-changes-made');
     }
+
+
 
     /**
      * Delete the user's account.
