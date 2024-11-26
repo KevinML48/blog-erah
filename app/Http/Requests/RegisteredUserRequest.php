@@ -28,12 +28,6 @@ class RegisteredUserRequest extends FormRequest
         $reservedUsernames = $this->getReservedUsernames();
 
         return [
-            'name' => [
-                'required',
-                'string',
-                'min:3',
-                'max:35',
-            ],
             'username' => [
                 'unique:users,username',
                 'required',
@@ -67,11 +61,6 @@ class RegisteredUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Le nom est obligatoire.',
-            'name.string' => 'Le nom doit être une chaîne de caractères.',
-            'name.min' => 'Le nom doit comporter au moins :min caractères.',
-            'name.max' => 'Le nom ne peut pas dépasser :max caractères.',
-
             'username.unique' => 'Ce nom n\'est pas disponible.',
             'username.required' => 'Le nom est obligatoire.',
             'username.string' => 'Le nom doit être une chaîne de caractères.',

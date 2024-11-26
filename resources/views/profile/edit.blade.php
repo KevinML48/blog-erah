@@ -87,6 +87,31 @@
             </div>
         </div>
 
+        @if (session('first_time_name') === 'true')
+            <!-- Modal Background (optional, if you want to dim the background, this can be removed) -->
+            <div id="modalBackdrop" class="fixed inset-0 bg-gray-500 bg-opacity-75 z-50"></div>
+
+            <!-- Modal Content -->
+            <div id="nameModal" class="fixed inset-0 flex justify-center items-center z-50">
+                <div class="erah-box p-6 rounded-lg shadow-lg w-96">
+                    <!-- Include the form partial -->
+                    @include('profile.partials.update-profile-name-form')
+                </div>
+            </div>
+
+            <script>
+                // Show the modal when the page loads
+                window.onload = function() {
+                    // Show modal by setting display to 'flex'
+                    document.getElementById('nameModal').style.display = 'flex';
+
+                    // Show the backdrop (optional if you want dimmed background)
+                    document.getElementById('modalBackdrop').style.display = 'block';
+                };
+            </script>
+        @endif
+
+
 
     </div>
 </x-app-layout>

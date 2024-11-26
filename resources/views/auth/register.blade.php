@@ -5,17 +5,12 @@
             <form method="POST" action="{{ route('register') }}">
                 @csrf
 
-                <!-- Display Name -->
-                <div>
-                    <x-input-label for="name" :value="__('Nom d\'affichage (le nom que les autres utilisateurs verront)')"/>
-                    <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')"
-                                  required autofocus autocomplete="name"/>
-                    <x-input-error :messages="$errors->get('name')" class="mt-2"/>
-                </div>
-
                 <!-- Username -->
                 <div class="mt-4 relative" x-data="checkAvailability()">
-                    <x-input-label for="username" :value="__('Nom d\'utilisateur unique')"/>
+                    <x-input-label for="username" :value="__('Nom d\'utilisateur')"/>
+                    <p class="mt-1 text-sm text-gray-400">
+                        {{ __("Votre nom d'utilisateur est unique.") }}
+                    </p>
                     <div class="relative">
                         <x-text-input id="username" class="block mt-1 w-full pr-10" type="text" name="username" x-model="username"
                                       @input.debounce.500ms="checkUsername" required autofocus autocomplete="name"/>

@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium">
-            {{ __('Description') }}
+            {{ __('Nom') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-400">
-            {{ __("Mettez à jour votre description.") }}
+            {{ __("Choisissez un nom.") }}
         </p>
     </header>
 
@@ -18,14 +18,8 @@
         @method('patch')
 
         <div>
-            <x-input-label for="name" :value="__('Nom')" />
             <x-text-input id="name" name="name" class="mt-1 block w-full" :value="old('description', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
-        </div>
-        <div>
-            <x-input-label for="description" :value="__('Bio')" />
-            <x-text-area id="description" name="description" class="mt-1 block w-full" :value="old('description', $user->description)" autofocus autocomplete="name" />
-            <x-input-error class="mt-2" :messages="$errors->get('description')" />
         </div>
 
         <div class="flex items-center gap-4">
