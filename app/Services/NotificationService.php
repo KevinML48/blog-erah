@@ -41,7 +41,7 @@ class NotificationService implements NotificationServiceInterface
     public function processNotifications(LengthAwarePaginator $notifications): void
     {
         $notifications->getCollection()->transform(function ($notification) {
-            $unread= $notification->read_at ? '' : true;
+            $unread = $notification->read_at ? '' : true;
             $notification->markAsRead();
             $notification->unread = $unread;
             $notificationClass = $notification->type;
@@ -73,12 +73,13 @@ class NotificationService implements NotificationServiceInterface
             ->where('context_id', $contextId)
             ->delete();
 
-        $user->notificationPreferences()->create([
-            'notification_type_id' => $notificationType->id,
-            'context_id' => $contextId,
-            'context_type' => $contextType,
-            'is_enabled' => $isEnabled,
-        ]);
+        if (!$isEnabled) {
+            $user->notificationPreferences()->create([
+                'notification_type_id' => $notificationType->id,
+                'context_id' => $contextId,
+                'context_type' => $contextType,
+                'is_enabled' => $isEnabled,
+            ]);
+        }
     }
-
 }
