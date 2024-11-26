@@ -10,10 +10,7 @@
 
             <div class="erah-box flex flex-col md:flex-row">
                 <div class="md:w-1/3 ml-6">
-                    @if($user->profile_picture)
-                        <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="Profile Picture"
-                             class="w-48 h-48 rounded-full object-fill ml-6">
-                    @endif
+                    <x-user-profile-picture :user="$user" :default="false"/>
                     <div class="py-2 ml-6">
                         @if(auth()->user()->isAdmin())
                             <p><strong>Email:</strong> {{ $user->email }}</p>

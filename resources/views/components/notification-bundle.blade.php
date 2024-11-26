@@ -13,9 +13,7 @@
         {{-- Profile Pictures --}}
         <div class="ml-2 flex">
             @foreach($users as $user)
-                <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture) : asset('storage/profile_pictures/default.png')}}"
-                     alt="{{ $user->name }}'s Profile Picture"
-                     class="w-8 h-8 rounded-full object-cover">
+                <x-user-profile-picture :user="$user" :default="false"/>
             @endforeach
         </div>
     </div>

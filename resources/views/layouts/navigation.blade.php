@@ -70,10 +70,7 @@
                         @endif
                     </a>
 
-                    @if(Auth::user()->profile_picture)
-                        <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture"
-                             class="w-12 h-12 rounded-full object-cover">
-                    @endif
+                    <x-user-profile-picture :user="Auth::user()" :default="false"/>
 
                     <!-- Settings Dropdown -->
                     <x-dropdown align="right" width="48">
