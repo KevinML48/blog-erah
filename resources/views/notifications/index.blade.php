@@ -48,6 +48,7 @@
     <script src="{{ asset('js/comment-form.js') }}" defer></script>
     <script src="{{ asset('js/likes.js') }}" defer></script>
     <script src="{{ asset('js/load-notifications.js') }}" defer></script>
+    <script src="{{ asset('js/follow.js') }}" defer></script>
 
     <script>
 
