@@ -1,6 +1,5 @@
 <x-app-layout>
     <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
-
         <div class="w-full sm:max-w-md mt-6 px-6 py-4 erah-box">
             <form method="POST" action="{{ route('register') }}">
                 @csrf
@@ -9,7 +8,7 @@
                 <div class="mt-4 relative" x-data="checkAvailability()">
                     <x-input-label for="username" :value="__('Nom d\'utilisateur')"/>
                     <p class="mt-1 text-sm text-gray-400">
-                        {{ __("Votre nom d'utilisateur est unique.") }}
+                        {{ __("Votre nom d'utilisateur doit être unique.") }}
                     </p>
                     <div class="relative">
                         <x-text-input id="username" class="block mt-1 w-full pr-10" type="text" name="username"
@@ -39,7 +38,7 @@
 
                             <!-- Valid Username -->
                             <template
-                                x-if="!isCheckingUsername && username && username.length >= 3 && username.length <= 15 && !usernameExists">
+                                x-if="!isCheckingUsername && username && username.length >= 3 && username.length <= 15 && !usernameExists && username.match(/^[a-zA-Z0-9_-]+$/)">
                                 <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
                                      viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
@@ -53,9 +52,31 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
                             </template>
+
+                            <!-- Invalid Regex Username -->
+                            <template x-if="!isCheckingUsername && username.length >= 3 && username.length <= 15 && username && !username.match(/^[a-zA-Z0-9_-]+$/)">
+                                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </template>
                         </div>
                     </div>
                     <x-input-error :messages="$errors->get('username')" class="mt-2"/>
+
+                    <!-- Username Validation Message -->
+                    <template x-if="username && username.length < 3">
+                        <p class="mt-2 text-xs text-red-500">Le nom d'utilisateur doit comporter au moins 3 caractères.</p>
+                    </template>
+                    <template x-if="username && username.length > 15">
+                        <p class="mt-2 text-xs text-red-500">Le nom d'utilisateur ne doit pas dépasser 15 caractères.</p>
+                    </template>
+                    <template x-if="username && username.length >= 3 && username.length <= 15 && !username.match(/^[a-zA-Z0-9_-]+$/)">
+                        <p class="mt-2 text-xs text-red-500">Le nom d'utilisateur ne doit contenir que des lettres, des chiffres, des tirets et des underscores.</p>
+                    </template>
+                    <template x-if="usernameExists">
+                        <p class="mt-2 text-xs text-red-500">Ce nom d'utilisateur n'est pas disponible.</p>
+                    </template>
                 </div>
 
 
@@ -66,8 +87,18 @@
                         <x-text-input id="email" class="block mt-1 w-full pr-10" type="email" name="email"
                                       x-model="email" :value="old('email')"
                                       @input.debounce.500ms="checkEmail" required autocomplete="username"/>
+
                         <!-- Checkmark or Error Icon -->
                         <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                            <!-- Invalid Email Format (Red X) -->
+                            <template x-if="email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)">
+                                <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                     viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                            </template>
+
+                            <!-- Checking Spinner -->
                             <template x-if="isCheckingEmail">
                                 <svg class="animate-spin h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg"
                                      fill="none" viewBox="0 0 24 24">
@@ -77,12 +108,16 @@
                                           d="M4 12a8 8 0 018-8v4l5-5-5-5v4a10 10 0 1010 10h-4l5 5-5 5v-4a8 8 0 01-8 8"></path>
                                 </svg>
                             </template>
-                            <template x-if="!isCheckingEmail && email && !emailExists">
+
+                            <!-- Valid Email -->
+                            <template x-if="!isCheckingEmail && email && !emailExists && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)">
                                 <svg class="h-5 w-5 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
                                      viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                                 </svg>
                             </template>
+
+                            <!-- Invalid Email (Already Exists) -->
                             <template x-if="!isCheckingEmail && emailExists">
                                 <svg class="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none"
                                      viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -91,8 +126,20 @@
                             </template>
                         </div>
                     </div>
+
                     <x-input-error :messages="$errors->get('email')" class="mt-2"/>
+
+                    <!-- Email Format Validation Message -->
+                    <template x-if="email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)">
+                        <p class="mt-2 text-xs text-red-500">L'email n'est pas valide.</p>
+                    </template>
+
+                    <!-- Email Exists Message -->
+                    <template x-if="emailExists">
+                        <p class="mt-2 text-xs text-red-500">Cet email n'est pas disponible.</p>
+                    </template>
                 </div>
+
 
 
                 <!-- Password -->
@@ -168,6 +215,13 @@
             },
 
             async checkEmail() {
+                // Basic email format validation using regex
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(this.email)) {
+                    this.emailExists = false;
+                    return;
+                }
+
                 this.isCheckingEmail = true;
                 this.emailExists = false;
 
@@ -184,7 +238,8 @@
                 }
 
                 this.isCheckingEmail = false;
-            },
+            }
+
         }));
     });
 </script>
