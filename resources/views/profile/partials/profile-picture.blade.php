@@ -9,10 +9,10 @@
         </p>
     </header>
 
-    @if(Auth::user()->profile_picture)
-        <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="Profile Picture"
-             class="w-48 h-48 rounded-full object-fill">
-    @endif
+    <div class="flex flex-row items-end">
+        <x-user-profile-picture :user="Auth::user()" :default="false" :size="48" :border="false"/>
+        <x-user-profile-picture :user="Auth::user()" :default="false"/>
+    </div>
 
     <form action="{{ route('profile.update.picture') }}" method="POST" enctype="multipart/form-data">
         @csrf
