@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Helpers\ReservedUsernamesHelper;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Validation\Rules\Password;
 
 class RegisteredUserRequest extends FormRequest
@@ -25,7 +25,7 @@ class RegisteredUserRequest extends FormRequest
     public function rules(): array
     {
         // Get reserved usernames dynamically
-        $reservedUsernames = $this->getReservedUsernames();
+        $reservedUsernames = ReservedUsernamesHelper::getReservedUsernames();
 
         return [
             'username' => [
@@ -85,25 +85,5 @@ class RegisteredUserRequest extends FormRequest
             'password.uncompromised' => 'Le mot de passe a été compromis dans une violation de données connue.',
 
         ];
-    }
-
-    /**
-     * Get reserved usernames based on registered routes.
-     *
-     * @return array
-     */
-    private function getReservedUsernames(): array
-    {
-        $reservedUsernames = [];
-
-        $routes = Route::getRoutes();
-
-        foreach ($routes as $route) {
-            if (preg_match('#^profil/([^/]+)#', $route->uri, $matches)) {
-                $reservedUsernames[] = strtolower($matches[1]);
-            }
-        }
-
-        return $reservedUsernames;
     }
 }

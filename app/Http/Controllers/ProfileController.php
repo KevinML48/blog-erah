@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\ReservedUsernamesHelper;
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\CommentContent;
 use App\Models\NotificationType;
@@ -327,7 +328,10 @@ class ProfileController extends Controller
     public function checkUsername(Request $request)
     {
         $username = $request->query('username');
-        $exists = User::where('username', $username)->exists();
+
+        $reservedUsernames = ReservedUsernamesHelper::getReservedUsernames();
+
+        $exists = User::where('username', $username)->exists() || in_array(strtolower($username), $reservedUsernames);
 
         return response()->json(['exists' => $exists]);
     }
