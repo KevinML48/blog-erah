@@ -315,4 +315,20 @@ class ProfileController extends Controller
 
         return view('profile.thread', compact('contents'));
     }
+
+    public function checkUsername(Request $request)
+    {
+        $username = $request->query('username');
+        $exists = User::where('username', $username)->exists();
+
+        return response()->json(['exists' => $exists]);
+    }
+
+    public function checkEmail(Request $request)
+    {
+        $email = $request->query('email');
+        $exists = User::where('email', $email)->exists();
+
+        return response()->json(['exists' => $exists]);
+    }
 }

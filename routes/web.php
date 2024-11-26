@@ -39,6 +39,9 @@ Route::get('/blog/{post}/comments/load-more-comments', [CommentController::class
 // Load more replies for a comment
 Route::get('/commentaires/{comment}/load-more-replies', [CommentController::class, 'loadMoreReplies'])->name('comments.loadMoreReplies');
 
+// Routes to check the availability of credentials
+Route::get('/check-username', [ProfileController::class, 'checkUsername'])->name('check-username');
+Route::get('/check-email', [ProfileController::class, 'checkEmail'])->name('check-email');
 
 // =======================================
 // Authenticated User Routes
