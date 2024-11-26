@@ -61,7 +61,7 @@ class RegisteredUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'username.unique' => 'Ce nom n\'est pas disponible.',
+            'username.unique' => 'Ce nom d\'utilisateur n\'est pas disponible.',
             'username.required' => 'Le nom est obligatoire.',
             'username.string' => 'Le nom doit être une chaîne de caractères.',
             'username.min' => 'Le nom d\'utilisateur doit faire au moins :min caractères.',

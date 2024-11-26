@@ -5,7 +5,7 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-400">
-            {{ __("Choisissez un nom.") }}
+            {{ __("Choisissez un nom d'affichage visible pour les autres utilisateurs.") }}
         </p>
     </header>
 
