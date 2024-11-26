@@ -7,7 +7,6 @@ function loadMore(button, url) {
     replyContainers.forEach(container => {
         existingReplyIds.push(container.id.replace('replies-container-', ''));
     });
-    console.log(existingReplyIds);
 
     // Send the current page and the existing reply IDs to the server
     fetch(`${url}?page=${currentPage}&existing_comment_ids=${JSON.stringify(existingReplyIds)}`)

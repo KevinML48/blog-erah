@@ -180,8 +180,6 @@ function displayGIFs(gifs) {
 
 function previewImage(parentId) {
     event.preventDefault();
-    console.log('tick')
-    console.log(parentId)
     const fileInput = document.getElementById(`media-${parentId}`);
     const displayZone = document.getElementById(`displayMediaZone-${parentId}`);
     const selectedImage = document.getElementById(`selectedImage-${parentId}`);

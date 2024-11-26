@@ -9,7 +9,6 @@ use App\Models\User;
 use App\Notifications\PostPublishedNotification;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\Log;
 
 class PostNotificationStrategy implements NotificationStrategy
 {
@@ -22,7 +21,6 @@ class PostNotificationStrategy implements NotificationStrategy
 
     public function handleCreation(): void
     {
-        Log::info($this->post);
         // Logic for handling post creation
         $notificationType = NotificationType::where('name', 'post_published')->first();
 

@@ -6,7 +6,6 @@ use App\Models\Comment;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\Log;
 
 
 class StoreCommentRequest extends FormRequest
@@ -65,7 +64,6 @@ class StoreCommentRequest extends FormRequest
     protected function failedValidation(Validator $validator)
     {
         $errors = $validator->errors();
-        Log::info($errors);
         throw new HttpResponseException(
             response()->json([
                 'errors' => $errors,

@@ -10,7 +10,6 @@ function handleFetch(url, buttonId, toggleAction) {
         .then(data => {
             if (data.status === 'success') {
                 toggleAction(buttonId);
-                console.log(data.message);
             } else {
                 console.error(data.message);
             }
@@ -56,7 +55,6 @@ function toggleFollowButtons(userId, isFollowing) {
 }
 
 function toggleMuteButtons(contentId, hasMuted) {
-    console.log('toggleMuteButtons');
     const muteButtons = document.querySelectorAll(`.simple-mute-button-${contentId}, .detailed-mute-button-${contentId}`);
     const unmuteButtons = document.querySelectorAll(`.simple-unmute-button-${contentId}, .detailed-unmute-button-${contentId}`);
 
