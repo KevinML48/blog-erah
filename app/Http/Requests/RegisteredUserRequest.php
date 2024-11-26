@@ -36,7 +36,7 @@ class RegisteredUserRequest extends FormRequest
                 'max:15',
                 function ($attribute, $value, $fail) use ($reservedUsernames) {
                     if (in_array(strtolower($value), $reservedUsernames)) {
-                        $fail("Ce nom d\'utilisateur n'est pas disponible.");
+                        $fail("Ce nom d'utilisateur n'est pas disponible.");
                     }
                 },
                 'regex:/^[a-zA-Z0-9_-]+$/',
