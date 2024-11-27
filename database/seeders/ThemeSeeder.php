@@ -12,9 +12,9 @@ class ThemeSeeder extends Seeder
      */
     public function run()
     {
-        Theme::create(['name' => 'ERAH']);
-        Theme::create(['name' => 'Valorant']);
-        Theme::create(['name' => 'Rocket League']);
-        Theme::create(['name' => 'Black Ops 6']);
+        Theme::create(['name' => 'ERAH', 'slug' => 'erah']);
+        Theme::create(['name' => 'Valorant', 'slug' => 'valorant']);
+        Theme::create(['name' => 'Rocket League', 'slug' => 'rocket-league']);
+        Theme::create(['name' => 'Black Ops 6', 'slug' => 'black-ops-6']);
     }
 }
