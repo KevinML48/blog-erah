@@ -19,7 +19,7 @@
                 <div class="flex items-center space-x-2">
                     <!-- Profile Picture -->
                     <div>
-                        <x-user-profile-picture :user="$content->user"/>
+                        <x-user-profile-picture :user="$content->user" :card="true"/>
                     </div>
                     <!-- Name -->
                     <div>
