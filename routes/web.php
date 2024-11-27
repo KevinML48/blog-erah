@@ -99,23 +99,22 @@ Route::middleware('auth')->group(function () {
 // =======================================
 // Admin Routes
 // =======================================
-Route::middleware('can:administrate')->group(function () {
+Route::middleware('can:administrate')->prefix('admin')->name('admin.')->group(function () {
 
     // Admin Dashboard
-    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin');
-    Route::get('/admin/orphans', [AdminController::class, 'deleteOrphanedContents'])->name('admin.delete.orphans');
+    Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('orphans', [AdminController::class, 'deleteOrphanedContents'])->name('delete.orphans');
 
     // Post Management in Admin Zone
-    Route::get('/admin/posts/creer', [PostController::class, 'create'])->name('admin.posts.create');
-    Route::post('/admin/posts/creer', [PostController::class, 'store'])->name('admin.posts.store');
-    Route::get('/admin/posts/{post}/editer', [PostController::class, 'edit'])->name('admin.posts.edit');
-    Route::put('/admin/posts/{post}', [PostController::class, 'update'])->name('admin.posts.update');
+    Route::get('posts/creer', [PostController::class, 'create'])->name('posts.create');
+    Route::post('posts/creer', [PostController::class, 'store'])->name('posts.store');
+    Route::get('posts/{post}/editer', [PostController::class, 'edit'])->name('posts.edit');
+    Route::put('posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
     // User Management in Admin Zone
-    Route::get('/admin/profils/chercher', [ProfileController::class, 'search'])->name('admin.users.search');
-    Route::get('/admin/profils/{user}/changer-role/{role}', [ProfileController::class, 'changeRole'])->name('admin.users.changeRole');
-    Route::get('/admin/profils/{user}/supprimer', [ProfileController::class, 'adminDestroy'])->name('admin.users.delete');
-
+    Route::get('profils/chercher', [ProfileController::class, 'search'])->name('users.search');
+    Route::get('profils/{user}/changer-role/{role}', [ProfileController::class, 'changeRole'])->name('users.changeRole');
+    Route::get('profils/{user}/supprimer', [ProfileController::class, 'adminDestroy'])->name('users.delete');
 });
 
 require __DIR__ . '/auth.php';
