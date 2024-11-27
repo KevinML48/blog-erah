@@ -23,56 +23,56 @@
                     </div>
                     <!-- Name -->
                     <div>
-                        <a href="{{ route('profile.show', $content->user->username) }}"
-                           class="erah-link font-bold text-left focus:outline-none">
-                            <x-username :user="$content->user"/>
-                        </a>
+                        <x-username :user="$content->user"/>
                     </div>
                 </div>
 
                 <div class="flex space-x-2 ml-auto">
                     <!-- Creation Date -->
                     <div>
-                        <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}"
-                           class="hover:underline">
-                    <span class="text-gray-500 text-sm convert-time"
-                          data-time="{{ $content->created_at->toIso8601String() }}">
-                    </span>
-                        </a>
+                        <span class="text-gray-500 text-sm convert-time"
+                              data-time="{{ $content->created_at->toIso8601String() }}">
+                        </span>
                     </div>
 
                 </div>
             </div>
+
 
             <!-- Body -->
-            <div class="rounded py-2">
-                <div class="py-2 ml-14">
-                    <div id="content-preview-{{ $content->id }}"
-                         class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
-                        {!! nl2br(\App\Helpers\UrlHelper::convertUrlsToLinks($content->body)) !!}
-                    </div>
-                    <span id="toggle-container-{{ $content->id }}" class="hidden">
-                <button id="toggle-button-more-{{ $content->id }}" class="mt-2 text-blue-600 hover:underline"
-                        onclick="showMore({{ $content->id }})">Dérouler</button>
-                <button id="toggle-button-less-{{ $content->id }}" class="mt-2 text-blue-600 hover:underline hidden"
-                        onclick="showLess({{ $content->id }})">Cacher</button>
-            </span>
-                </div>
-
-                <!-- Media -->
-                @if ($content->media && ($showMedia ?? true))
+            <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}"
+               class="block">
+                <div class="rounded py-2">
                     <div class="py-2 ml-14">
-                        @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
-                            <!-- If it's a Tenor GIF URL -->
-                            <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
-                        @else
-                            <!-- If it's an uploaded image -->
-                            <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
-                                 class="object-contain h-48 w-48">
-                        @endif
+                        <div id="content-preview-{{ $content->id }}"
+                             class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
+                            {!! nl2br(\App\Helpers\UrlHelper::convertUrlsToLinks($content->body)) !!}
+                        </div>
+                        <span id="toggle-container-{{ $content->id }}" class="hidden">
+                            <button id="toggle-button-more-{{ $content->id }}"
+                                    class="mt-2 text-blue-600 hover:underline"
+                                    onclick="showMore({{ $content->id }})">Dérouler</button>
+                            <button id="toggle-button-less-{{ $content->id }}"
+                                    class="mt-2 text-blue-600 hover:underline hidden"
+                                    onclick="showLess({{ $content->id }})">Cacher</button>
+                        </span>
                     </div>
-                @endif
-            </div>
+
+                    <!-- Media -->
+                    @if ($content->media && ($showMedia ?? true))
+                        <div class="py-2 ml-14">
+                            @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
+                                <!-- If it's a Tenor GIF URL -->
+                                <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
+                            @else
+                                <!-- If it's an uploaded image -->
+                                <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
+                                     class="object-contain h-48 w-48">
+                            @endif
+                        </div>
+                    @endif
+                </div>
+            </a>
         </div>
     </x-slot>
 </x-dropdown>
