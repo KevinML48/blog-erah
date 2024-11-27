@@ -7,15 +7,15 @@
         default => '',
     };
 @endphp
-    <a href="{{ route('profile.show', ['username' => $user->username]) }}" class="hover:underline font-semibold {{ $class }}">
-        {{ $user->name }}
-    </a>
-    @if($badge)
-        @if($user->role == 'admin')
-            <x-badge-admin/>
-        @endif
-        @if($user->role == 'ultra')
-            <x-badge-ultra/>
-        @endif
+<a href="{{ route('profile.show', ['username' => $user->username]) }}"
+   class="hover:underline font-semibold {{ $class }}">
+    {{ $user->name }}
+</a>
+@if($badge)
+    @if($user->role == 'admin')
+        <x-badge-admin/>
     @endif
-</span>
+    @if($user->role == 'ultra')
+        <x-badge-ultra/>
+    @endif
+@endif
