@@ -6,6 +6,7 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ThemeController;
 use App\Http\Controllers\UserNotificationPreferenceController;
 use Illuminate\Support\Facades\Route;
 
@@ -115,6 +116,14 @@ Route::middleware('can:administrate')->prefix('admin')->name('admin.')->group(fu
     Route::get('profils/chercher', [ProfileController::class, 'search'])->name('users.search');
     Route::get('profils/{user}/changer-role/{role}', [ProfileController::class, 'changeRole'])->name('users.changeRole');
     Route::get('profils/{user}/supprimer', [ProfileController::class, 'adminDestroy'])->name('users.delete');
+
+    // Theme management
+    Route::get('themes/create', [ThemeController::class, 'create'])->name('themes.create');
+    Route::post('themes', [ThemeController::class, 'store'])->name('themes.store');
+    Route::get('themes/{theme}/edit', [ThemeController::class, 'edit'])->name('themes.edit');
+    Route::put('themes/{theme}', [ThemeController::class, 'update'])->name('themes.update');
+    Route::delete('themes/{theme}', [ThemeController::class, 'destroy'])->name('themes.destroy');
+
 });
 
 require __DIR__ . '/auth.php';

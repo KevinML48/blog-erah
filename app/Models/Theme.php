@@ -10,6 +10,10 @@ class Theme extends Model
     /** @use HasFactory<\Database\Factories\ThemeFactory> */
     use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'slug',
+    ];
 
     public function posts()
     {
