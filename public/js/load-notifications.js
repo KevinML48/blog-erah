@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
     function loadMoreNotifications() {
         if (loading) return;
         loading = true;
-        loader.style.display = "block";
+        loader.style.display = "flex";
 
 
         fetch(`/notifications?page=${page + 1}`, {

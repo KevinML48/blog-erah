@@ -11,7 +11,7 @@ function loadMoreData(url, sectionId, pageKey) {
     const loader = document.getElementById(`loader-${sectionId}`);
     if (loading || !window.pages[pageKey].has_more_pages) return;  // Stop if no more pages
     loading = true;
-    loader.style.display = "block"; // Show loading indicator
+    loader.style.display = "flex"; // Show loading indicator
 
     // Fetch data using the page number from the `pages` object
     const page = window.pages[pageKey].page; // Use the page for the specific section

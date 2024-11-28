@@ -15,7 +15,7 @@
                     @endforeach
                 </div>
 
-                <div id="loading" class="hidden flex justify-center items-center space-x-2">
+                <div id="loading" class="hidden justify-center items-center space-x-2">
                     <x-spinner/>
                 </div>
             </div>
@@ -37,7 +37,7 @@
         function loadMoreComments() {
             if (!nextPageUrl || loading) return;
             loading = true;
-            document.getElementById('loading').style.display = 'block';
+            document.getElementById('loading').style.display = 'flex';
 
             fetch(nextPageUrl, {
                 headers: {
