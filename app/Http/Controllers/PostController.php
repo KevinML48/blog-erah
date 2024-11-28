@@ -26,6 +26,8 @@ class PostController extends Controller
             ->orderBy('publication_time', 'desc')
             ->paginate(15);
 
+        $posts->onEachSide(2);
+
         return view('posts.index', compact('themes', 'posts'));
     }
 
