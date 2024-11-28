@@ -29,7 +29,7 @@
                             onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
                         Charger plus de commentaires
                     </button>
-                    <div class="loader hidden">
+                    <div class="loader hidden ml-2">
                         <x-spinner/>
                     </div>
                 </div>
@@ -43,7 +43,7 @@
                             onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
                         Charger plus de commentaires
                     </button>
-                    <div class="loader hidden">
+                    <div class="loader hidden ml-2">
                         <x-spinner/>
                     </div>
                 </div>
