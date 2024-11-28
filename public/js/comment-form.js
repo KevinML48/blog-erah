@@ -234,6 +234,7 @@ function clearMedia(parentId) {
     document.getElementById(`mediaUpload-${parentId}`).classList.remove('hidden');
 }
 
+const existingReplyIds = [];
 document.addEventListener('submit', function (event) {
     if (event.target.matches('form[id^="commentForm-"]')) {
         event.preventDefault(); // Prevent the form from submitting the normal way
@@ -267,6 +268,8 @@ document.addEventListener('submit', function (event) {
             })
             .then(data => {
                 if (data.comment) {
+                    existingReplyIds.push(data.commentId);
+                    console.log(existingReplyIds)
                     // If successful, insert the new comment into the replies container
                     addCommentToReplies(data.comment, formId);
                 }

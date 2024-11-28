@@ -61,11 +61,16 @@
 
 
     @if ($comments->hasMorePages())
-        <button class="hidden" id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}"
-                data-page="{{ $comments->currentPage() }}"
-                onclick="loadMore(this, '{{ route('comments.loadMore', ['post' => $post->id]) }}')">
-            Charger plus de commentaires
-        </button>
+            <div class="load-more-container">
+                <button class="hidden" id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}"
+                        data-page="{{ $comments->currentPage() }}"
+                        onclick="loadMore(this, '{{ route('comments.loadMore', ['post' => $post->id]) }}')">
+                    Charger plus de commentaires
+                </button>
+                <div class="loader hidden">
+                    <x-spinner/>
+                </div>
+            </div>
     @endif
 </div>
 

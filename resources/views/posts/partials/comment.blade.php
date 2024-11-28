@@ -22,21 +22,31 @@
 
     @if (isset($depth) && $depth >= 1)
         @if ($comment->replies()->count() > 0)
-            <button class="load-more-replies text-sm text-blue-600"
-                    data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
-                    data-page="0"
-                    onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
-                Charger plus de commentaires
-            </button>
+                <div class="load-more-container">
+                    <button class="load-more-replies text-sm text-blue-600"
+                            data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
+                            data-page="0"
+                            onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
+                        Charger plus de commentaires
+                    </button>
+                    <div class="loader hidden">
+                        <x-spinner/>
+                    </div>
+                </div>
         @endif
     @else
         @if ($comment->replies()->count() > 1 && isset($depth) && $depth >= 0)
-            <button class="load-more-replies text-sm text-blue-600"
-                    data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
-                    data-page="1"
-                    onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
-                Charger plus de commentaires
-            </button>
+                <div class="load-more-container">
+                    <button class="load-more-replies text-sm text-blue-600"
+                            data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
+                            data-page="0"
+                            onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
+                        Charger plus de commentaires
+                    </button>
+                    <div class="loader hidden">
+                        <x-spinner/>
+                    </div>
+                </div>
         @endif
     @endif
 </div>

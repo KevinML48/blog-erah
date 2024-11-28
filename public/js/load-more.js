@@ -2,12 +2,18 @@ function loadMore(button, url) {
     return new Promise((resolve, reject) => {
         const currentPage = parseInt(button.getAttribute('data-page'));
 
-        // Collect all existing reply container IDs on the page
-        const existingReplyIds = [];
-        const replyContainers = document.querySelectorAll('[id^="replies-container-"]');
-        replyContainers.forEach(container => {
-            existingReplyIds.push(container.id.replace('replies-container-', ''));
-        });
+
+        // Find or create the loader
+        let loader = button.nextElementSibling;
+        if (!loader || !loader.classList.contains('loader')) {
+            loader = document.createElement('div');
+            loader.className = 'loader';
+            button.parentNode.insertBefore(loader, button.nextSibling);
+        }
+
+        // Show the loader
+        loader.classList.remove('hidden');
+        button.disabled = true; // Disable the button while loading
 
         // Send the current page and the existing reply IDs to the server
         fetch(`${url}?page=${currentPage}&existing_comment_ids=${JSON.stringify(existingReplyIds)}`)
@@ -21,18 +27,31 @@ function loadMore(button, url) {
 
                 if (container) {
                     displayComments(container, data.comments || data.replies, button, currentPage, data.hasMore);
+
+                    // Hide the loader
+                    loader.classList.add('hidden');
+                    button.disabled = false; // Re-enable the button if necessary
                     resolve();
                 } else {
                     console.error(`Container with ID '${containerId}' not found.`);
+
+                    // Hide the loader on error
+                    loader.classList.add('hidden');
+                    button.disabled = false;
                     reject();
                 }
             })
             .catch(error => {
                 console.error('Error loading more comments/replies:', error);
+
+                // Hide the loader and re-enable the button on error
+                loader.classList.add('hidden');
+                button.disabled = false;
                 reject(error);
             });
     });
 }
+
 
 
 function displayComments(container, content, button, currentPage, hasMore) {

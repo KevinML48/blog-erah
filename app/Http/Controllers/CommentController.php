@@ -37,6 +37,7 @@ class CommentController extends Controller
         $newComment = $this->commentService->store($userId, $postId, $parentId, $body, $mediaPath);
 
         return response()->json([
+            'commentId' => $newComment->id,
             'message' => 'Commentaire ajouté.',
             'comment' => view('posts.partials.comment-structure', ['comment' => $newComment, 'depth' => -1])->render(),
         ]);
