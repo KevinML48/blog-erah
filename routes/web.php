@@ -110,6 +110,7 @@ Route::middleware('can:administrate')->prefix('admin')->name('admin.')->group(fu
     Route::get('posts/creer', [PostController::class, 'create'])->name('posts.create');
     Route::post('posts/creer', [PostController::class, 'store'])->name('posts.store');
     Route::get('posts/{post}/editer', [PostController::class, 'edit'])->name('posts.edit');
+    Route::get('posts/{post}/supprimer', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::put('posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
     // User Management in Admin Zone

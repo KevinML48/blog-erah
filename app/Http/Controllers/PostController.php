@@ -156,9 +156,11 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post): RedirectResponse
     {
-        //
+        $post->delete();
+
+        return redirect()->route('admin.dashboard')->with('success', 'Post supprimé avec succès');
     }
 
     public function like(Post $post)

@@ -40,7 +40,17 @@
             <a href="{{ route('admin.posts.edit', $post->id) }}" class="erah-link">
                 Éditer
             </a>
+            <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="inline-block ml-2" onsubmit="return confirmDelete()">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+            </form>
         </div>
+        <script>
+            function confirmDelete() {
+                return confirm("Le Post et tous les commentaires associés seront supprimés. Continuer?");
+            }
+        </script>
     @endif
 
     <!-- Theme Display -->
