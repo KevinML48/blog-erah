@@ -1,7 +1,7 @@
 <tr>
     {{--  Name  --}}
     <td class="py-2 px-4 border-b">
-        <x-username :user="$user"/>
+        <x-user.name :user="$user"/>
     </td>
     {{--  Email  --}}
     <td class="py-2 px-4 border-b">{{ $user->email }}</td>

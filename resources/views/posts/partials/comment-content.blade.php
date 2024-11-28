@@ -19,11 +19,11 @@
                 <div class="flex items-center space-x-2">
                     <!-- Profile Picture -->
                     <div>
-                        <x-user-profile-picture :user="$content->user" :card="true"/>
+                        <x-user.profile-picture :user="$content->user" :card="true"/>
                     </div>
                     <!-- Name -->
                     <div>
-                        <x-username :user="$content->user"/>
+                        <x-user.name :user="$content->user"/>
                     </div>
                 </div>
 

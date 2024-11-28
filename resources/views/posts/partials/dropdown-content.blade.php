@@ -14,7 +14,7 @@
                         @if($withDetails)
                             <span>Arrêter de suivre {{ $content->user->name }}</span>
                         @endif
-                        <x-svg-user option="minus"></x-svg-user>
+                        <x-svg.user option="minus"></x-svg.user>
                     </div>
                 </button>
                 @if(!$withDetails)
@@ -36,7 +36,7 @@
                         @if($withDetails)
                             <span>Suivre {{ $content->user->name }}</span>
                         @endif
-                        <x-svg-user option="plus"></x-svg-user>
+                        <x-svg.user option="plus"></x-svg.user>
                     </div>
                 </button>
                 @if(!$withDetails)
@@ -65,7 +65,7 @@
                             @if($withDetails)
                                 <span>Ne plus recevoir de notifications pour ce commentaire</span>
                             @endif
-                            <x-svg-volume :mute="true"></x-svg-volume>
+                            <x-svg.volume :mute="true"></x-svg.volume>
                         </div>
                     </button>
                     @if(!$withDetails)
@@ -87,7 +87,7 @@
                             @if($withDetails)
                                 <span>Recevoir des notifications pour ce commentaire</span>
                             @endif
-                            <x-svg-volume option="plus"></x-svg-volume>
+                            <x-svg.volume option="plus"></x-svg.volume>
                         </div>
                     </button>
                     @if(!$withDetails)
@@ -111,7 +111,7 @@
                     @if($withDetails)
                         <span>Supprimer ce commentaire</span>
                     @endif
-                    <x-svg-bin></x-svg-bin>
+                    <x-svg.bin></x-svg.bin>
                 </div>
             </button>
             @if(!$withDetails)

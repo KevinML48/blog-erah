@@ -5,15 +5,15 @@
         {{-- Icon --}}
         <div class="text-red-600">
             @if ($type === 'like')
-                <x-svg-heart :filled="true"/>
+                <x-svg.heart :filled="true"/>
             @elseif ($type === 'follow')
-                <x-svg-follow/>
+                <x-svg.follow/>
             @endif
         </div>
         {{-- Profile Pictures --}}
         <div class="ml-2 flex">
             @foreach($users as $user)
-                <x-user-profile-picture :user="$user" :default="false"/>
+                <x-user.profile-picture :user="$user" :default="false"/>
             @endforeach
         </div>
     </div>
@@ -23,7 +23,7 @@
         @if ($count > 3)
             {{-- Take the 3 first users --}}
             @foreach($users->take(3) as $user)
-                <x-username :user="$user"/>
+                <x-user.name :user="$user"/>
                 {{-- If the current index is not 2 (i.e., not the third and last user), use a comma --}}
                 @if ($index !== 2)
                     ,
@@ -34,7 +34,7 @@
         @else
             {{-- If 3 or fewer likes or follows --}}
             @foreach($users as $index => $user)
-                <x-username :user="$user"/>
+                <x-user.name :user="$user"/>
                 {{-- If the index is the second-to-last user, insert "et" --}}
                 @if ($index === $count - 2)
                     et

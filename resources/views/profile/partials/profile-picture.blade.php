@@ -10,8 +10,8 @@
     </header>
 
     <div class="flex flex-row items-end">
-        <x-user-profile-picture :user="Auth::user()" :default="false" :size="48" :border="false"/>
-        <x-user-profile-picture :user="Auth::user()" :default="false"/>
+        <x-user.profile-picture :user="Auth::user()" :default="false" :size="48" :border="false"/>
+        <x-user.profile-picture :user="Auth::user()" :default="false"/>
     </div>
 
     <form action="{{ route('profile.update.picture') }}" method="POST" enctype="multipart/form-data">

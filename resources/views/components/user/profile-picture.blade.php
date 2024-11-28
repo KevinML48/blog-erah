@@ -30,7 +30,7 @@ $color = $roleColors[$user->role] ?? 'white';
             @endif
         </x-slot>
         <x-slot name="content">
-            <x-user-card :user="$user"/>
+            <x-user.card :user="$user"/>
         </x-slot>
     </x-dropdown>
 @else

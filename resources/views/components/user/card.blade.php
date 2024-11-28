@@ -5,12 +5,12 @@
     <div class="flex flex-col items-start py-4 ml-2">
         <!-- Profile Picture -->
         <div class="flex justify-center">
-            <x-user-profile-picture :user="$user" :size="20" :border="true" :card="false"/>
+            <x-user.profile-picture :user="$user" :size="20" :border="true" :card="false"/>
         </div>
 
         <!-- Name -->
         <div class="text-left ml-2">
-            <x-username :user="$user"/>
+            <x-user.name :user="$user"/>
         </div>
     </div>
 

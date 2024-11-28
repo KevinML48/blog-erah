@@ -3,14 +3,14 @@
         {{ $user->name }}
     </x-slot>
     <x-slot name="header">
-        <x-username :user="$user"/>
+        <x-user.name :user="$user"/>
     </x-slot>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             <div class="erah-box flex flex-col md:flex-row">
                 <div class="md:w-1/3 ml-6 ">
-                    <x-user-profile-picture :user="$user" :default="false" :size="48"/>
+                    <x-user.profile-picture :user="$user" :default="false" :size="48"/>
                     <div class="py-2 ml-6">
                         @if(auth()->user()->isAdmin())
                             <p><strong>Email:</strong> {{ $user->email }}</p>
