@@ -31,7 +31,7 @@
                                 required
                             />
 
-                            <x-primary-button>
+                            <x-button.primary>
                                 {{ __('Update') }}
                             </x-primary-button>
                         </div>

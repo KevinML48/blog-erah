@@ -9,7 +9,7 @@
         </p>
     </header>
 
-    <x-danger-button
+    <x-button.danger
         x-data=""
         x-on:click.prevent="$dispatch('open-modal', 'confirm-user-deletion')"
     >{{ __('Supprimer le compte') }}</x-danger-button>
@@ -42,11 +42,11 @@
             </div>
 
             <div class="mt-6 flex justify-end">
-                <x-secondary-button x-on:click="$dispatch('close')">
+                <x-button.secondary x-on:click="$dispatch('close')">
                     {{ __('Annuler') }}
                 </x-secondary-button>
 
-                <x-danger-button class="ms-3">
+                <x-button.danger class="ms-3">
                     {{ __('Supprimer le compte') }}
                 </x-danger-button>
             </div>

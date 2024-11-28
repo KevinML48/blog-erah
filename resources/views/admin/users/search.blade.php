@@ -21,7 +21,7 @@
                             <option value="admin">Admin</option>
                         </select>
 
-                        <x-primary-button class="mt-4">
+                        <x-button.primary class="mt-4">
                             {{ __('Rechercher') }}
                         </x-primary-button>
                     </form>

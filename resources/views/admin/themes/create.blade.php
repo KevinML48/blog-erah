@@ -44,7 +44,7 @@
                                 x-model="slug"
                             />
 
-                            <x-primary-button>
+                            <x-button.primary>
                                 {{ __('Créer') }}
                             </x-primary-button>
                         </div>

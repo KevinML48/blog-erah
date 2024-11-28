@@ -171,7 +171,7 @@
                         {{ __('Déjà inscrit ?') }}
                     </a>
 
-                    <x-primary-button class="ms-4">
+                    <x-button.primary class="ms-4">
                         {{ __('S\'inscrire') }}
                     </x-primary-button>
                 </div>

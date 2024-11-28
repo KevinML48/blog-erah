@@ -13,9 +13,9 @@
 </a>
 @if($badge)
     @if($user->role == 'admin')
-        <x-badge-admin/>
+        <x-user.badge.admin/>
     @endif
     @if($user->role == 'ultra')
-        <x-badge-ultra/>
+        <x-user.badge.ultra/>
     @endif
 @endif

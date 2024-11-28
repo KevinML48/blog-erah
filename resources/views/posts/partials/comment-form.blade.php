@@ -70,7 +70,7 @@
                         <span id="current">0</span>
                         <span id="maximum">/ 255</span>
                     </div>
-                    <x-primary-button>{{ __('Poster') }}</x-primary-button>
+                    <x-button.primary>{{ __('Poster') }}</x-primary-button>
                 </div>
             </div>
 
@@ -78,7 +78,7 @@
             <div id="displayMediaZone" class="mt-2 hidden">
                 <img id="selectedImage" src="" alt="Selected Image" class="w-32 h-32 rounded-md hidden">
                 <img id="selectedGif" src="" alt="Selected GIF" class="w-32 h-32 rounded-md hidden">
-                <x-cancel-button id="cancelButton" onclick="clearMedia()"> Annuler</x-cancel-button>
+                <x-button.cancel id="cancelButton" onclick="clearMedia()"> Annuler</x-cancel-button>
             </div>
 
             <input type="hidden" name="parent_id" value="">
@@ -97,8 +97,8 @@
             <x-text-input id="searchQuery" placeholder="Search Tenor" class="w-full mb-2"></x-text-input>
             <div id="gifResults" class="grid grid-cols-2 gap-2 mb-4 overflow-auto flex-grow"></div>
             <div class="flex justify-end">
-                <x-cancel-button onclick="toggleModal()"> Annuler</x-cancel-button>
-                <x-secondary-button type="submit"> Chercher</x-secondary-button> <!-- Submit button -->
+                <x-button.cancel onclick="toggleModal()"> Annuler</x-cancel-button>
+                <x-button.secondary type="submit"> Chercher</x-secondary-button> <!-- Submit button -->
             </div>
         </form>
     </div>

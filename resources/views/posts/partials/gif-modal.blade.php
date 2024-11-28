@@ -9,8 +9,8 @@
             <x-text-input id="searchQuery" placeholder="Search Tenor" class="w-full mb-2"></x-text-input>
             <div id="gifResults" class="grid grid-cols-2 gap-2 mb-4 overflow-auto flex-grow"></div>
             <div class="flex justify-end">
-                <x-cancel-button onclick="toggleModal()"> Annuler</x-cancel-button>
-                <x-secondary-button type="submit"> Chercher</x-secondary-button> <!-- Submit button -->
+                <x-button.cancel onclick="toggleModal()"> Annuler</x-cancel-button>
+                <x-button.secondary type="submit"> Chercher</x-secondary-button> <!-- Submit button -->
             </div>
         </form>
     </div>

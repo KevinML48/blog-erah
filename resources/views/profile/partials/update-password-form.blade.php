@@ -32,7 +32,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Enregistrer') }}</x-primary-button>
+            <x-button.primary>{{ __('Enregistrer') }}</x-primary-button>
 
             @if (session('status') === 'password-updated')
                 <p

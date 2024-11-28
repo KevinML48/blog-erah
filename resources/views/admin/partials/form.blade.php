@@ -75,7 +75,7 @@
 
     <!-- Submit -->
     <div class="mt-4">
-        <x-primary-button>
+        <x-button.primary>
             {{ isset($post) ? __('Modifier Post') : __('Créer Post') }}
         </x-primary-button>
     </div>

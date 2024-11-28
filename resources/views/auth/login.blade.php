@@ -45,7 +45,7 @@
                         </a>
                     @endif
 
-                    <x-primary-button class="ms-3">
+                    <x-button.primary class="ms-3">
                         {{ __('Se connecter') }}
                     </x-primary-button>
                 </div>
