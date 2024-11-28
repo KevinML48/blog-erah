@@ -15,7 +15,9 @@
                     @endforeach
                 </div>
 
-                <div id="loading" style="display: none;">Loading...</div>
+                <div id="loading" class="hidden flex justify-center items-center space-x-2">
+                    <x-spinner/>
+                </div>
             </div>
         </div>
     </div>

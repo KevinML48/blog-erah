@@ -38,7 +38,9 @@
         </div>
     </div>
 
-    <div id="loader" style="display: none;">Loading...</div>
+    <div id="loader" style="display: none;">
+        <x-spinner/>
+    </div>
 
     <!-- Hidden comment form layout -->
     @include('posts.partials.comment-form')
