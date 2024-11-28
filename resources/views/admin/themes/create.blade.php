@@ -13,7 +13,17 @@
                 <div class="p-6">
                     <form method="POST" action="{{ route('admin.themes.create') }}">
                         @csrf
-                        <div class="space-y-6">
+                        <div class="space-y-6" x-data="{
+                            name: '',
+                            slug: '',
+                            generateSlug() {
+                                this.slug = this.name
+                                    .toLowerCase() // Make lowercase
+                                    .replace(/[^\w\s-]/g, '') // Remove non-alphanumeric characters
+                                    .replace(/[\s_-]+/g, '-') // Replace spaces and underscores with dashes
+                                    .replace(/^-+|-+$/g, ''); // Trim dashes from the ends
+                            }
+                        }">
                             <x-text-input
                                 id="name"
                                 name="name"
@@ -21,6 +31,8 @@
                                 placeholder="Nom"
                                 :value="old('name')"
                                 required
+                                x-model="name"
+                                x-on:input="generateSlug"
                             />
 
                             <x-text-input
@@ -29,11 +41,11 @@
                                 type="text"
                                 placeholder="Slug"
                                 :value="old('slug')"
-                                required
+                                x-model="slug"
                             />
 
                             <x-primary-button>
-                                {{ __('Create') }}
+                                {{ __('Créer') }}
                             </x-primary-button>
                         </div>
                     </form>
