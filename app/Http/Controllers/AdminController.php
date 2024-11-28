@@ -34,6 +34,6 @@ class AdminController extends Controller
                 $comment->delete();
             }
         }
-        return redirect()->route('admin');
+        return redirect()->route('admin.dashboard');
     }
 }

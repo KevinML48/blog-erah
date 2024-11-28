@@ -74,7 +74,7 @@ class PostController extends Controller
             'theme_id' => $request->theme_id,
         ]);
 
-        return redirect()->route('admin')->with('success', 'Post créé avec succès');
+        return redirect()->route('admin.dashboard')->with('success', 'Post créé avec succès');
     }
 
     /**
@@ -150,7 +150,7 @@ class PostController extends Controller
             'theme_id' => $request->theme_id,
         ]);
 
-        return redirect()->route('admin')->with('success', 'Post mis à jour avec succès');
+        return redirect()->route('admin.dashboard')->with('success', 'Post mis à jour avec succès');
     }
 
     /**
