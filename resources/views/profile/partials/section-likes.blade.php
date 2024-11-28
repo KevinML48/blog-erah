@@ -4,7 +4,7 @@
         <div id="likes-container">
             @include('posts.partials.content-loop')
         </div>
-        <div id="loader" class="hidden flex justify-center items-center space-x-2">
+        <div id="loader-likes-container" class="hidden flex justify-center items-center space-x-2">
             <x-spinner/>
         </div>
 

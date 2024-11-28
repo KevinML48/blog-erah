@@ -6,7 +6,7 @@
                 @include('posts.partials.post-short', ['post' => $post])
             @endforeach
         </div>
-        <div id="loader" class="hidden flex justify-center items-center space-x-2">
+        <div id="loader-posts-container" class="hidden flex justify-center items-center space-x-2">
             <x-spinner/>
         </div>
 

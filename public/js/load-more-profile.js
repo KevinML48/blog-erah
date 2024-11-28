@@ -1,6 +1,4 @@
 let loading = false;
-const loader = document.getElementById('loader'); // Assume there's a loader element
-
 // Initialize a global `pages` object to track the page and has_more_pages for each section
 window.pages = {
     comments: { page: 1, has_more_pages: true }, // Example: { page: 1, has_more_pages: true }
@@ -10,6 +8,7 @@ window.pages = {
 
 // Generic function to load more data, now with separate page tracking for each section
 function loadMoreData(url, sectionId, pageKey) {
+    const loader = document.getElementById(`loader-${sectionId}`);
     if (loading || !window.pages[pageKey].has_more_pages) return;  // Stop if no more pages
     loading = true;
     loader.style.display = "block"; // Show loading indicator
@@ -51,7 +50,6 @@ function profileLoadMoreComments(url) {
     const pageKey = 'comments'; // The key for the comments section in window.pages
     if (!window.pages[pageKey].has_more_pages) return;  // If no more pages, stop immediately
 
-    // Call the generic loadMoreData function for comments
     loadMoreData(url, 'comments-container', pageKey);
 }
 
@@ -61,7 +59,6 @@ function profileLoadMoreLikedComments(url) {
     const pageKey = 'likes'; // The key for the likes section in window.pages
     if (!window.pages[pageKey].has_more_pages) return;  // If no more pages, stop immediately
 
-    // Call the generic loadMoreData function for liked comments
     loadMoreData(url, 'likes-container', pageKey);
 }
 
@@ -71,7 +68,6 @@ function profileLoadMoreLikedPosts(url) {
     const pageKey = 'post-likes'; // The key for the post-likes section in window.pages
     if (!window.pages[pageKey].has_more_pages) return;  // If no more pages, stop immediately
 
-    // Call the generic loadMoreData function for liked posts
     loadMoreData(url, 'posts-container', pageKey);
 }
 
