@@ -59,7 +59,7 @@
 
 
 
-                    <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center p-3 text-sm font-medium text-center text-white rounded-lg">
+                    <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center p-3 text-sm font-medium text-center text-white rounded-lg mr-2">
                         <x-svg.bell />
                         <span class="sr-only">Notifications</span>
                         @if( Auth::user()->unreadNotificationsCount() > 0 )
@@ -70,7 +70,7 @@
                         @endif
                     </a>
 
-                    <x-user.profile-picture :user="Auth::user()" :default="false"/>
+                    <x-user.profile-picture :user="Auth::user()" :default="false" :border="false"/>
 
                     <!-- Settings Dropdown -->
                     <x-dropdown align="right" width="48">
