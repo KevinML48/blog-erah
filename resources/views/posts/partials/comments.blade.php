@@ -1,7 +1,7 @@
 <div class="mt-6 comment-section" id="comment-section">
     @if(session('fragment'))
         <script>
-            window.onload = function() {
+            window.onload = function () {
                 // Add the fragment to the URL
                 window.location.hash = "{{ session('fragment') }}";
 
@@ -54,6 +54,9 @@
         @foreach ($comments as $comment)
             @include('posts.partials.comment-structure', ['comment' => $comment, 'depth' => 0])
         @endforeach
+    </div>
+    <div id="loader" class="hidden">
+        <x-spinner/>
     </div>
 
 
