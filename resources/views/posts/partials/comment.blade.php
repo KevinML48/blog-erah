@@ -7,7 +7,7 @@
         @include('posts.partials.comment-reaction', ['comment' => $comment])
     @else
         <div class="py-5 p-2">
-            <span class="text-red-500 italic">Commentaire introuvable.</span>
+            <span class="text-red-500 italic">{!! __('Comment unavailable.') !!}</span>
         </div>
     @endif
 
@@ -27,7 +27,7 @@
                             data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
                             data-page="0"
                             onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
-                        Charger plus de commentaires
+                        {!! __("comments.load-more.comments") !!}
                     </button>
                     <div class="loader hidden ml-2">
                         <x-spinner/>
@@ -41,7 +41,7 @@
                             data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
                             data-page="0"
                             onclick="loadMore(this, '{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}')">
-                        Charger plus de commentaires
+                        {!! __("comments.load-more.comments") !!}
                     </button>
                     <div class="loader hidden ml-2">
                         <x-spinner/>

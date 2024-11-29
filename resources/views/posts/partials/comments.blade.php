@@ -14,14 +14,14 @@
         </script>
     @endif
     @if (request()->routeIs('posts.show'))
-        <h4 class="font-semibold text-lg">Commentaires ({{ $totalCommentsCount }})</h4>
+        <h4 class="font-semibold text-lg">{!! __("comments.comments") !!} ({{ $totalCommentsCount }})</h4>
 
         @auth
             <!-- Main Comment Form -->
             <div id="form-container--1"></div> <!-- Empty container where the form will be appended -->
         @else
             <a href="{{ route('posts.show.redirect.comments', $post) }}" class="erah-link-amnesic">
-                Connectez-vous pour réagir
+                {!! __("comments.connect_to_react") !!}
             </a>
 
         @endauth
@@ -65,7 +65,7 @@
                 <button class="hidden" id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}"
                         data-page="{{ $comments->currentPage() }}"
                         onclick="loadMore(this, '{{ route('comments.loadMore', ['post' => $post->id]) }}')">
-                    Charger plus de commentaires
+                    {!! __("comments.load-more.comments") !!}
                 </button>
                 <div class="loader hidden">
                     <x-spinner/>

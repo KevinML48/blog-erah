@@ -30,14 +30,14 @@
                 @endif
             @endforeach
             {{-- Count the remaining elements --}}
-            et <strong>{{ $count - 3 }}</strong> autres
+            {!! __('notifications.bundle.and-others', ['count' => $count - 3]) !!}
         @else
             {{-- If 3 or fewer likes or follows --}}
             @foreach($users as $index => $user)
                 <x-user.name :user="$user"/>
                 {{-- If the index is the second-to-last user, insert "et" --}}
                 @if ($index === $count - 2)
-                    et
+                    {!! __('notifications.bundle.and') !!}
                     {{-- If index is not the last, use a comma --}}
                 @elseif ($index !== $count - 1)
                     ,
@@ -45,19 +45,18 @@
             @endforeach
         @endif
 
-
         {{-- Correct pluralization based on type and count --}}
         @if ($count === 1)
             @if ($type === 'like')
-                a aimé votre commentaire.
+                {!! __('notifications.bundle.like.single') !!}
             @elseif ($type === 'follow')
-                vous a suivi.
+                {!! __('notifications.bundle.follow.single') !!}
             @endif
         @elseif ($count > 1)
             @if ($type === 'like')
-                ont aimé votre commentaire.
+                {!! __('notifications.bundle.like.plural') !!}
             @elseif ($type === 'follow')
-                vous ont suivi.
+                {!! __('notifications.bundle.follow.plural') !!}
             @endif
         @endif
 

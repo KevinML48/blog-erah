@@ -47,7 +47,7 @@
 
                     <x-button.primary class="ms-3">
                         {{ __('Se connecter') }}
-                    </x-primary-button>
+                    </x-button.primary>
                 </div>
             </form>
         </div>

@@ -52,15 +52,6 @@ class StoreCommentRequest extends FormRequest
         ];
     }
 
-    public function messages(): array
-    {
-
-        return [
-            'input-body-' . $this->input('parent_id') . '.max' => 'Le commentaire ne doit pas faire plus de 255 caractères.',
-            'input-body-' . $this->input('parent_id') . '.required' => 'Un commentaire est requis.',
-        ];
-    }
-
     protected function failedValidation(Validator $validator)
     {
         $errors = $validator->errors();

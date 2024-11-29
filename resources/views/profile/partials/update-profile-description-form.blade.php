@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium">
-            {{ __('Description') }}
+            {{ __('profile.form.description.title') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-400">
-            {{ __("Mettez à jour votre description.") }}
+            {{ __("profile.form.description.details") }}
         </p>
     </header>
 
@@ -18,18 +18,18 @@
         @method('patch')
 
         <div>
-            <x-input-label for="name" :value="__('Nom')" />
+            <x-input-label for="name" :value="__('profile.user.name')" />
             <x-text-input id="name" name="name" class="mt-1 block w-full" :value="old('description', $user->name)" required autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
         <div>
-            <x-input-label for="description" :value="__('Bio')" />
+            <x-input-label for="description" :value="__('profile.user.description')" />
             <x-text-area id="description" name="description" class="mt-1 block w-full" :value="old('description', $user->description)" autofocus autocomplete="name" />
             <x-input-error class="mt-2" :messages="$errors->get('description')" />
         </div>
 
         <div class="flex items-center gap-4">
-            <x-button.primary>{{ __('Enregistrer') }}</x-primary-button>
+            <x-button.primary>{{ __('profile.save') }}</x-button.primary>
 
             @if (session('status') === 'description-updated')
                 <p
@@ -38,7 +38,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Enregistré.') }}</p>
+                >{{ __('profile.saved.') }}</p>
             @endif
         </div>
     </form>

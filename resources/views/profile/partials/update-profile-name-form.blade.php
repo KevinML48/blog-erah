@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium">
-            {{ __('Nom') }}
+            {{ __('profile.user.name') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-400">
-            {{ __("Choisissez un nom d'affichage visible pour les autres utilisateurs.") }}
+            {{ __("profile.form.first-log.choose-name") }}
         </p>
     </header>
 
@@ -23,7 +23,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-button.primary>{{ __('Enregistrer') }}</x-primary-button>
+            <x-button.primary>{{ __('profile.save') }}</x-button.primary>
 
             @if (session('status') === 'description-updated')
                 <p
@@ -32,7 +32,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Enregistré.') }}</p>
+                >{{ __('profile.saved.') }}</p>
             @endif
         </div>
     </form>

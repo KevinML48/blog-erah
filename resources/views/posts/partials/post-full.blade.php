@@ -38,17 +38,17 @@
     @if(auth()->user() && auth()->user()->isAdmin())
         <div class="mt-1">
             <a href="{{ route('admin.posts.edit', $post->id) }}" class="erah-link">
-                Éditer
+                {!! __("posts.admin.edit") !!}
             </a>
-            <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="inline-block ml-2" onsubmit="return confirmDelete()">
+            <form action="{{ route('admin.posts.destroy', $post) }}" method="POST" class="inline-block ml-2" onsubmit="return confirmPostDelete()">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="text-red-600 hover:text-red-900">Supprimer</button>
+                <button type="submit" class="text-red-600 hover:text-red-900">{!! __("posts.admin.delete") !!}</button>
             </form>
         </div>
         <script>
-            function confirmDelete() {
-                return confirm("Le Post et tous les commentaires associés seront supprimés. Continuer?");
+            function confirmPostDelete() {
+                return confirm({!! __("posts.admin.confirm") !!});
             }
         </script>
     @endif

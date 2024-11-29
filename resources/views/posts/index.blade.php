@@ -1,18 +1,18 @@
 <x-app-layout>
     <x-slot name="title">
-        Votre Fil
+        {!! __('Blog') !!}
     </x-slot>
     <x-slot name="header">
         <div class="flex justify-center space-x-8">
             @foreach ($themes as $theme)
                 <x-theme-link :href="route('posts.theme', $theme->slug)"
-                              :active="request()->routeIs('posts.theme') && request()->route('name') == $theme->slug">
+                              :active="request()->routeIs('posts.theme') && request()->route('slug') == $theme->slug">
                     {{ $theme->name }}
                 </x-theme-link>
             @endforeach
             @if(request()->routeIs('posts.theme'))
                 <x-theme-link :href="route('posts.index')" :active="false">
-                    Revenir ←
+                    {!! __('navigation.back') !!}
                 </x-theme-link>
             @endif
         </div>

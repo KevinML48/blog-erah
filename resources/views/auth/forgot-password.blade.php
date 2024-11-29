@@ -23,7 +23,7 @@
                 <div class="flex items-center justify-end mt-4">
                     <x-button.primary>
                         {{ __('Lien de réinitialisation d\'e-mail') }}
-                    </x-primary-button>
+                    </x-button.primary>
                 </div>
             </form>
         </div>

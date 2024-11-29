@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="title">
-        Votre Fil
+        {{ __('profile.thread') }}
     </x-slot>
     <x-slot name="header">
-        Votre Fil
+        {{ __('profile.thread') }}
     </x-slot>
 
     <div class="py-8">

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\FollowController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -19,6 +20,9 @@ Route::get('/blog', [PostController::class, 'index'])->name('posts.index');
 Route::get('/', function () {
     return redirect()->route('posts.index');
 });
+
+// Change locale
+Route::get('/locale/{locale}', [LocaleController::class, 'changeLocale'])->name('changeLocale');
 
 // Filtered Main Page: Display posts by theme
 Route::get('/blog/theme/{slug}', [PostController::class, 'showByTheme'])->name('posts.theme');

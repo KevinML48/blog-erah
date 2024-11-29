@@ -20,7 +20,7 @@
 
             <x-button.primary class="mt-4">
                 {{ __('Rechercher') }}
-            </x-primary-button>
+            </x-button.primary>
             <a href="{{ route('admin.users.search') }}" class="erah-link">Page de recherche</a>
         </form>
     </div>

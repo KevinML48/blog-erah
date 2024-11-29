@@ -32,7 +32,7 @@ class ThemeController extends Controller
             'slug' => $request->slug,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Thème créé avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', __('messages.theme.success.create'));
     }
 
     /**
@@ -60,7 +60,7 @@ class ThemeController extends Controller
             'slug' => $request->slug,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Thème mis à jour avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', __('messages.theme.success.update'));
     }
 
     /**
@@ -73,6 +73,6 @@ class ThemeController extends Controller
     {
         $theme->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Thème supprimé avec succès.');
+        return redirect()->route('admin.dashboard')->with('success', __('messages.theme.success.delete'));
     }
 }

@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Édition de Profil') }}
+        {{ __('profile.title') }}
     </x-slot>
     <x-slot name="header">
-        {{ __('Édition de Profil') }}
+        {{ __('profile.title') }}
     </x-slot>
 
     <div class="py-12">

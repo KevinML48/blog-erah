@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium">
-            {{ __('Préférences de notifications') }}
+            {{ __('profile.form.notifications.title') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-400">
-            {{ __("Mettez à jour vos préférences de notifications.") }}
+            {{ __('profile.form.notifications.details') }}
         </p>
     </header>
     @include('notifications.partials.preferences')

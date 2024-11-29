@@ -46,7 +46,7 @@
 
                             <x-button.primary>
                                 {{ __('Créer') }}
-                            </x-primary-button>
+                            </x-button.primary>
                         </div>
                     </form>
                 </div>

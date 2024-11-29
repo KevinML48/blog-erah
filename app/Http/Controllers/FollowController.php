@@ -15,7 +15,7 @@ class FollowController extends Controller
         if ($authenticatedUser->id === $user->id) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'You cannot follow yourself.'
+                'message' => __('message.follow.error.yourself')
             ]);
         }
 
@@ -29,14 +29,14 @@ class FollowController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'You are now following ' . $user->name,
+                'message' => __('message.follow.success.follow', ['user' => $user->username]),
                 'followed' => true
             ]);
         }
 
         return response()->json([
             'status' => 'info',
-            'message' => 'You are already following ' . $user->name,
+            'message' => __('message.follow.error.following', ['user' => $user->username]),
             'followed' => true
         ]);
     }
@@ -60,14 +60,14 @@ class FollowController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'You have unfollowed ' . $user->name,
+                'message' => __('message.follow.success.unfollow', ['user' => $user->username]),
                 'followed' => false
             ]);
         }
 
         return response()->json([
             'status' => 'info',
-            'message' => 'You are not following ' . $user->name,
+            'message' => __('message.follow.info.not-following', ['user' => $user->username]),
             'followed' => false
         ]);
     }

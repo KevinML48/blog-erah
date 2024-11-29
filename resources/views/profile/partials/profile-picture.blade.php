@@ -1,11 +1,11 @@
 <section>
     <header>
         <h2 class="text-lg font-medium">
-            {{ __('Image de profil') }}
+            {{ __('profile.user.picture') }}
         </h2>
 
         <p class="mt-1 text-sm text-gray-400">
-            {{ __("Mettez à jour votre image de profil.") }}
+            {{ __("profile.form.picture.details") }}
         </p>
     </header>
 
@@ -27,7 +27,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-button.primary>{{ __('Enregistrer') }}</x-primary-button>
+            <x-button.primary>{{ __('profile.save') }}</x-button.primary>
 
             @if (session('status') === 'profile-picture-updated')
                 <p
@@ -36,7 +36,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Image de profil changée.') }}</p>
+                >{{ __('profile.user.picture_updated') }}</p>
             @endif
         </div>
     </form>

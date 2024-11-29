@@ -173,7 +173,7 @@
 
                     <x-button.primary class="ms-4">
                         {{ __('S\'inscrire') }}
-                    </x-primary-button>
+                    </x-button.primary>
                 </div>
             </form>
         </div>

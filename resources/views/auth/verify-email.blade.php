@@ -19,7 +19,7 @@
                     <div>
                         <x-button.primary>
                             {{ __('Renvoyer l\'email de vérification') }}
-                        </x-primary-button>
+                        </x-button.primary>
                     </div>
                 </form>
 

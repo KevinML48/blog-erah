@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="title">
-        {{ __('Notifications') }}
+        {{ __('notifications.title') }}
     </x-slot>
     <x-slot name="header">
-        <h2>{{ __('Notifications') }}</h2>
+        {{ __('notifications.title') }}
     </x-slot>
 
     <div class="py-12">
@@ -14,11 +14,11 @@
                         <section>
                             <header>
                                 <p class="mt-1 text-sm text-gray-400">
-                                    {{ __("Marquer toutes vos notifications comme lues.") }}
+                                    {{ __("notifications.reead.title") }}
                                 </p>
                             </header>
                             <a href="{{ route('notifications.read', Auth::user()->name) }}" class="erah-link-amnesic">
-                                Marquer comme lues →
+                                {!! __('notifications.read.mark') !!}
                             </a>
                         </section>
                     </div>
@@ -27,7 +27,7 @@
             <div class="shadow-sm sm:rounded-lg">
                 <div class="p-6">
                     @if($notifications->isEmpty())
-                        <p>{{ __('Aucune notification pour le moment.') }}</p>
+                        <p>{{ __('notifications.empty') }}</p>
                     @else
                         <div id="notifications-container" data-next-page-url="{{ $notifications->nextPageUrl() }}">
                             @include('notifications.partials.notification-loop', ['notifications' => $notifications])

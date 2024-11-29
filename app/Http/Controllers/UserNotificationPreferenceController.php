@@ -50,7 +50,7 @@ class UserNotificationPreferenceController extends Controller
             $request->boolean('like_notifications_enabled')
         );
 
-        return redirect()->back()->with('success', 'Préférences mises à jour');
+        return redirect()->back()->with('success', __('message.user-notification-preference.success.update'));
     }
 
     public function muteComment(CommentContent $commentContent)
@@ -78,7 +78,7 @@ class UserNotificationPreferenceController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Comment muted successfully',
+            'message' => __('message.user-notification-preference.success.mute-comment'),
         ]);
     }
 
@@ -107,7 +107,7 @@ class UserNotificationPreferenceController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Comment unmuted successfully',
+            'message' => __('message.user-notification-preference.success.unmute-comment'),
         ]);
     }
 }

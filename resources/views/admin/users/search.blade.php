@@ -23,7 +23,7 @@
 
                         <x-button.primary class="mt-4">
                             {{ __('Rechercher') }}
-                        </x-primary-button>
+                        </x-button.primary>
                     </form>
                 </div>
 

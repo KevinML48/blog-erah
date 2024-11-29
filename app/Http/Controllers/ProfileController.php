@@ -106,14 +106,11 @@ class ProfileController extends Controller
         ]);
     }
 
-
-
     /**
      * Display the user's profile form.
      */
     public function edit(Request $request): View
     {
-
         $themes = Theme::all();
 
         // Get the specific notification types for post publication, reply, and like
@@ -162,7 +159,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('success', 'Profil mis à jour');
+        return Redirect::route('profile.edit')->with('success', __('messages.profile.success.update'));
     }
 
     public function updateDescription(Request $request)
@@ -179,13 +176,11 @@ class ProfileController extends Controller
 
         if ($user->isDirty('name') || $user->isDirty('description')) {
             $user->save();
-            return back()->with('success', 'Profil mis à jour');
+            return back()->with('success', __('messages.profile.success.update'));
         }
 
         return back()->with('status', 'no-changes-made');
     }
-
-
 
     /**
      * Delete the user's account.
@@ -217,12 +212,12 @@ class ProfileController extends Controller
         }
 
         if ($user->id === auth()->id()) {
-            return redirect()->route('admin.users.search')->with('error', 'Vous ne pouvez pas supprimer votre compte ici.');
+            return redirect()->route('admin.users.search')->with('error', __('messages.profile.error.cannot_delete_own_account'));
         }
 
         $this->profileService->deleteUserAccount($user);
 
-        return redirect()->route('admin.users.search')->with('success', 'Utilisateur supprimé.');
+        return redirect()->route('admin.users.search')->with('success', __('messages.profile.success.delete'));
     }
 
     /**
@@ -239,7 +234,7 @@ class ProfileController extends Controller
 
         $this->profileService->updateUserProfilePicture($user, $path);
 
-        return redirect()->back()->with('status', 'profile-picture-updated');
+        return redirect()->back()->with('success', __('messages.profile.success.profile_picture_update'));
     }
 
     /**
@@ -287,7 +282,7 @@ class ProfileController extends Controller
     public function changeRole(User $user, $role, Request $request): RedirectResponse
     {
         if (!in_array($role, ['user', 'ultra', 'admin'])) {
-            return redirect()->route('admin.users.search')->with('error', 'Rôle invalide');
+            return redirect()->route('admin.users.search')->with('error', __('messages.profile.error.change_role'));
         }
 
         $this->profileService->changeUserRole($user, $role);
@@ -298,7 +293,7 @@ class ProfileController extends Controller
         return redirect()->route('admin.users.search', [
             'search' => $query,
             'page' => $page
-        ])->with('success', 'Rôle changé avec succès');
+        ])->with('success', __('messages.profile.success.change_role', ['user' => $user->username, 'role' => $role->name]));
     }
 
     /**

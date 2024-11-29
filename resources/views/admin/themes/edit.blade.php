@@ -33,7 +33,7 @@
 
                             <x-button.primary>
                                 {{ __('Update') }}
-                            </x-primary-button>
+                            </x-button.primary>
                         </div>
                     </form>
                 </div>

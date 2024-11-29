@@ -34,20 +34,20 @@
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     <x-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')">
-                        {{ __('Blog') }}
+                        {{ __('navigation.blog') }}
                     </x-nav-link>
                 </div>
                 @auth
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('profile.thread')" :active="request()->routeIs('profile.thread')">
-                            {{ __('Fil') }}
+                            {{ __('navigation.thread') }}
                         </x-nav-link>
                     </div>
                 @endauth
                 @if (Auth::user() && Auth::user()->role === 'admin')
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
-                            {{ __('Admin') }}
+                            {{ __('navigation.admin') }}
                         </x-nav-link>
                     </div>
                 @endif
@@ -61,7 +61,7 @@
 
                     <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center p-3 text-sm font-medium text-center text-white rounded-lg mr-2">
                         <x-svg.bell />
-                        <span class="sr-only">Notifications</span>
+                        <span class="sr-only">{!! __('navigation.notifications') !!}</span>
                         @if( Auth::user()->unreadNotificationsCount() > 0 )
                             <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-800 border-2 border-white rounded-full -top-1 -end-1 dark:border-gray-900">
                                 <span class="-z-10 absolute inset-0 rounded-full animate-[ping_1s_ease-in-out_3] bg-red-950 opacity-75"></span>
@@ -91,7 +91,7 @@
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('profile.edit')">
-                                {{ __('Profil') }}
+                                {{ __('navigation.profile') }}
                             </x-dropdown-link>
 
                             <!-- Authentication -->
@@ -100,7 +100,7 @@
                                 <x-dropdown-link :href="route('logout')"
                                                  onclick="event.preventDefault();
                                                     this.closest('form').submit();">
-                                    {{ __('Se déconnecter') }}
+                                    {{ __('navigation.logout') }}
                                 </x-dropdown-link>
                             </form>
                         </x-slot>
@@ -112,19 +112,32 @@
                 <div class="flex">
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('login')" :active="request()->routeIs('login')">
-                            {{ __('Se connecter') }}
+                            {{ __('navigation.login') }}
                         </x-nav-link>
                     </div>
                     <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                         <x-nav-link :href="route('register')" :active="request()->routeIs('register')">
-                            {{ __('S\'inscrire') }}
+                            {{ __('navigation.register') }}
                         </x-nav-link>
                     </div>
                 </div>
             @endif
 
+
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
+                @Auth
+                <a href="{{ route('notifications.index') }}" class="relative inline-flex items-center p-3 text-sm font-medium text-center text-white rounded-lg mr-2">
+                    <x-svg.bell />
+                    <span class="sr-only">{!! __('navigation.notifications') !!}</span>
+                    @if( Auth::user()->unreadNotificationsCount() > 0 )
+                        <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-800 border-2 border-white rounded-full -top-1 -end-1 dark:border-gray-900">
+                            <span class="-z-10 absolute inset-0 rounded-full animate-[ping_1s_ease-in-out_3] bg-red-950 opacity-75"></span>
+                            <span>{{ Auth::user()->unreadNotificationsCount() }}</span>
+                        </div>
+                    @endif
+                </a>
+                @endauth
                 <button @click="open = ! open"
                         class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
                     <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
@@ -152,7 +165,7 @@
 
                 <div class="mt-3 space-y-1">
                     <x-responsive-nav-link :href="route('profile.edit')">
-                        {{ __('Profil') }}
+                        {{ __('navigation.profile') }}
                     </x-responsive-nav-link>
 
                     <!-- Authentication -->
@@ -161,7 +174,7 @@
                         <x-responsive-nav-link :href="route('logout')"
                                                onclick="event.preventDefault();
                                             this.closest('form').submit();">
-                            {{ __('Se déconnecter') }}
+                            {{ __('navigation.logout') }}
                         </x-responsive-nav-link>
                     </form>
                 </div>
@@ -170,10 +183,10 @@
                     <div class="font-medium text-base text-gray-800">{{ __('Guest') }}</div>
                     <div class="mt-3 space-y-1">
                         <x-responsive-nav-link :href="route('login')" :active="request()->routeIs('login')">
-                            {{ __('Se connecter') }}
+                            {{ __('navigation.login') }}
                         </x-responsive-nav-link>
                         <x-responsive-nav-link :href="route('register')" :active="request()->routeIs('register')">
-                            {{ __('S\'inscrire') }}
+                            {{ __('navigation.register') }}
                         </x-responsive-nav-link>
                     </div>
                 </div>

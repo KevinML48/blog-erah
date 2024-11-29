@@ -82,20 +82,4 @@ class LoginRequest extends FormRequest
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
     }
-
-    /**
-     * Get the custom validation messages.
-     *
-     * @return array
-     */
-    public function messages(): array
-    {
-        return [
-            'email.required' => 'L\'adresse email est obligatoire.',
-            'email.string' => 'L\'adresse email doit être une chaîne de caractères valide.',
-            'email.email' => 'L\'adresse email doit être un format valide.',
-            'password.required' => 'Le mot de passe est obligatoire.',
-            'password.string' => 'Le mot de passe doit être une chaîne de caractères valide.',
-        ];
-    }
 }

@@ -44,7 +44,6 @@ class PostController extends Controller
         return view('posts.index', compact('posts', 'themes'));
     }
 
-
     /**
      * Show the form for creating a new resource.
      */
@@ -76,7 +75,7 @@ class PostController extends Controller
             'theme_id' => $request->theme_id,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Post créé avec succès');
+        return redirect()->route('admin.dashboard')->with('success', __('messages.posts.success.created'));
     }
 
     /**
@@ -112,7 +111,6 @@ class PostController extends Controller
         }
         return redirect()->route('posts.show', ['post' => $post]);
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -152,7 +150,7 @@ class PostController extends Controller
             'theme_id' => $request->theme_id,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', 'Post mis à jour avec succès');
+        return redirect()->route('admin.dashboard')->with('success', __('messages.posts.success.updated'));
     }
 
     /**
@@ -162,7 +160,7 @@ class PostController extends Controller
     {
         $post->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', 'Post supprimé avec succès');
+        return redirect()->route('admin.dashboard')->with('success', __('messages.posts.success.deleted'));
     }
 
     public function like(Post $post)
