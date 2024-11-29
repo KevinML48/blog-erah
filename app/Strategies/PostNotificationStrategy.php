@@ -8,7 +8,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Notifications\PostPublishedNotification;
 use Illuminate\Notifications\DatabaseNotification;
-use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\DB;
 
 class PostNotificationStrategy implements NotificationStrategy
 {
@@ -40,7 +40,8 @@ class PostNotificationStrategy implements NotificationStrategy
     public function handleDeletion(): void
     {
         // Delete notifications related to this post
-        $notifications = Notification::where('data->post_id', $this->post->id)
+        $notifications = DB::table('notifications')
+            ->where('data', 'like', '%"post_id":' . $this->post->id . '%')
             ->where('type', PostPublishedNotification::class)
             ->get();
 
