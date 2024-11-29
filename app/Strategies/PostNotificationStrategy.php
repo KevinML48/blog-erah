@@ -47,7 +47,7 @@ class PostNotificationStrategy implements NotificationStrategy
 
         // Delete the notifications if found
         foreach ($notifications as $notification) {
-            $notification->delete();
+            DB::table('notifications')->where('id', $notification->id)->delete();
         }
     }
 
