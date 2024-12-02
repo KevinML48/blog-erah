@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'load_more' => [
+    'load-more' => [
         'comments' => 'Load more comments',
         'replies' => 'Load more replies',
     ],

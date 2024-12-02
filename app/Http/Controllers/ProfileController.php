@@ -31,7 +31,7 @@ class ProfileController extends Controller
     public function show($username): View
     {
         $user = $this->profileService->getUserProfile($username);
-        $contents = $this->profileService->getUserCommentContents($user);
+        $contents = $this->profileService->getUserCommentContents($user, Auth::user());
         $likes = $this->profileService->getUserLikedComments($user);
         $postLikes = $this->profileService->getUserLikedPosts($user);
 
@@ -52,14 +52,14 @@ class ProfileController extends Controller
         $page = $request->query('page', 1);
 
         // Get the next set of comment contents, paginated
-        $comments = $this->profileService->getUserCommentContents($user);
+        $contents = $this->profileService->getUserCommentContents($user, Auth::user());
 
         // Check if there are more comments available (pagination)
-        $hasMorePages = $comments->hasMorePages();
+        $hasMorePages = $contents->hasMorePages();
 
         // Return the new content and pagination info as JSON
         return response()->json([
-            'content' => view('posts.partials.content-loop', ['contents' => $comments])->render(),
+            'content' => view('posts.partials.content-loop', ['contents' => $contents])->render(),
             'has_more_pages' => $hasMorePages  // Explicitly send has_more_pages for clarity
         ]);
     }

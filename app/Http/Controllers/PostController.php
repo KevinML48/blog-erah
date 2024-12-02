@@ -7,7 +7,6 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Theme;
-use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -22,7 +21,8 @@ class PostController extends Controller
     {
         $themes = Theme::all();
 
-        $posts = Post::where('publication_time', '<=', now())
+        $posts = Post::with(['user', 'theme', 'likes'])
+        ->where('publication_time', '<=', now())
             ->orderBy('publication_time', 'desc')
             ->paginate(15);
 
@@ -81,16 +81,24 @@ class PostController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user, Post $post)
+    public function show(Post $post)
     {
-        $user = auth()->user() ?? $user;
+        $post->load(['user', 'theme', 'likes'])->loadCount('likes');
 
-        if ($user->cannot('view', $post)) {
+        if (Auth::check() && Auth::user()->cannot('view', $post)) {
             abort(404);
         }
 
-        $comments = Comment::with(['content.user', 'replies.content.user'])
+
+
+        $comments = Comment::with([
+            'content' => function ($query) {
+                $query->withCount('likes');},
+            'content.likes','content.user',
+            'replies', 'replies.content',
+            'replies.content.user'])
             ->where('post_id', $post->id)
+            ->withCount('replies')
             ->whereNull('parent_id')
             ->paginate(5);
 

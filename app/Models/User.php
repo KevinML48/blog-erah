@@ -107,32 +107,31 @@ class User extends Authenticatable
             return false; // Notification type does not exist
         }
 
-        // Check for a specific preference with context
-        $specificPreference = $this->notificationPreferences()
+        // Fetch the preference, considering both specific and global preferences in one query
+        $preference = $this->notificationPreferences()
             ->where('notification_type_id', $notificationType->id)
-            ->where('context_id', $contextId)
-            ->where('context_type', $contextType)
+            ->where(function($query) use ($contextId, $contextType) {
+                $query->where('context_id', $contextId)
+                    ->where('context_type', $contextType)
+                    ->orWhere(function($query) {
+                        $query->whereNull('context_id')
+                            ->where('context_type', 'global');
+                    });
+            })
             ->first();
 
-        if ($specificPreference) {
-            return $specificPreference->is_enabled;
-        }
-        // Check for a general preference if no specific context preference exists
-        $generalPreference = $this->notificationPreferences()
-            ->where('notification_type_id', $notificationType->id)
-            ->whereNull('context_id')
-            ->where('context_type', 'global')
-            ->first();
-        return $generalPreference ? $generalPreference->is_enabled : true; // Default to true if no preference is found
+        // If a preference is found, return its 'is_enabled' status, otherwise default to true
+        return $preference ? $preference->is_enabled : true;
     }
+
 
     public function hasMuted(CommentContent $content): bool
     {
         $wantsReplyNotification = $this->wantsNotification('comment_reply', $content->id, 'single');
 
-        $wantsLikeNotification = $this->wantsNotification('comment_like', $content->id, 'single');
+//        $wantsLikeNotification = $this->wantsNotification('comment_like', $content->id, 'single');
 
-        return !$wantsReplyNotification || !$wantsLikeNotification;
+        return !$wantsReplyNotification;
     }
 
     /**

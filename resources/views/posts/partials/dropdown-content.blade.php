@@ -1,9 +1,9 @@
 @auth
     <!-- Follow/Unfollow button -->
-    @if(auth()->user() != $content->user)
+    @if(auth()->user()->id != $content->user->id)
         <div class="ml-1">
             <div id="{{$withDetails ? 'detailed-' : 'simple-'}}unfollow-button-{{ $content->user->id }}"
-                 class="{{ auth()->user()->isFollowing($content->user) ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unfollow-button-{{ $content->user->id }}">
+                 class="{{ auth()->user()->follows->contains('followed_id', $content->user->id) ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unfollow-button-{{ $content->user->id }}">
                 <button
                     class="peer follow-button"
                     data-following="true"
@@ -25,7 +25,7 @@
                 @endif
             </div>
             <div id="{{$withDetails? 'detailed-' : 'simple-'}}follow-button-{{ $content->user->id }}"
-                 class="{{ auth()->user()->isFollowing($content->user) ? 'hidden' : '' }} {{$withDetails? 'detailed-' : 'simple-'}}follow-button-{{ $content->user->id }}">
+                 class="{{ auth()->user()->follows->contains('followed_id', $content->user->id) ? 'hidden' : '' }} {{$withDetails? 'detailed-' : 'simple-'}}follow-button-{{ $content->user->id }}">
                 <button
                     class="peer follow-button"
                     data-following="false"
@@ -42,7 +42,7 @@
                 @if(!$withDetails)
                     <div id="tooltip-follow" role="tooltip"
                          class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
-                        {!! __("comments.dropdown.stop_follow") !!} {{ $content->user->name }}
+                        {!! __("comments.dropdown.follow") !!} {{ $content->user->name }}
                     </div>
                 @endif
             </div>
@@ -54,7 +54,7 @@
         @if(auth()->user()->id === $content->user->id)
             <div class="ml-1">
                 <div id="mute-button-{{ $content->id }}"
-                     class="{{ auth()->user()->hasMuted($content) ? 'hidden' : '' }} {{$withDetails ? 'detailed-' : 'simple-'}}mute-button-{{ $content->id }}">
+                     class="{{ auth()->user()->notificationPreferences->contains('context_id', $content->id) ? 'hidden' : '' }} {{$withDetails ? 'detailed-' : 'simple-'}}mute-button-{{ $content->id }}">
                     <button
                         class="peer follow-button"
                         data-following="true"
@@ -76,7 +76,7 @@
                     @endif
                 </div>
                 <div id="unmute-button-{{ $content->id }}"
-                     class="{{ auth()->user()->hasMuted($content) ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unmute-button-{{ $content->id }}">
+                     class="{{ auth()->user()->notificationPreferences->contains('context_id', $content->id)  ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unmute-button-{{ $content->id }}">
                     <button
                         class="peer follow-button"
                         data-following="false"

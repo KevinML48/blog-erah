@@ -3,13 +3,14 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 
 interface ProfileServiceInterface
 {
     public function getUserProfile(string $username): User;
 
-    public function getUserCommentContents(User $user, int $limit = 15): LengthAwarePaginator;
+    public function getUserCommentContents(User $user, Authenticatable $authUser, int $limit = 15): LengthAwarePaginator;
 
     public function getUserLikedComments(User $user, int $limit = 15): LengthAwarePaginator;
 

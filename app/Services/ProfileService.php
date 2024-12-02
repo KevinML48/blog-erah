@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 
@@ -13,19 +14,39 @@ class ProfileService implements ProfileServiceInterface
         return User::where('username', $username)->firstOrFail();
     }
 
-    public function getUserCommentContents(User $user, int $limit = 15): LengthAwarePaginator
+    public function getUserCommentContents(User $user, Authenticatable $authUser, int $limit = 15): LengthAwarePaginator
     {
-        return $user->commentContents()->latest()->paginate($limit);
+        return $user->commentContents()
+            ->with([
+                'comment' => function ($query) {
+                    $query->withCount('replies');
+                },
+                'comment.content' => function ($query) use ($authUser) {
+                    $query->withCount('likes')
+                        ->with('user')  // Load the user of the comment content
+                        ->get()
+                        ->each(function ($commentContent) use ($authUser) {
+                            // Add a custom attribute to check if authUser follows the comment's user
+                            $commentContent->user->is_followed_by_auth_user = $authUser->isFollowing($commentContent->user);
+                        });
+                },
+                'comment.content.likes'
+            ])
+            ->latest()
+            ->paginate($limit);
     }
+
 
     public function getUserLikedComments(User $user, int $limit = 15): LengthAwarePaginator
     {
-        return $user->likedComments()->latest()->paginate($limit);
+        return $user->likedComments()->with(['comment', 'comment.content', 'comment.content.user', 'comment.content.likes'])
+            ->latest()->paginate($limit);
     }
 
     public function getUserLikedPosts(User $user, int $limit = 15): LengthAwarePaginator
     {
-        return $user->likedPosts()->latest()->paginate($limit);
+        return $user->likedPosts()->with(['user', 'theme', 'likes'])
+            ->latest()->paginate($limit);
     }
 
     public function updateUserProfilePicture(User $user, $filePath): void

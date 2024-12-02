@@ -21,7 +21,7 @@
     </div>
 
     @if (isset($depth) && $depth >= 1)
-        @if ($comment->replies()->count() > 0)
+        @if ($comment->replies_count > 0)
                 <div class="load-more-container">
                     <button class="load-more-replies text-sm text-blue-600"
                             data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"
@@ -35,7 +35,7 @@
                 </div>
         @endif
     @else
-        @if ($comment->replies()->count() > 1 && isset($depth) && $depth >= 0)
+        @if ($comment->replies_count > 1 && isset($depth) && $depth >= 0)
                 <div class="load-more-container">
                     <button class="load-more-replies text-sm text-blue-600"
                             data-url="{{ route('comments.loadMoreReplies', ['comment' => $comment->id]) }}"

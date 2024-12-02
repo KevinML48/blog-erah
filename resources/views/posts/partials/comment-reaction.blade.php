@@ -10,8 +10,8 @@
                 <x-svg.speech-bubble/>
             </a>
         @endauth
-        @if ($comment->replies->count() > 0)
-            <span class="text-gray-300 ml-1">({{ $comment->replies->count() }})</span>
+        @if ($comment->replies_count > 0)
+            <span class="text-gray-300 ml-1">({{ $comment->replies_count }})</span>
         @endif
     </div>
 
@@ -21,13 +21,13 @@
             <div class="flex items-center bg-transparent border-0 cursor-pointer">
                 <!-- Unliked Button -->
                 <button onclick="likeComment({{ $comment->id }})" id="like-comment-button-{{ $comment->id }}"
-                        class="flex items-center {{ $comment->content->likes()->where('user_id', auth()->id())->exists() ? 'hidden' : '' }}">
+                        class="flex items-center {{ $comment->content->likes->contains('user_id', auth()->id()) ? 'hidden' : '' }}">
                     <x-svg.heart id="unfilled-icon-{{ $comment->id }}" :filled="false"/>
                 </button>
 
                 <!-- Liked Button -->
                 <button onclick="unlikeComment({{ $comment->id }})" id="unlike-comment-button-{{ $comment->id }}"
-                        class="flex items-center text-red-600 {{ $comment->content->likes()->where('user_id', auth()->id())->exists() ? '' : 'hidden' }}">
+                        class="flex items-center text-red-600 {{ $comment->content->likes->contains('user_id', auth()->id()) ? '' : 'hidden' }}">
                     <x-svg.heart id="filled-icon-{{ $comment->id }}" :filled="true"/>
                 </button>
             </div>
@@ -38,9 +38,9 @@
                 <x-svg.heart id="filled-icon-{{ $comment->id }}" :filled="true"/>
             </a>
         @endauth
-        @if ($comment->content->likes()->count() > 0)
+        @if ($comment->content->likes_count > 0)
             <span id="likes-comment-count-{{ $comment->id }}" class="ml-1">
-                ({{ $comment->content->likes()->count() }})
+                ({{ $comment->content->likes_count }})
             </span>
         @endif
     </div>
