@@ -93,7 +93,7 @@ class UserNotificationPreferenceController extends Controller
             'comment_reply',
             'single',
             $commentContentId,
-            false
+            true
         );
 
         // Unmute like notifications for the comment
@@ -102,7 +102,7 @@ class UserNotificationPreferenceController extends Controller
             'comment_like',
             'single',
             $commentContentId,
-            false
+            true
         );
 
         return response()->json([
