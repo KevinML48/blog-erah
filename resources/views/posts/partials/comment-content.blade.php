@@ -40,7 +40,7 @@
 
 
             <!-- Body -->
-            <a href="{{ route('comments.show', ['post' => $content->comment->post->id, 'comment' => $content->comment->id]) }}"
+            <a href="{{ route('comments.show', ['post' => $content->comment->post_id, 'comment' => $content->comment->id]) }}"
                class="block">
                 <div class="rounded py-2">
                     <div class="py-2 ml-14">

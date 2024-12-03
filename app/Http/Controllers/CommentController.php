@@ -10,6 +10,8 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -47,6 +49,10 @@ class CommentController extends Controller
     public function show(Post $post, Comment $comment): View
     {
         $comments = $this->commentService->show($comment);
+        foreach ($comments as $comment) {
+            Log::info('Comment ID: ' . $comment->id);
+        }
+        $this->commentService->addAuthUserTags($comments, Auth::user());
         return view('posts.show', compact('post', 'comments', 'comment'));
     }
 
@@ -68,6 +74,10 @@ class CommentController extends Controller
 
         $comments = $this->commentService->loadMoreComments($post, $currentPage, $existingCommentIds);
 
+        if (Auth::check()) {
+            $this->commentService->addAuthUserTags($comments, Auth::user());
+        }
+
         return response()->json([
             'comments' => view('posts.partials.comment-structure-loop', compact('comments'))->render(),
             'hasMore' => $comments->hasMorePages(),
@@ -80,6 +90,10 @@ class CommentController extends Controller
         $existingReplyIds = json_decode($request->input('existing_comment_ids', '[]'));
 
         $comments = $this->commentService->loadMoreReplies($comment, $currentPage, $existingReplyIds);
+
+        if (Auth::check()) {
+            $this->commentService->addAuthUserTags($comments, Auth::user());
+        }
 
         return response()->json([
             'commentId' => $comment->id,

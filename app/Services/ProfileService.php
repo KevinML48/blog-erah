@@ -30,7 +30,10 @@ class ProfileService implements ProfileServiceInterface
                             $commentContent->user->is_followed_by_auth_user = $authUser->isFollowing($commentContent->user);
                         });
                 },
-                'comment.content.likes'
+                'comment.content.likes',
+                'comment.content.comment.post' => function ($query) {
+                    $query->select('id');
+                }
             ])
             ->latest()
             ->paginate($limit);

@@ -3,7 +3,7 @@
     @if(auth()->user()->id != $content->user->id)
         <div class="ml-1">
             <div id="{{$withDetails ? 'detailed-' : 'simple-'}}unfollow-button-{{ $content->user->id }}"
-                 class="{{ auth()->user()->follows->contains('followed_id', $content->user->id) ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unfollow-button-{{ $content->user->id }}">
+                 class="{{ $content->user->is_followed_by_auth_user ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unfollow-button-{{ $content->user->id }}">
                 <button
                     class="peer follow-button"
                     data-following="true"
@@ -25,7 +25,7 @@
                 @endif
             </div>
             <div id="{{$withDetails? 'detailed-' : 'simple-'}}follow-button-{{ $content->user->id }}"
-                 class="{{ auth()->user()->follows->contains('followed_id', $content->user->id) ? 'hidden' : '' }} {{$withDetails? 'detailed-' : 'simple-'}}follow-button-{{ $content->user->id }}">
+                 class="{{ $content->user->is_followed_by_auth_user ? 'hidden' : '' }} {{$withDetails? 'detailed-' : 'simple-'}}follow-button-{{ $content->user->id }}">
                 <button
                     class="peer follow-button"
                     data-following="false"

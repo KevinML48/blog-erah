@@ -47,25 +47,20 @@
     <div class="mt-4" id="replies-container--1">
         @if (request()->routeIs('comments.show'))
             <!-- Display the parent comment, if one exists -->
-            @if ($comment->parent_id)
+            @if ($comment->parent)
                 @include('posts.partials.comment', ['comment' => $comment->parent])
             @endif
         @endif
         @foreach ($comments as $comment)
-            @include('posts.partials.comment-structure', ['comment' => $comment, 'depth' => 0])
+            @include('posts.partials.comment-structure', ['comment' => $comment, 'depth' => 1])
         @endforeach
     </div>
-    <div id="loader" class="hidden">
-        <x-spinner/>
-    </div>
-
 
     @if ($comments->hasMorePages())
             <div class="load-more-container">
                 <button class="hidden" id="load-more" data-url="{{ route('comments.loadMore', ['post' => $post->id]) }}"
                         data-page="{{ $comments->currentPage() }}"
                         onclick="loadMore(this, '{{ route('comments.loadMore', ['post' => $post->id]) }}')">
-                    {!! __("comments.load-more.comments") !!}
                 </button>
                 <div class="loader hidden">
                     <x-spinner/>

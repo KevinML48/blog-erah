@@ -14,7 +14,7 @@
     <!-- Display Replies -->
     <div id="replies-container-{{ $comment->id }}" class="ml-6 mt-2">
         @if (isset($depth) && ($depth < 1 && $depth >= 0))
-            @foreach ($comment->replies()->take(2)->get() as $reply)
+            @foreach ($comment->replies as $reply)
                 @include('posts.partials.comment-structure', ['comment' => $reply, 'depth' => $depth + 1])
             @endforeach
         @endif

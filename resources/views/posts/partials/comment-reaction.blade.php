@@ -6,7 +6,7 @@
                 <x-svg.speech-bubble/>
             </button>
         @else
-            <a href="{{ route('comments.show.redirect', [$comment->post, $comment]) }}" class="cursor-pointer">
+            <a href="{{ route('comments.show.redirect', [$comment->post_id, $comment]) }}" class="cursor-pointer">
                 <x-svg.speech-bubble/>
             </a>
         @endauth
@@ -21,19 +21,18 @@
             <div class="flex items-center bg-transparent border-0 cursor-pointer">
                 <!-- Unliked Button -->
                 <button onclick="likeComment({{ $comment->id }})" id="like-comment-button-{{ $comment->id }}"
-                        class="flex items-center {{ $comment->content->likes->contains('user_id', auth()->id()) ? 'hidden' : '' }}">
+                        class="flex items-center {{ $comment->content->is_liked_by_auth_user ? 'hidden' : '' }}">
                     <x-svg.heart id="unfilled-icon-{{ $comment->id }}" :filled="false"/>
                 </button>
-
                 <!-- Liked Button -->
                 <button onclick="unlikeComment({{ $comment->id }})" id="unlike-comment-button-{{ $comment->id }}"
-                        class="flex items-center text-red-600 {{ $comment->content->likes->contains('user_id', auth()->id()) ? '' : 'hidden' }}">
+                        class="flex items-center text-red-600 {{ $comment->content->is_liked_by_auth_user ? '' : 'hidden' }}">
                     <x-svg.heart id="filled-icon-{{ $comment->id }}" :filled="true"/>
                 </button>
             </div>
         @else
             <!-- Display filled heart with link to login -->
-            <a href="{{ route('comments.show.redirect.like', [$comment->post, $comment]) }}"
+            <a href="{{ route('comments.show.redirect.like', [$comment->post_id, $comment->id]) }}"
                class="flex items-center text-red-600">
                 <x-svg.heart id="filled-icon-{{ $comment->id }}" :filled="true"/>
             </a>

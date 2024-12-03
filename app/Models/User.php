@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -58,6 +59,11 @@ class User extends Authenticatable
         return $this->hasMany(CommentContent::class);
     }
 
+    public function comments(): HasManyThrough
+    {
+        return $this->hasManyThrough(Comment::class, CommentContent::class);
+    }
+
     public function isAdmin()
     {
         return $this->role === 'admin';
@@ -76,6 +82,14 @@ class User extends Authenticatable
     public function likedComments()
     {
         return $this->morphedByMany(CommentContent::class, 'likeable', 'likes');
+    }
+
+    public function isLiking($likeable)
+    {
+        return $this->likes()
+            ->where('likeable_id', $likeable->id)
+            ->where('likeable_type', get_class($likeable))
+            ->exists();
     }
 
     // The Users that the current User follows

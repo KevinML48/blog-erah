@@ -18,7 +18,9 @@ use App\Services\NotificationService;
 use App\Services\NotificationServiceInterface;
 use App\Services\ProfileService;
 use App\Services\ProfileServiceInterface;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -45,6 +47,11 @@ class AppServiceProvider extends ServiceProvider
         Follow::observe(FollowObserver::class);
         Gate::define('administrate', function ($user) {
             return $user->isAdmin();
+        });
+        View::composer('layouts.navigation', function ($view) {
+            if (Auth::check()) {
+                $view->with('unreadNotificationsCount', Auth::user()->unreadNotificationsCount());
+            }
         });
     }
 }

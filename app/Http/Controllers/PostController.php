@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePostRequest;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\Theme;
+use App\Services\CommentServiceInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -14,6 +15,13 @@ use Illuminate\View\View;
 
 class PostController extends Controller
 {
+    protected CommentServiceInterface $commentService;
+
+    public function __construct(CommentServiceInterface $commentService)
+    {
+        $this->commentService = $commentService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -90,17 +98,38 @@ class PostController extends Controller
         }
 
 
+        if (Auth::check()) {
 
-        $comments = Comment::with([
-            'content' => function ($query) {
-                $query->withCount('likes');},
-            'content.likes','content.user',
-            'replies', 'replies.content',
-            'replies.content.user'])
-            ->where('post_id', $post->id)
-            ->withCount('replies')
-            ->whereNull('parent_id')
-            ->paginate(5);
+            $comments = $this->commentService->loadPostComments($post);
+
+            $this->commentService->addAuthUserTags($comments, Auth::user());
+
+
+
+
+        } else {
+            $comments = Comment::with([
+                'content' => function ($query) {
+                    $query->withCount('likes');},
+                'content.user',
+//                'content.comment.post:id',
+//                'post:id',
+            ])
+                ->where('post_id', $post->id)
+                ->withCount('replies')
+                ->whereNull('parent_id')
+                ->paginate(5);
+
+            $comments->each(function ($comment) use ($post) {
+                $comment->post_id = $post->id; // Add the post_id manually
+            });
+            $comments->each(function ($comment) use ($post) {
+                $comment->content->comment->post_id = $post->id; // Add the post_id manually
+            });
+
+
+        }
+
 
         $totalCommentsCount = Comment::where('post_id', $post->id)->count();
 
