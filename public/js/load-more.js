@@ -1,7 +1,8 @@
+let isFetching = false; // Initialize the isFetching variable to control multiple requests
+
 function loadMore(button, url) {
     return new Promise((resolve, reject) => {
         const currentPage = parseInt(button.getAttribute('data-page'));
-
 
         // Find or create the loader
         let loader = button.nextElementSibling;
@@ -52,8 +53,6 @@ function loadMore(button, url) {
     });
 }
 
-
-
 function displayComments(container, content, button, currentPage, hasMore) {
     container.insertAdjacentHTML('beforeend', content);
     convertTimes();
@@ -69,8 +68,12 @@ function triggerLoadMore(button) {
     const url = button.getAttribute('data-url');
     return loadMore(button, url); // Return the promise from loadMore
 }
+
 // Check if the user is at the bottom of the page
 window.onscroll = async function () {
+    // Prevent multiple triggers by checking the isFetching flag
+    if (isFetching) return;
+
     // When the user scrolls to the bottom of the page
     if (document.documentElement.scrollTop + window.innerHeight >= document.documentElement.scrollHeight) {
         const loadMoreButton = document.getElementById('load-more');
@@ -79,12 +82,14 @@ window.onscroll = async function () {
         // Only trigger loadMore if there are more pages (button is in the DOM)
         if (loadMoreButton && loadMoreButton.style.display !== 'none') {
             if (loader) loader.classList.remove('hidden');
+            isFetching = true; // Set isFetching to true to prevent further requests
 
             try {
                 await triggerLoadMore(loadMoreButton); // Wait for loading to complete
             } catch (error) {
                 console.error('Error while loading more content:', error);
             } finally {
+                isFetching = false; // Set isFetching to false when done
                 if (loader) loader.classList.add('hidden');
             }
         }
