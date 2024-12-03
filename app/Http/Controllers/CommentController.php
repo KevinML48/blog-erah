@@ -52,7 +52,7 @@ class CommentController extends Controller
         foreach ($comments as $comment) {
             Log::info('Comment ID: ' . $comment->id);
         }
-        $this->commentService->addAuthUserTags($comments, Auth::user());
+        $this->commentService->addAuthUserTags([$comments], Auth::user());
         return view('posts.show', compact('post', 'comments', 'comment'));
     }
 
@@ -75,7 +75,7 @@ class CommentController extends Controller
         $comments = $this->commentService->loadMoreComments($post, $currentPage, $existingCommentIds);
 
         if (Auth::check()) {
-            $this->commentService->addAuthUserTags($comments, Auth::user());
+            $this->commentService->addAuthUserTags([$comments], Auth::user());
         }
 
         return response()->json([
@@ -92,7 +92,7 @@ class CommentController extends Controller
         $comments = $this->commentService->loadMoreReplies($comment, $currentPage, $existingReplyIds);
 
         if (Auth::check()) {
-            $this->commentService->addAuthUserTags($comments, Auth::user());
+            $this->commentService->addAuthUserTags([$comments], Auth::user());
         }
 
         return response()->json([

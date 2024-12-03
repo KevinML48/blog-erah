@@ -15,7 +15,7 @@ interface CommentServiceInterface
 
     public function loadPostComments(Post $post): LengthAwarePaginator;
 
-    public function addAuthUserTags(LengthAwarePaginator $comments, Authenticatable $authUser): void;
+    public function addAuthUserTags(array $comments, Authenticatable $authUser): void;
 
     public function loadMoreComments(Post $post, $currentPage, array $existingCommentIds): LengthAwarePaginator;
 

@@ -88,38 +88,43 @@ class CommentService implements CommentServiceInterface
             ->paginate(5);
     }
 
-    public function addAuthUserTags(LengthAwarePaginator $comments, Authenticatable $authUser): void
+    public function addAuthUserTags(array $commentsLists, Authenticatable $authUser): void
     {
         $likedContentIds = $authUser->likes()->pluck('likeable_id')->toArray(); // IDs of liked content
         $followedUserIds = $authUser->follows()->pluck('followed_id')->toArray(); // IDs of followed users
 
-        $comments->each(function ($comment) use ($authUser, $likedContentIds, $followedUserIds) {
-            // Process the comment itself
-            $comment->content->is_liked_by_auth_user = in_array($comment->content->id, $likedContentIds);
+        foreach ($commentsLists as $comments) {
+            if ($comments instanceof LengthAwarePaginator) {
+                $comments->each(function ($comment) use ($authUser, $likedContentIds, $followedUserIds) {
+                    // Process the comment itself
+                    $comment->content->is_liked_by_auth_user = in_array($comment->content->id, $likedContentIds);
 
-            if ($authUser->id !== $comment->content->user_id) {
-                $comment->content->user->is_followed_by_auth_user = in_array($comment->content->user_id, $followedUserIds);
-            }
+                    if ($authUser->id !== $comment->content->user_id) {
+                        $comment->content->user->is_followed_by_auth_user = in_array($comment->content->user_id, $followedUserIds);
+                    }
 
-            // Process each reply
-            if ($comment->replies) {
-                $comment->replies->each(function ($reply) use ($authUser, $likedContentIds, $followedUserIds) {
-                    $reply->content->is_liked_by_auth_user = in_array($reply->content->id, $likedContentIds);
+                    // Process each reply
+                    if ($comment->relationLoaded('replies')) {
+                        $comment->replies->each(function ($reply) use ($authUser, $likedContentIds, $followedUserIds) {
+                            $reply->content->is_liked_by_auth_user = in_array($reply->content->id, $likedContentIds);
 
-                    if ($authUser->id !== $reply->content->user_id) {
-                        $reply->content->user->is_followed_by_auth_user = in_array($reply->content->user_id, $followedUserIds);
+                            if ($authUser->id !== $reply->content->user_id) {
+                                $reply->content->user->is_followed_by_auth_user = in_array($reply->content->user_id, $followedUserIds);
+                            }
+                        });
+                    }
+
+                    // Process the parent comment
+                    if ($comment->relationLoaded('parent')) {
+                        $comment->parent->content->is_liked_by_auth_user = in_array($comment->parent->content->id, $likedContentIds);
+
+                        if ($authUser->id !== $comment->parent->content->user_id) {
+                            $comment->parent->content->user->is_followed_by_auth_user = in_array($comment->parent->content->user_id, $followedUserIds);
+                        }
                     }
                 });
             }
-
-            if ($comment->parent) {
-                $comment->parent->content->is_liked_by_auth_user = in_array($comment->parent->content->id, $likedContentIds);
-
-                if ($authUser->id !== $comment->parent->content->user_id) {
-                    $comment->parent->content->user->is_followed_by_auth_user = in_array($comment->parent->content->user_id, $followedUserIds);
-                }
-            }
-        });
+        }
     }
 
     public function loadMoreComments(Post $post, $currentPage, array $existingCommentIds): LengthAwarePaginator

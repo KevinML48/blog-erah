@@ -17,7 +17,7 @@ class Comment extends Model implements SingleNotification
 
     /** @use HasFactory<CommentFactory> */
     use HasFactory;
-    
+
     /**
      * The table associated with the model.
      *
@@ -50,6 +50,19 @@ class Comment extends Model implements SingleNotification
     public function contentExists(): bool
     {
         return $this->content()->exists();
+    }
+
+    public function likes()
+    {
+        return $this->hasManyThrough(
+            Like::class,
+            CommentContent::class,
+            'comment_id',
+            'likeable_id',
+            'id',
+            'id'
+        )
+            ->where('likeable_type', CommentContent::class);
     }
 
     protected static function booted(): void

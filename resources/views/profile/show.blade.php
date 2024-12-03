@@ -55,8 +55,8 @@
                         'post-likes' => view('components.navigator-trigger', ['trigger' => 'post-likes', 'label' => 'Posts aimés']),
                     ]"
                     :sections="[
-                        'comments' => view('profile.partials.section-comments', ['contents' => $contents]),
-                        'likes' => view('profile.partials.section-likes', ['contents' => $likes]),
+                        'comments' => view('profile.partials.section-comments', ['comments' => $comments]),
+                        'likes' => view('profile.partials.section-likes', ['comments' => $likes]),
                         'post-likes' => view('profile.partials.section-post-likes', ['posts' => $postLikes]),
                     ]"
                     :functions="[
@@ -70,7 +70,6 @@
                             'attributes' => [
                                 route('profile.fetchMoreLikedComments', ['username' => $user->username])]
                             ],
-
                         'post-likes' => [
                             'functionName' => 'profileLoadMoreLikedPosts',
                             'attributes' => [

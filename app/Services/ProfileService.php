@@ -39,12 +39,33 @@ class ProfileService implements ProfileServiceInterface
             ->paginate($limit);
     }
 
+    public function getUserComments(User $user, int $limit = 15): LengthAwarePaginator
+    {
+        return $user->comments()->with([
+            'content' => function ($query) {
+                $query->withCount('likes')
+                    ->with('user');
+            },
+            'content.user',
+        ])
+            ->withCount('replies')
+            ->latest()
+            ->paginate($limit);
+    }
+
 
     public function getUserLikedComments(User $user, int $limit = 15): LengthAwarePaginator
     {
-        return $user->likedComments()->with(['comment', 'comment.content', 'comment.content.user', 'comment.content.likes'])
+        return $user->likedComments()->with([
+            'content' => function ($query) {
+                $query->withCount('likes')
+                    ->with('user');
+            },
+            'content.user',
+        ])
             ->latest()->paginate($limit);
     }
+
 
     public function getUserLikedPosts(User $user, int $limit = 15): LengthAwarePaginator
     {

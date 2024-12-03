@@ -32,6 +32,7 @@
         <div class="mb-4">
             <!-- Link back to the full post view -->
             <a href="{{ route('posts.show', $post->id) }}" class="text-blue-600">
+                {{-- TODO: add to lang files --}}
                 ← Retour à la discussion complète
             </a>
 
@@ -39,6 +40,7 @@
             @if ($comment->parent_id)
                 <a href="{{ route('comments.show', ['post' => $post->id, 'comment' => $comment->parent_id]) }}"
                    class="text-blue-600 ml-4">
+                    {{-- TODO: add to lang files --}}
                     ← Retour au commentaire parent
                 </a>
             @endif

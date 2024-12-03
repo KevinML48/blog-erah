@@ -61,7 +61,14 @@ class User extends Authenticatable
 
     public function comments(): HasManyThrough
     {
-        return $this->hasManyThrough(Comment::class, CommentContent::class);
+        return $this->hasManyThrough(
+            Comment::class,
+            CommentContent::class,
+            'user_id',
+            'id',
+            'id',
+            'comment_id'
+        );
     }
 
     public function isAdmin()
@@ -81,7 +88,14 @@ class User extends Authenticatable
 
     public function likedComments()
     {
-        return $this->morphedByMany(CommentContent::class, 'likeable', 'likes');
+        return $this->hasManyThrough(
+            Comment::class,
+            Like::class,
+            'user_id',
+            'id',
+            'id',
+            'likeable_id'
+        )->where('likeable_type', CommentContent::class);
     }
 
     public function isLiking($likeable)

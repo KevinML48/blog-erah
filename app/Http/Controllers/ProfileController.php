@@ -8,6 +8,7 @@ use App\Models\CommentContent;
 use App\Models\NotificationType;
 use App\Models\Theme;
 use App\Models\User;
+use App\Services\CommentServiceInterface;
 use App\Services\ProfileServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -19,10 +20,12 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     protected ProfileServiceInterface $profileService;
+    protected CommentServiceInterface $commentService;
 
-    public function __construct(ProfileServiceInterface $profileService)
+    public function __construct(ProfileServiceInterface $profileService, CommentServiceInterface $commentService)
     {
         $this->profileService = $profileService;
+        $this->commentService = $commentService;
     }
 
     /**
@@ -30,14 +33,18 @@ class ProfileController extends Controller
      */
     public function show($username): View
     {
+
+
         $user = $this->profileService->getUserProfile($username);
-        $contents = $this->profileService->getUserCommentContents($user, Auth::user());
+        $comments = $this->profileService->getUserComments($user);
         $likes = $this->profileService->getUserLikedComments($user);
         $postLikes = $this->profileService->getUserLikedPosts($user);
 
+        $this->commentService->addAuthUserTags([$comments, $likes], Auth::user());
+
         return view('profile.show', [
             'user' => $user,
-            'contents' => $contents,
+            'comments' => $comments,
             'likes' => $likes,
             'postLikes' => $postLikes,
         ]);
@@ -52,14 +59,14 @@ class ProfileController extends Controller
         $page = $request->query('page', 1);
 
         // Get the next set of comment contents, paginated
-        $contents = $this->profileService->getUserCommentContents($user, Auth::user());
-
+        $comments = $this->profileService->getUserComments($user);
+        $this->commentService->addAuthUserTags([$comments], Auth::user());
         // Check if there are more comments available (pagination)
-        $hasMorePages = $contents->hasMorePages();
+        $hasMorePages = $comments->hasMorePages();
 
         // Return the new content and pagination info as JSON
         return response()->json([
-            'content' => view('posts.partials.content-loop', ['contents' => $contents])->render(),
+            'content' => view('posts.partials.comment-loop', ['comments' => $comments, 'depth' => -1])->render(),
             'has_more_pages' => $hasMorePages  // Explicitly send has_more_pages for clarity
         ]);
     }
@@ -74,13 +81,14 @@ class ProfileController extends Controller
 
         // Get the next set of liked comments, paginated
         $likedComments = $this->profileService->getUserLikedComments($user);
+        $this->commentService->addAuthUserTags([$likedComments], Auth::user());
 
         // Check if there are more liked comments available (pagination)
         $hasMorePages = $likedComments->hasMorePages();
 
         // Return the new content and pagination info as JSON
         return response()->json([
-            'content' => view('posts.partials.content-loop', ['contents' => $likedComments])->render(),
+            'content' => view('posts.partials.comment-loop', ['comments' => $likedComments, 'depth' => -1])->render(),
             'next_page_url' => $hasMorePages ? $likedComments->nextPageUrl() : null,
         ]);
     }

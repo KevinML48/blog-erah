@@ -102,7 +102,7 @@ class PostController extends Controller
 
             $comments = $this->commentService->loadPostComments($post);
 
-            $this->commentService->addAuthUserTags($comments, Auth::user());
+            $this->commentService->addAuthUserTags([$comments], Auth::user());
 
 
 

@@ -32,6 +32,18 @@ class Like extends Model implements BundledNotification
         return $this->belongsTo(User::class);
     }
 
+    public function comment()
+    {
+        return $this->hasOneThrough(
+            Comment::class,          // Final model (Comment)
+            CommentContent::class,  // Intermediate model (CommentContent)
+            'comment_id',           // Foreign key on CommentContent (links to Like)
+            'id',                // Foreign key on Comment (links to CommentContent)
+            'likeable_id',         // Local key on Like (links to CommentContent)
+            'comment_id'     // Local key on CommentContent (links to Comment)
+        );
+    }
+
     public function targetUser()
     {
         return $this->likeable->user;
