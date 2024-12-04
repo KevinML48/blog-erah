@@ -10,9 +10,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="erah-box">
                 <div id="comments-container">
-                    @foreach($contents as $content)
-                        @include('posts.partials.comment', ['comment' => $content->comment])
-                    @endforeach
+                        @include('posts.partials.comment-loop', ['comments' => $comments, 'depth' => -1])
                 </div>
 
                 <div id="loading" class="hidden justify-center items-center space-x-2">
@@ -31,7 +29,7 @@
     @include('posts.partials.gif-modal')
 
     <script>
-        let nextPageUrl = "{{ $contents->nextPageUrl() }}";
+        let nextPageUrl = "{{ $comments->nextPageUrl() }}";
         let loading = false;
 
         function loadMoreComments() {

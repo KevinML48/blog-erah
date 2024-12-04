@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ReservedUsernamesHelper;
 use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\CommentContent;
+use App\Models\Comment;
 use App\Models\NotificationType;
 use App\Models\Theme;
 use App\Models\User;
@@ -310,23 +310,29 @@ class ProfileController extends Controller
     public function thread(Request $request): View|JsonResponse
     {
         $user = Auth::user();
-        $contents = CommentContent::whereIn('user_id', function ($query) use ($user) {
-            $query->select('followed_id')
-                ->from('follows')
-                ->where('follower_id', $user->id);
+
+        $followedUserIds = $user->follows->pluck('id');
+
+        // Query for the latest comments from the followed users with eager loading
+        $comments = Comment::with([
+            'content.user',
+        ])
+            ->withCount(['replies', 'likes'])
+        ->whereHas('content.user', function ($query) use ($followedUserIds) {
+            $query->whereIn('id', $followedUserIds);
         })
-            ->with('user')
-            ->latest()
+            ->orderBy('created_at', 'desc')
             ->paginate(20);
 
+        $this->commentService->addAuthUserTags([$comments], $user);
         if ($request->ajax()) {
             return response()->json([
-                'html' => view('posts.partials.content-loop', compact('contents'))->render(),
-                'next_page_url' => $contents->nextPageUrl()
+                'html' => view('posts.partials.comment-loop', ['comments' => $comments, 'depth' => -1])->render(),
+                'next_page_url' => $comments->nextPageUrl()
             ]);
         }
 
-        return view('profile.thread', compact('contents'));
+        return view('profile.thread', compact('comments'));
     }
 
     public function checkUsername(Request $request)
