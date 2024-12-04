@@ -6,6 +6,11 @@ return [
         'replies' => 'Charger plus de réponses',
     ],
 
+    'back' => [
+        'root' => '&larr; Retours à la discussion',
+        'parent' => '&larr; Retours au commentaire parent',
+    ],
+
     'comments' => 'Commentaires',
 
     'form' => [

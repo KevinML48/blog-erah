@@ -6,6 +6,11 @@ return [
         'replies' => 'Load more replies',
     ],
 
+    'back' => [
+        'root' => '&larr; Back to the discussion',
+        'parent' => '&larr; Back to the parent comment',
+    ],
+
     'comments' => 'Comments',
 
     'form' => [
