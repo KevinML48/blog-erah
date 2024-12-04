@@ -99,14 +99,8 @@ class PostController extends Controller
 
 
         if (Auth::check()) {
-
             $comments = $this->commentService->loadPostComments($post);
-
             $this->commentService->addAuthUserTags([$comments], Auth::user());
-
-
-
-
         } else {
             $comments = Comment::with([
                 'content' => function ($query) {
@@ -121,13 +115,9 @@ class PostController extends Controller
                 ->paginate(5);
 
             $comments->each(function ($comment) use ($post) {
-                $comment->post_id = $post->id; // Add the post_id manually
+                $comment->post_id = $post->id;
+                $comment->content->comment->post_id = $post->id;
             });
-            $comments->each(function ($comment) use ($post) {
-                $comment->content->comment->post_id = $post->id; // Add the post_id manually
-            });
-
-
         }
 
 
