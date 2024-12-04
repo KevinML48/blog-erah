@@ -29,8 +29,9 @@ class PostController extends Controller
     {
         $themes = Theme::all();
 
-        $posts = Post::with(['user', 'theme', 'likes'])
-        ->where('publication_time', '<=', now())
+        $posts = Post::with(['user:id,username,name', 'theme:id,name'])
+            ->withcount('likes')
+            ->where('publication_time', '<=', now())
             ->orderBy('publication_time', 'desc')
             ->paginate(15);
 
@@ -45,6 +46,8 @@ class PostController extends Controller
         $theme = $themes->firstWhere('slug', $slug);
 
         $posts = Post::where('theme_id', $theme->id)
+            ->with(['user:id,username,name', 'theme:id,name'])
+            ->withcount('likes')
             ->where('publication_time', '<=', now())
             ->orderBy('publication_time', 'desc')
             ->paginate(15);
