@@ -90,37 +90,74 @@ class CommentService implements CommentServiceInterface
 
     public function addAuthUserTags(array $commentsLists, Authenticatable $authUser): void
     {
-        $likedContentIds = $authUser->likes()->pluck('likeable_id')->toArray(); // IDs of liked content
-        $followedUserIds = $authUser->follows()->pluck('followed_id')->toArray(); // IDs of followed users
+        // Extract relevant comment and user IDs
+        $commentIds = [];
+        $userIds = [];
 
         foreach ($commentsLists as $comments) {
             if ($comments instanceof LengthAwarePaginator) {
+                $comments->each(function ($comment) use (&$commentIds, &$userIds) {
+                    // Collect the content IDs of all comments
+                    $commentIds[] = $comment->content->id;
+
+                    // Collect the user IDs of all users who posted these comments
+                    $userIds[] = $comment->content->user_id;
+
+                    // Collect reply content IDs if they exist
+                    if ($comment->relationLoaded('replies')) {
+                        $comment->replies->each(function ($reply) use (&$commentIds, &$userIds) {
+                            $commentIds[] = $reply->content->id;
+                            $userIds[] = $reply->content->user_id;
+                        });
+                    }
+
+                    // Collect parent comment content IDs if they exist
+                    if ($comment->relationLoaded('parent') && $comment->parent !== null ) {
+                        $commentIds[] = $comment->parent->content->id;
+                        $userIds[] = $comment->parent->content->user_id;
+                    }
+                });
+            }
+        }
+
+        // Remove duplicates from the IDs arrays
+        $commentIds = array_unique($commentIds);
+        $userIds = array_unique($userIds);
+
+        // Fetch likes for the relevant comment IDs
+        $likedContentIds = $authUser->likes()->whereIn('likeable_id', $commentIds)->pluck('likeable_id')->toArray();
+
+        // Fetch follows for the relevant user IDs
+        $followedUserIds = $authUser->follows()->whereIn('followed_id', $userIds)->pluck('followed_id')->toArray();
+
+        // Now, iterate over the comments and mark liked/followed status
+        foreach ($commentsLists as $comments) {
+            if ($comments instanceof LengthAwarePaginator) {
                 $comments->each(function ($comment) use ($authUser, $likedContentIds, $followedUserIds) {
-                    // Process the comment itself
+                    // Check if the comment's content is liked
                     $comment->content->is_liked_by_auth_user = in_array($comment->content->id, $likedContentIds);
 
+                    // Check if the comment's user is followed
                     if ($authUser->id !== $comment->content->user_id) {
                         $comment->content->user->is_followed_by_auth_user = in_array($comment->content->user_id, $followedUserIds);
                     }
 
-                    // Process each reply
+                    // Check each reply
                     if ($comment->relationLoaded('replies')) {
-                        $comment->replies->each(function ($reply) use ($authUser, $likedContentIds, $followedUserIds) {
+                        $comment->replies->each(function ($reply) use ($likedContentIds, $followedUserIds) {
                             $reply->content->is_liked_by_auth_user = in_array($reply->content->id, $likedContentIds);
 
-                            if ($authUser->id !== $reply->content->user_id) {
-                                $reply->content->user->is_followed_by_auth_user = in_array($reply->content->user_id, $followedUserIds);
-                            }
+                            // Check if the reply's user is followed
+                            $reply->content->user->is_followed_by_auth_user = in_array($reply->content->user_id, $followedUserIds);
                         });
                     }
 
-                    // Process the parent comment
-                    if ($comment->relationLoaded('parent')) {
+                    // Check the parent comment
+                    if ($comment->relationLoaded('parent') && $comment->parent !== null ) {
                         $comment->parent->content->is_liked_by_auth_user = in_array($comment->parent->content->id, $likedContentIds);
 
-                        if ($authUser->id !== $comment->parent->content->user_id) {
-                            $comment->parent->content->user->is_followed_by_auth_user = in_array($comment->parent->content->user_id, $followedUserIds);
-                        }
+                        // Check if the parent comment's user is followed
+                        $comment->parent->content->user->is_followed_by_auth_user = in_array($comment->parent->content->user_id, $followedUserIds);
                     }
                 });
             }
@@ -129,7 +166,23 @@ class CommentService implements CommentServiceInterface
 
     public function loadMoreComments(Post $post, $currentPage, array $existingCommentIds): LengthAwarePaginator
     {
-        $comments = Comment::with(['content.user', 'replies.content.user'])
+        $comments = Comment::with([
+            'content' => function ($query) {
+                $query->withCount('likes') // Preload likes count
+                ->with('user'); // Preload the user who created the content
+            },
+            'content.user', // Preload user for the content
+            'replies' => function ($query) {
+                $query->limit(2)->with([
+                    'content' => function ($query) {
+                        $query->withCount('likes')
+                            ->with('user');
+                    },
+                    'content.user',
+                ])
+                    ->withCount('replies');
+            }
+        ])
             ->where('post_id', $post->id)
             ->whereNull('parent_id')
             ->paginate(5, ['*'], 'page', $currentPage + 1);
@@ -146,7 +199,24 @@ class CommentService implements CommentServiceInterface
 
     public function loadMoreReplies(Comment $comment, $currentPage, array $existingReplyIds): LengthAwarePaginator
     {
-        $comments = $comment->replies()->paginate(5, ['*'], 'page', $currentPage + 1);
+        $comments = $comment->replies()->with([
+            'content' => function ($query) {
+                $query->withCount('likes') // Preload likes count
+                ->with('user'); // Preload the user who created the content
+            },
+            'content.user', // Preload user for the content
+            'replies' => function ($query) {
+                $query->limit(2)->with([
+                    'content' => function ($query) {
+                        $query->withCount('likes')
+                            ->with('user');
+                    },
+                    'content.user',
+                ])
+                    ->withCount('replies');
+            }
+        ])
+            ->paginate(5, ['*'], 'page', $currentPage + 1);
 
         $filteredReplies = $comments->getCollection()->reject(function ($reply) use ($existingReplyIds) {
             return in_array($reply->id, $existingReplyIds);

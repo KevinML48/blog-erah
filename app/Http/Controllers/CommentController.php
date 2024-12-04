@@ -11,7 +11,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class CommentController extends Controller
 {
@@ -49,9 +48,6 @@ class CommentController extends Controller
     public function show(Post $post, Comment $comment): View
     {
         $comments = $this->commentService->show($comment);
-        foreach ($comments as $comment) {
-            Log::info('Comment ID: ' . $comment->id);
-        }
         $this->commentService->addAuthUserTags([$comments], Auth::user());
         return view('posts.show', compact('post', 'comments', 'comment'));
     }
