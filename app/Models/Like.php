@@ -61,7 +61,7 @@ class Like extends Model implements BundledNotification
 
     public function getContextId()
     {
-        return $this->likeable->comment_id;
+        return $this->likeable->id;
     }
 
     public function getContextType(): ?string

@@ -37,7 +37,7 @@ class FollowNotificationStrategy implements NotificationStrategy
             $notification->delete(); // If no follows, delete the notification
             return null;
         } else {
-            $notification->view = 'components.notification-bundle';
+            $notification->view = 'notifications.partials.new_bundle';
             $notification->args = [
                 'type' => 'follow',
                 'users' => $users,

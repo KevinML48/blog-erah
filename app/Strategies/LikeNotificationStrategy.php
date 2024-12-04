@@ -4,7 +4,7 @@ namespace App\Strategies;
 
 use App\Contracts\BundledNotification;
 use App\Contracts\NotificationStrategy;
-use App\Models\Comment;
+use App\Models\CommentContent;
 use App\Models\Like;
 
 class LikeNotificationStrategy implements NotificationStrategy
@@ -28,14 +28,16 @@ class LikeNotificationStrategy implements NotificationStrategy
         $this->strategy->handleDeletion();
     }
 
-    public function processNotification($notification)
+    public function processNotification($notification, $authUser = null)
     {
-        $comment = Comment::find($notification->data['context_id']);
+        $content = CommentContent::find($notification->data['context_id']);
 
-        if (!$comment || !$comment->contentExists()) {
+        if (!$content) {
             $notification->delete();
             return null;
         }
+
+        $content->is_liked_by_auth_user = $authUser->isLiking($content);
 
         $likeIds = $notification->data['ids'] ?? [];
         $likes = Like::whereIn('id', $likeIds)->take(3)->get();
@@ -45,12 +47,12 @@ class LikeNotificationStrategy implements NotificationStrategy
             $notification->delete();
             return null;
         } else {
-            $notification->view = 'components.notification-bundle';
+            $notification->view = 'notifications.partials.new_bundle';
             $notification->args = [
                 'type' => 'like',
                 'users' => $users,
                 'count' => count($likeIds),
-                'like' => $likes->first()->likeable,
+                'likeable' => $content,
             ];
         }
     }

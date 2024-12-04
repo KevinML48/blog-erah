@@ -26,7 +26,7 @@ class LikeObserver
      */
     public function created(Like $like): void
     {
-        if ($like->likeable_type == CommentContent::class) {
+        if ($like->likeable_type == CommentContent::class && $like->user_id !== $like->likeable->user_id) {
             $this->notificationService->handleCreation($like);
         }
     }

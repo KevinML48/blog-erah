@@ -51,9 +51,9 @@ class PostNotificationStrategy implements NotificationStrategy
         }
     }
 
-    public function processNotification(DatabaseNotification $notification)
+    public function processNotification(DatabaseNotification $notification, $authUser = null)
     {
-        $post = Post::find($notification->data['post_id']);
+        $post = Post::find($notification->data['post_id'])->with('user:id,name,username', 'theme:id,name')->firstOrFail();
 
         if (!$post) {
             $notification->delete();

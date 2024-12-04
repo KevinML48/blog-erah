@@ -30,7 +30,7 @@ interface NotificationServiceInterface
      * @param LengthAwarePaginator $notifications A paginated list of notifications
      * @return void
      */
-    public function processNotifications(LengthAwarePaginator $notifications): void;
+    public function processNotifications(LengthAwarePaginator $notifications, Authenticatable $authUser);
 
     /**
      * Update a single notification preference.

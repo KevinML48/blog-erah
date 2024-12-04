@@ -1,5 +1,3 @@
-@props(['type', 'users', 'count', 'like'])
-
 <div class="new-{{ $type }}-notification py-2">
     <div class="py-2 flex items-center">
         {{-- Icon --}}
@@ -61,7 +59,7 @@
         @endif
 
         @if($type === 'like')
-            @include('posts.partials.comment-content', ['content' => $like, 'showMedia' => false])
+            @include('posts.partials.comment-content', ['content' => $likeable, 'showMedia' => false])
         @endif
     </div>
 </div>

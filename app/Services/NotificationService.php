@@ -38,9 +38,9 @@ class NotificationService implements NotificationServiceInterface
     }
 
 
-    public function processNotifications(LengthAwarePaginator $notifications): void
+    public function processNotifications(LengthAwarePaginator $notifications, Authenticatable $authUser)
     {
-        $notifications->getCollection()->transform(function ($notification) {
+        $notifications->getCollection()->transform(function ($notification) use ($authUser) {
             $unread = $notification->read_at ? '' : true;
             $notification->markAsRead();
             $notification->unread = $unread;
@@ -49,7 +49,7 @@ class NotificationService implements NotificationServiceInterface
             if (class_exists($notificationClass)) {
                 $notificationInstance = new $notificationClass($notification);
                 $strategy = $notificationInstance->getNotificationStrategy();
-                $strategy->processNotification($notification);
+                $strategy->processNotification($notification, $authUser);
             } else {
                 $notification->delete();
                 return null;

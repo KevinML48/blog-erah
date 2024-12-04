@@ -184,7 +184,7 @@ class BundledNotificationStrategy implements NotificationStrategy
     }
 
 
-    public function processNotification(DatabaseNotification $notification)
+    public function processNotification(DatabaseNotification $notification, $authUser = null)
     {
         //
     }

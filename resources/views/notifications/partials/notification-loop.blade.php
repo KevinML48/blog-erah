@@ -6,10 +6,6 @@
             @if(isset($notification->view) && view()->exists($notification->view))
                 {{-- Render the Blade view with arguments --}}
                 @include($notification->view, array_merge($notification->args ?? [], ['notification' => $notification]))
-            @elseif(isset($notification->view))
-                {{-- Render a Blade component --}}
-                @component($notification->view, array_merge($notification->args ?? [], ['notification' => $notification]))
-                @endcomponent
             @endif
     </div>
 @endforeach

@@ -12,7 +12,7 @@ class CommentNotificationStrategy implements NotificationStrategy
 {
     protected $comment;
 
-    public function __construct(Comment $comment=null)
+    public function __construct(Comment $comment = null)
     {
         $this->comment = $comment ?? new Comment();
     }
@@ -23,8 +23,9 @@ class CommentNotificationStrategy implements NotificationStrategy
         if ($this->comment->parent_id) {
             $parentComment = Comment::find($this->comment->parent_id);
             if ($parentComment) {
+                $currentUserId = $this->comment->content->user_id;
                 $parentUser = $parentComment->content->user;
-                if ($parentUser->wantsNotification('comment-reply', $parentComment->content->id, 'single')) {
+                if ($currentUserId !== $parentUser->id && $parentUser->wantsNotification('comment_reply', $parentComment->content->id, 'single')) {
                     $parentUser->notify(new CommentReplyNotification(['comment_id' => $this->comment->id]));
                 }
             }
@@ -62,14 +63,21 @@ class CommentNotificationStrategy implements NotificationStrategy
         }
     }
 
-    public function processNotification($notification)
+    public function processNotification($notification, $authUser = null)
     {
-        $comment = Comment::find($notification->data['comment_id']);
+        $comment = Comment::find($notification->data['comment_id'])
+            ->load([
+                'content' => function ($query) {
+                    $query->withCount('likes');
+                },
+            ])
+            ->loadCount('likes', 'replies');
 
         if (!$comment || !$comment->contentExists()) {
             $notification->delete();
             return null;
         } else {
+            $comment->content->is_liked_by_auth_user = $authUser->isLiking($comment->content);
             $notification->view = 'notifications.partials.new_reply';
             $notification->args = [
                 'comment' => $comment,
