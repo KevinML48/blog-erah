@@ -19,17 +19,25 @@
                 @php
                     $hasLiked = $post->likes()->where('user_id', auth()->id())->exists();
                 @endphp
-                <!-- Unlike Button -->
+                <!-- Like Button -->
                 <button onclick="likePost({{ $post->id }})" id="like-post-button-{{ $post->id }}"
                         class="flex items-center {{ $hasLiked ? 'hidden' : '' }}">
                     <x-svg.heart id="unfilled-icon-{{ $post->id }}" :filled="false"/>
                 </button>
 
-                <!-- Liked Button -->
-                <button onclick="unlikePost({{ $post->id }})" id="unlike-post-button-{{ $post->id }}"
-                        class="flex items-center text-red-600 {{ $hasLiked ? '' : 'hidden' }}">
-                    <x-svg.heart id="filled-icon-{{ $post->id }}" :filled="true"/>
-                </button>
+                <!-- Unlike Button -->
+                <div class="relative">
+                    <!-- Animation Heart -->
+                    <div id="unlike-post-animation-{{ $post->id }}"
+                         class="absolute inset-0 flex items-center justify-center text-red-600 hidden animate-pingOnce z-0">
+                        <x-svg.heart id="filled-icon-{{ $post->id }}" :filled="true"/>
+                    </div>
+                    <!-- Button on Top -->
+                    <button onclick="unlikePost({{ $post->id }})" id="unlike-post-button-{{ $post->id }}"
+                            class="flex items-center text-red-600 {{ $hasLiked ? '' : 'hidden' }} z-10">
+                        <x-svg.heart id="filled-icon-{{ $post->id }}" :filled="true"/>
+                    </button>
+                </div>
             @else
                 <a href="{{ route('posts.show.redirect.like', $post) }}" class="flex items-center text-red-600">
                     <x-svg.heart id="filled-icon-{{ $post->id }}" :filled="true"/>

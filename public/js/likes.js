@@ -26,17 +26,21 @@ function toggleLike(id, type, action) {
 function updateLikeUI(id, type, action, likesCount) {
     const likeButton = document.querySelector(`#like-${type}-button-${id}`);
     const unlikeButton = document.querySelector(`#unlike-${type}-button-${id}`);
+    const animation = document.querySelector(`#unlike-${type}-animation-${id}`);
     const likesCountElement = document.querySelector(`#likes-${type}-count-${id}`);
 
     if (action === 'like') {
         likeButton.classList.add('hidden');
+        animation.classList.remove('hidden');
         unlikeButton.classList.remove('hidden');
     } else {
         likeButton.classList.remove('hidden');
+        animation.classList.add('hidden');
         unlikeButton.classList.add('hidden');
     }
 
     updateLikesCount(likesCountElement, likesCount);
+
 }
 
 function likeComment(commentId) {

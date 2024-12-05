@@ -11,6 +11,9 @@ export default {
 
     theme: {
         extend: {
+            animation: {
+                pingOnce: 'ping 1s ease-out',
+            },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
