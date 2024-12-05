@@ -6,6 +6,7 @@ use App\Contracts\NotificationStrategy;
 use App\Models\NotificationType;
 use App\Models\Post;
 use App\Models\User;
+use App\Models\UserNotificationPreference;
 use App\Notifications\PostPublishedNotification;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\DB;
@@ -28,13 +29,19 @@ class PostNotificationStrategy implements NotificationStrategy
             return;
         }
 
-        $users = User::all()->filter(function ($user) use ($notificationType) {
-            return $user->wantsNotification($notificationType->name, $this->post->theme_id, 'theme');
-        });
+        // Get user IDs who don't want the notification
+        $excludedUserIds = UserNotificationPreference::getUserIdsWhoDontWantNotification(
+            $notificationType->id,
+            $this->post->theme_id,
+            'theme'
+        );
 
-        foreach ($users as $user) {
-            $user->notify(new PostPublishedNotification(['post_id' => $this->post->id,]));
-        }
+        User::whereNotIn('id', $excludedUserIds)
+            ->chunk(100, function ($users) {
+                foreach ($users as $user) {
+                    $user->notify(new PostPublishedNotification(['post_id' => $this->post->id]));
+                }
+            });
     }
 
     public function handleDeletion(): void

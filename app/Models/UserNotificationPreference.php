@@ -17,4 +17,13 @@ class UserNotificationPreference extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public static function getUserIdsWhoDontWantNotification($notificationType, $themeId, $context)
+    {
+        return self::where('notification_type_id', $notificationType)
+            ->where('context_id', $themeId)
+            ->where('context_type', $context)
+            ->where('is_enabled', false)
+            ->pluck('user_id');
+    }
 }
