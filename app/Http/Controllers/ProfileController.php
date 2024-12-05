@@ -37,8 +37,10 @@ class ProfileController extends Controller
 
         $user = $this->profileService->getUserProfile($username);
         $comments = $this->profileService->getUserComments($user);
-        $likes = $this->profileService->getUserLikedComments($user);
-        $postLikes = $this->profileService->getUserLikedPosts($user);
+//        $likes = $this->profileService->getUserLikedComments($user);
+        $likes = collect();
+//        $postLikes = $this->profileService->getUserLikedPosts($user);
+        $postLikes = collect();
 
         $this->commentService->addAuthUserTags([$comments, $likes], Auth::user());
 
@@ -73,10 +75,7 @@ class ProfileController extends Controller
 
     public function fetchMoreLikedComments($username, Request $request): JsonResponse
     {
-        // Get the user based on the username
         $user = $this->profileService->getUserProfile($username);
-
-        // Get the current page from the request (default to 1 if not provided)
         $page = $request->query('page', 1);
 
         // Get the next set of liked comments, paginated
@@ -86,9 +85,9 @@ class ProfileController extends Controller
         // Check if there are more liked comments available (pagination)
         $hasMorePages = $likedComments->hasMorePages();
 
-        // Return the new content and pagination info as JSON
         return response()->json([
             'content' => view('posts.partials.comment-loop', ['comments' => $likedComments, 'depth' => -1])->render(),
+            'has_more_pages' => $hasMorePages,
             'next_page_url' => $hasMorePages ? $likedComments->nextPageUrl() : null,
         ]);
     }
@@ -110,6 +109,7 @@ class ProfileController extends Controller
         // Return the new content and pagination info as JSON
         return response()->json([
             'content' => view('posts.partials.posts-loop', ['posts' => $likedPosts])->render(),
+            'has_more_pages' => $hasMorePages,
             'next_page_url' => $hasMorePages ? $likedPosts->nextPageUrl() : null,
         ]);
     }

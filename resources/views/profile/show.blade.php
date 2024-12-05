@@ -68,12 +68,16 @@
                         'likes' => [
                             'functionName' => 'profileLoadMoreLikedComments',
                             'attributes' => [
-                                route('profile.fetchMoreLikedComments', ['username' => $user->username])]
+                                route('profile.fetchMoreLikedComments', ['username' => $user->username])
+                                ],
+                            'runOnce' => true,
                             ],
                         'post-likes' => [
                             'functionName' => 'profileLoadMoreLikedPosts',
                             'attributes' => [
-                                route('profile.fetchMoreLikedPosts', ['username' => $user->username])]
+                                route('profile.fetchMoreLikedPosts', ['username' => $user->username])
+                                ],
+                            'runOnce' => true,
                             ],
                     ]"
                 />

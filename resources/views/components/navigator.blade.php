@@ -9,24 +9,35 @@
 
 <div x-data="{
     activeSection: '{{ $default }}',
-    functions: @js($functions), // Pass functions as an array of objects
+    functions: @js($functions),
+    runOnceFlags: {
+        @foreach ($functions as $key => $function)
+            '{{ $key }}': {{ isset($function['runOnce']) && $function['runOnce'] ? 'false' : 'true' }},
+        @endforeach
+    },
     checkScrollToBottom(sectionName) {
         const section = this.$refs[`section${sectionName}`];
         if (section.scrollHeight - section.scrollTop === section.clientHeight) {
-            // Retrieve the function and attributes from the object
             const { functionName, attributes } = this.functions[sectionName] || {};
             if (functionName && typeof window[functionName] === 'function') {
-                window[functionName](...(attributes || [])); // Spread attributes array as arguments
+                window[functionName](...(attributes || []));
+            }
+        }
+    },
+    triggerClick(sectionName) {
+        const { functionName, attributes, runOnce } = this.functions[sectionName] || {};
+        if (runOnce && !this.runOnceFlags[sectionName]) {
+            if (functionName && typeof window[functionName] === 'function') {
+                window[functionName](...(attributes || []));
+                this.runOnceFlags[sectionName] = true;
             }
         }
     }
 }">
-
-    <!-- Navigation Buttons -->
     <div class="flex space-x-2 mb-4">
         @foreach ($triggers as $key => $trigger)
             <div
-                @click="activeSection = '{{ $key }}'"
+                @click="activeSection = '{{ $key }}'; triggerClick('{{ $key }}')"
                 :class="{ 'ring-2 ring-white ring-offset-2': activeSection === '{{ $key }}' }"
                 class="cursor-pointer">
                 {{ $trigger }}
@@ -34,7 +45,6 @@
         @endforeach
     </div>
 
-    <!-- Sections -->
     <div>
         @foreach ($sections as $key => $content)
             <div x-show="activeSection === '{{ $key }}'" class="space-y-6 {{ $scroll }}">

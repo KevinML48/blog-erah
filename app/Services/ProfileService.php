@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Comment;
+use App\Models\CommentContent;
 use App\Models\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -54,18 +56,37 @@ class ProfileService implements ProfileServiceInterface
     }
 
 
-    public function getUserLikedComments(User $user, int $limit = 15): LengthAwarePaginator
+    public function getUserLikedComments(User $user, int $limit = 10): LengthAwarePaginator
     {
-        return $user->likedComments()->with([
+        // Retrieve the CommentContents liked by the user, ordered by the most recent like
+        $likedContentIds = CommentContent::whereHas('likes', function ($query) use ($user) {
+            $query->where('user_id', $user->id);  // Only likes by the specified user
+        })
+            ->orderByDesc(function ($query) {
+                // Subquery to order by the most recent like on the content
+                $query->select('created_at')
+                    ->from('likes')
+                    ->whereColumn('likeable_id', 'comments_content.id')
+                    ->where('likeable_type', CommentContent::class)
+                    ->orderByDesc('created_at')
+                    ->limit(1);
+            })
+            ->pluck('comment_id');  // Get all associated comment_ids for these CommentContents
+
+        // Retrieve Comments that are associated with the liked CommentContents, and order them by the latest like
+        return Comment::whereIn('id', $likedContentIds)
+        ->with([
             'content' => function ($query) {
-                $query->withCount('likes')
-                    ->with('user');
+                $query->withCount('likes');
             },
             'content.user',
         ])
-            ->latest()->paginate($limit);
+            ->withCount([
+                'replies',
+            ])
+            ->orderByRaw('FIELD(id, ' . implode(',', $likedContentIds->toArray()) . ')')  // Maintain the order based on likedContentIds
+            ->paginate($limit);  // Paginate the results
     }
-
 
     public function getUserLikedPosts(User $user, int $limit = 15): LengthAwarePaginator
     {
