@@ -50,9 +50,9 @@
                     :default="'comments'"
                     :scroll="true"
                     :triggers="[
-                        'comments' => view('components.navigator-trigger', ['trigger' => 'comments', 'label' => 'Commentaires']),
-                        'likes' => view('components.navigator-trigger', ['trigger' => 'account', 'label' => 'J\'aimes']),
-                        'post-likes' => view('components.navigator-trigger', ['trigger' => 'post-likes', 'label' => 'Posts aimés']),
+                        'comments' => view('components.navigator-trigger', ['trigger' => 'comments', 'label' => __('profile.section.comments')]),
+                        'likes' => view('components.navigator-trigger', ['trigger' => 'account', 'label' => __('profile.section.likes')]),
+                        'post-likes' => view('components.navigator-trigger', ['trigger' => 'post-likes', 'label' => __('profile.section.post-likes')]),
                     ]"
                     :sections="[
                         'comments' => view('profile.partials.section-comments', ['comments' => $comments]),

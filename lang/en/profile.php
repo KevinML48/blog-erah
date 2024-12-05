@@ -70,5 +70,11 @@ return [
         'first-log' => [
             'choose-name' => 'Choose a display name visible to other users.'
         ],
+    ],
+
+    'section' => [
+        'comments' => 'Comments',
+        'likes' => 'Likes',
+        'post-likes' => 'Post likes',
     ]
 ];
