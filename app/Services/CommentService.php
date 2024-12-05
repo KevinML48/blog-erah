@@ -132,9 +132,12 @@ class CommentService implements CommentServiceInterface
         // Fetch follows for the relevant user IDs
         $followedUserIds = $authUser->follows()->whereIn('followed_id', $userIds)->pluck('followed_id')->toArray();
 
+        // Fetch muted content IDs for the authenticated user
+        $mutedContentIds = $authUser->mutedContents();
+
         // Now, iterate over the comments and mark liked/followed status
         foreach ($commentsLists as $comments) {
-            $comments->each(function ($comment) use ($authUser, $likedContentIds, $followedUserIds) {
+            $comments->each(function ($comment) use ($mutedContentIds, $authUser, $likedContentIds, $followedUserIds) {
                 if ($comment->content) {
                     // Check if the comment's content is liked
                     $comment->content->is_liked_by_auth_user = in_array($comment->content->id, $likedContentIds);
@@ -142,6 +145,9 @@ class CommentService implements CommentServiceInterface
                     // Check if the comment's user is followed
                     if ($authUser->id !== $comment->content->user_id) {
                         $comment->content->user->is_followed_by_auth_user = in_array($comment->content->user_id, $followedUserIds);
+                    } else {
+                        $comment->content->is_muted_by_auth_user = in_array($comment->content->id, $mutedContentIds);
+
                     }
                 }
 

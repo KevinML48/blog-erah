@@ -54,7 +54,7 @@
         @if(auth()->user()->id === $content->user->id)
             <div class="ml-1">
                 <div id="mute-button-{{ $content->id }}"
-                     class="{{ auth()->user()->notificationPreferences->contains('context_id', $content->id) ? 'hidden' : '' }} {{$withDetails ? 'detailed-' : 'simple-'}}mute-button-{{ $content->id }}">
+                     class="{{ $content->is_muted_by_auth_user ? 'hidden' : '' }} {{$withDetails ? 'detailed-' : 'simple-'}}mute-button-{{ $content->id }}">
                     <button
                         class="peer follow-button"
                         data-following="true"
@@ -70,13 +70,13 @@
                     </button>
                     @if(!$withDetails)
                         <div id="tooltip-mute" role="tooltip"
-                             class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 start-auto -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                             class="w-64 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 start-auto -translate-x-2/3 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
                             {!! __("comments.dropdown.notifications.stop") !!}
                         </div>
                     @endif
                 </div>
                 <div id="unmute-button-{{ $content->id }}"
-                     class="{{ auth()->user()->notificationPreferences->contains('context_id', $content->id)  ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unmute-button-{{ $content->id }}">
+                     class="{{ $content->is_muted_by_auth_user  ? '' : 'hidden' }} {{$withDetails ? 'detailed-' : 'simple-'}}unmute-button-{{ $content->id }}">
                     <button
                         class="peer follow-button"
                         data-following="false"
@@ -92,7 +92,7 @@
                     </button>
                     @if(!$withDetails)
                         <div id="tooltip-follow" role="tooltip"
-                             class="w-36 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 left-1/2 -translate-x-1/2 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
+                             class="w-64 opacity-0 peer-hover:opacity-100 peer-focus:opacity-100 absolute bottom-full mb-2 start-auto -translate-x-2/3 z-10 inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm dark:bg-gray-700">
                             {!! __("comments.dropdown.notifications.start") !!}
                         </div>
                     @endif
@@ -101,7 +101,7 @@
         @endif
 
         <!-- Delete button -->
-        <form action="{{ route('comments.destroy', $content->comment) }}" method="POST"
+        <form action="{{ route('comments.destroy', $content->comment_id) }}" method="POST"
               class="inline ml-1"
               onsubmit="return confirmDelete();">
             @csrf

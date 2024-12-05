@@ -162,6 +162,23 @@ class User extends Authenticatable
         return !$wantsReplyNotification;
     }
 
+    public function mutedContents(): array
+    {
+        // Get the notification types for 'comment_reply' and 'comment_like'
+        $notificationTypes = NotificationType::whereIn('name', ['comment_reply', 'comment_like'])
+            ->pluck('id')
+            ->toArray();
+
+        // Get the muted content IDs from user_notification_preferences for the 'single' context_type
+        $mutedContentIds = UserNotificationPreference::whereIn('notification_type_id', $notificationTypes)
+            ->where('context_type', 'single')
+            ->pluck('context_id')
+            ->unique() // Ensures unique content IDs
+            ->toArray();
+
+        return $mutedContentIds;
+    }
+
     /**
      * Get the number of unread notifications for the user.
      *
