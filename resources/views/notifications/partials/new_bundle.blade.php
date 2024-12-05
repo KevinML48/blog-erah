@@ -59,7 +59,7 @@
         @endif
 
         @if($type === 'like')
-            @include('posts.partials.comment-content', ['content' => $likeable, 'showMedia' => false])
+            @include('posts.partials.comment-content', ['content' => $likeable->content, 'showMedia' => false])
         @endif
     </div>
 </div>

@@ -37,7 +37,7 @@ class LikeNotificationStrategy implements NotificationStrategy
             return null;
         }
 
-        $content->is_liked_by_auth_user = $authUser->isLiking($content);
+//        $content->is_liked_by_auth_user = $authUser->isLiking($content);
 
         $likeIds = $notification->data['ids'] ?? [];
         $likes = Like::whereIn('id', $likeIds)->take(3)->get();
@@ -52,7 +52,7 @@ class LikeNotificationStrategy implements NotificationStrategy
                 'type' => 'like',
                 'users' => $users,
                 'count' => count($likeIds),
-                'likeable' => $content,
+                'likeable' => $content->comment,
             ];
         }
     }

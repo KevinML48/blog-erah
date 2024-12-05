@@ -70,6 +70,7 @@ class CommentNotificationStrategy implements NotificationStrategy
                 'content' => function ($query) {
                     $query->withCount('likes');
                 },
+                'content.user',
             ])
             ->loadCount('likes', 'replies');
 
@@ -77,7 +78,7 @@ class CommentNotificationStrategy implements NotificationStrategy
             $notification->delete();
             return null;
         } else {
-            $comment->content->is_liked_by_auth_user = $authUser->isLiking($comment->content);
+//            $comment->content->is_liked_by_auth_user = $authUser->isLiking($comment->content);
             $notification->view = 'notifications.partials.new_reply';
             $notification->args = [
                 'comment' => $comment,

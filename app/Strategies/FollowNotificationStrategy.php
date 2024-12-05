@@ -27,7 +27,7 @@ class FollowNotificationStrategy implements NotificationStrategy
         $this->strategy->handleDeletion();
     }
 
-    public function processNotification($notification)
+    public function processNotification($notification, $authUser = null)
     {
         $followIds = $notification->data['ids'] ?? [];
         $follows = Follow::whereIn('id', $followIds)->take(3)->get(); // Retrieve up to 3 follow records

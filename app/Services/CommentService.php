@@ -54,7 +54,7 @@ class CommentService implements CommentServiceInterface
             },
             'parent.content' => function ($query) {
                 $query->withCount('likes')
-                ->with('user');
+                    ->with('user');
             },
         ])
             ->withCount('replies')
@@ -95,33 +95,31 @@ class CommentService implements CommentServiceInterface
         $userIds = [];
 
         foreach ($commentsLists as $comments) {
-            if ($comments instanceof LengthAwarePaginator) {
-                $comments->each(function ($comment) use (&$commentIds, &$userIds) {
-                    if ($comment->content) {
-                        // Collect the content IDs of all comments
-                        $commentIds[] = $comment->content->id;
+            $comments->each(function ($comment) use (&$commentIds, &$userIds) {
+                if ($comment->content) {
+                    // Collect the content IDs of all comments
+                    $commentIds[] = $comment->content->id;
 
-                        // Collect the user IDs of all users who posted these comments
-                        $userIds[] = $comment->content->user_id;
-                    }
+                    // Collect the user IDs of all users who posted these comments
+                    $userIds[] = $comment->content->user_id;
+                }
 
-                    // Collect reply content IDs if they exist
-                    if ($comment->relationLoaded('replies')) {
-                        $comment->replies->each(function ($reply) use (&$commentIds, &$userIds) {
-                            if ($reply->content) {
-                                $commentIds[] = $reply->content->id;
-                                $userIds[] = $reply->content->user_id;
-                            }
-                        });
-                    }
+                // Collect reply content IDs if they exist
+                if ($comment->relationLoaded('replies')) {
+                    $comment->replies->each(function ($reply) use (&$commentIds, &$userIds) {
+                        if ($reply->content) {
+                            $commentIds[] = $reply->content->id;
+                            $userIds[] = $reply->content->user_id;
+                        }
+                    });
+                }
 
-                    // Collect parent comment content IDs if they exist
-                    if ($comment->relationLoaded('parent') && $comment->parent !== null ) {
-                        $commentIds[] = $comment->parent->content->id;
-                        $userIds[] = $comment->parent->content->user_id;
-                    }
-                });
-            }
+                // Collect parent comment content IDs if they exist
+                if ($comment->relationLoaded('parent') && $comment->parent !== null) {
+                    $commentIds[] = $comment->parent->content->id;
+                    $userIds[] = $comment->parent->content->user_id;
+                }
+            });
         }
 
         // Remove duplicates from the IDs arrays
@@ -136,39 +134,37 @@ class CommentService implements CommentServiceInterface
 
         // Now, iterate over the comments and mark liked/followed status
         foreach ($commentsLists as $comments) {
-            if ($comments instanceof LengthAwarePaginator) {
-                $comments->each(function ($comment) use ($authUser, $likedContentIds, $followedUserIds) {
-                    if ($comment->content) {
-                        // Check if the comment's content is liked
-                        $comment->content->is_liked_by_auth_user = in_array($comment->content->id, $likedContentIds);
+            $comments->each(function ($comment) use ($authUser, $likedContentIds, $followedUserIds) {
+                if ($comment->content) {
+                    // Check if the comment's content is liked
+                    $comment->content->is_liked_by_auth_user = in_array($comment->content->id, $likedContentIds);
 
-                        // Check if the comment's user is followed
-                        if ($authUser->id !== $comment->content->user_id) {
-                            $comment->content->user->is_followed_by_auth_user = in_array($comment->content->user_id, $followedUserIds);
+                    // Check if the comment's user is followed
+                    if ($authUser->id !== $comment->content->user_id) {
+                        $comment->content->user->is_followed_by_auth_user = in_array($comment->content->user_id, $followedUserIds);
+                    }
+                }
+
+                // Check each reply
+                if ($comment->relationLoaded('replies')) {
+                    $comment->replies->each(function ($reply) use ($likedContentIds, $followedUserIds) {
+                        if ($reply->content) {
+                            $reply->content->is_liked_by_auth_user = in_array($reply->content->id, $likedContentIds);
+
+                            // Check if the reply's user is followed
+                            $reply->content->user->is_followed_by_auth_user = in_array($reply->content->user_id, $followedUserIds);
                         }
-                    }
+                    });
+                }
 
-                    // Check each reply
-                    if ($comment->relationLoaded('replies')) {
-                        $comment->replies->each(function ($reply) use ($likedContentIds, $followedUserIds) {
-                            if ($reply->content) {
-                                $reply->content->is_liked_by_auth_user = in_array($reply->content->id, $likedContentIds);
+                // Check the parent comment
+                if ($comment->relationLoaded('parent') && $comment->parent !== null) {
+                    $comment->parent->content->is_liked_by_auth_user = in_array($comment->parent->content->id, $likedContentIds);
 
-                                // Check if the reply's user is followed
-                                $reply->content->user->is_followed_by_auth_user = in_array($reply->content->user_id, $followedUserIds);
-                            }
-                        });
-                    }
-
-                    // Check the parent comment
-                    if ($comment->relationLoaded('parent') && $comment->parent !== null ) {
-                        $comment->parent->content->is_liked_by_auth_user = in_array($comment->parent->content->id, $likedContentIds);
-
-                        // Check if the parent comment's user is followed
-                        $comment->parent->content->user->is_followed_by_auth_user = in_array($comment->parent->content->user_id, $followedUserIds);
-                    }
-                });
-            }
+                    // Check if the parent comment's user is followed
+                    $comment->parent->content->user->is_followed_by_auth_user = in_array($comment->parent->content->user_id, $followedUserIds);
+                }
+            });
         }
     }
 
