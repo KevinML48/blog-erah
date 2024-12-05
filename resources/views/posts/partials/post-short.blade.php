@@ -1,23 +1,35 @@
-<div class="flex flex-col md:flex-row border-b pb-4 mb-4">
+<article class="flex flex-col md:flex-row border-b pb-4 mb-4">
 
     <!-- Media Display -->
-    <div class="md:w-1/3 pr-4">
+    <figure class="md:w-1/3 pr-4">
         <div class="w-64 bg-gray-200 flex items-center justify-center overflow-hidden">
             @include('posts.partials.media', ['post' => $post])
         </div>
-    </div>
+    </figure>
 
     <!-- Post -->
     <div class="md:w-2/3 pl-4">
 
-        <!-- Title -->
-        <a href="{{ route('posts.show', $post->id) }}">
-            <h4 class="font-semibold text-lg hover:underline inline-block">{{ $post->title }}</h4>
-        </a>
+        <header class="flex flex-col mb-4">
+            <!-- Title -->
+            <a href="{{ route('posts.show', $post->id) }}">
+                <h4 class="font-semibold text-lg hover:underline inline-block">{{ $post->title }}</h4>
+            </a>
 
-        <!-- Edit link -->
-        @if(auth()->user() && auth()->user()->isAdmin())
+            <!-- Theme Display -->
             <div class="mt-1">
+                {{ $post->theme->name }}
+            </div>
+
+            <!-- Credit -->
+            <p class="text-gray-600">
+                @include('posts.partials.credit', ['post' => $post])
+            </p>
+        </header>
+
+        <!-- Edit Link (Admin Only) -->
+        @if(auth()->user() && auth()->user()->isAdmin())
+            <footer class="mt-1">
                 <a href="{{ route('admin.posts.edit', $post->id) }}" class="erah-link">
                     {!! __("posts.admin.edit") !!}
                 </a>
@@ -26,7 +38,7 @@
                     @method('DELETE')
                     <button type="submit" class="text-red-600 hover:text-red-900">{!! __("posts.admin.delete") !!}</button>
                 </form>
-            </div>
+            </footer>
             <script>
                 function confirmPostDelete() {
                     return confirm({!! __("posts.admin.confirm") !!});
@@ -34,18 +46,11 @@
             </script>
         @endif
 
-        <!-- Theme Display -->
-        <div class="mt-1">
-            {{ $post->theme->name }}
-        </div>
-
-        <!-- Credit -->
-        <p class="text-gray-600">
-            @include('posts.partials.credit', ['post' => $post])
-        </p>
-
         <!-- Truncated Body -->
-        <p class="mt-2">{{ Str::limit($post->body, 100) }}</p>
+        <section class="mt-2">
+            <p>{{ Str::limit($post->body, 100) }}</p>
+        </section>
+
     </div>
 
-</div>
+</article>

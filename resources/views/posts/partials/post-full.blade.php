@@ -1,13 +1,27 @@
-<div class="flex flex-col pb-4 mb-4">
-    @include('posts.partials.media', ['post' => $post])
+<article class="flex flex-col pb-4 mb-4">
+    <!-- Media Section -->
+    <figure class="media">
+        @include('posts.partials.media', ['post' => $post])
+    </figure>
 
-    <div class="flex justify-between items-center">
-        <a href="{{ route('posts.show', $post->id) }}">
-            <h4 class="font-semibold text-lg hover:underline inline-block">{{ $post->title }}</h4>
-        </a>
+    <section class="flex justify-between items-start">
+        <header class="flex-col justify-start">
+            <a href="{{ route('posts.show', $post->id) }}">
+                <h4 class="font-semibold text-lg hover:underline inline-block">{{ $post->title }}</h4>
+            </a>
 
-        <!-- Like Button Section -->
-        <div class="flex items-center">
+            <!-- Theme Display -->
+            <div class="mt-1">
+                {{ $post->theme->name }}
+            </div>
+
+            <p class="text-gray-600">
+                @include('posts.partials.credit', ['post' => $post])
+            </p>
+        </header>
+
+        <!-- Like Button Section (stick to top) -->
+        <section class="flex items-center self-start">
             <!-- Likes Count -->
             @if ($post->likes_count > 0)
                 <span id="likes-post-count-{{ $post->id }}">({{ $post->likes_count }})</span>
@@ -19,7 +33,7 @@
                 @php
                     $hasLiked = $post->likes()->where('user_id', auth()->id())->exists();
                 @endphp
-                <!-- Like Button -->
+                    <!-- Like Button -->
                 <button onclick="likePost({{ $post->id }})" id="like-post-button-{{ $post->id }}"
                         class="flex items-center {{ $hasLiked ? 'hidden' : '' }}">
                     <x-svg.heart id="unfilled-icon-{{ $post->id }}" :filled="false"/>
@@ -43,11 +57,11 @@
                     <x-svg.heart id="filled-icon-{{ $post->id }}" :filled="true"/>
                 </a>
             @endauth
-        </div>
-    </div>
+        </section>
+    </section>
 
     @if(auth()->user() && auth()->user()->isAdmin())
-        <div class="mt-1">
+        <footer class="mt-1">
             <a href="{{ route('admin.posts.edit', $post->id) }}" class="erah-link">
                 {!! __("posts.admin.edit") !!}
             </a>
@@ -56,7 +70,7 @@
                 @method('DELETE')
                 <button type="submit" class="text-red-600 hover:text-red-900">{!! __("posts.admin.delete") !!}</button>
             </form>
-        </div>
+        </footer>
         <script>
             function confirmPostDelete() {
                 return confirm({!! __("posts.admin.confirm") !!});
@@ -64,18 +78,8 @@
         </script>
     @endif
 
-    <!-- Theme Display -->
-    <div class="mt-1">
-        {{ $post->theme->name }}
-    </div>
-
-    <p class="text-gray-600">
-        @include('posts.partials.credit', ['post' => $post])
-    </p>
-
-
-    <div class="mt-4">
+    <!-- Post Body Section -->
+    <section class="mt-4">
         {!! nl2br(\App\Helpers\UrlHelper::convertUrlsToLinks($post->body)) !!}
-    </div>
-</div>
-
+    </section>
+</article>
