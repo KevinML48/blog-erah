@@ -1,6 +1,7 @@
 <template id="reply-form-template" style="display: none;">
     <form id="commentForm" action="{{ route('comments.store') }}" method="POST"
-          enctype="multipart/form-data">
+          enctype="multipart/form-data"
+          class="mb-12">
         @csrf
         @if(request()->route('post'))
             <input type="hidden" name="post_id" value="{{ request()->route('post')->id }}">
