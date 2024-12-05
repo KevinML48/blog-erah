@@ -7,16 +7,15 @@
             @include('posts.partials.dropdown-content', ['withDetails' => false])
         </x-slot>
 
-
-        <div class="py-2 p-2 flex flex-col shadow-md rounded-2xl
+        <article class="py-2 p-2 flex flex-col shadow-md rounded-2xl
             @if(request()->routeis('comments.show') && request()->route('comment.id') && request()->route('comment.id') == $content->comment->id )
              bg-red-950
              @else
              bg-gray-700
             @endif
             ">
-            <div class="flex justify-between items-start">
-                <div class="flex items-center space-x-2">
+            <header class="flex justify-between items-start">
+                <section class="flex items-center space-x-2">
                     <!-- Profile Picture -->
                     <div>
                         <x-user.profile-picture :user="$content->user" :card="true"/>
@@ -25,30 +24,29 @@
                     <div>
                         <x-user.name :user="$content->user"/>
                     </div>
-                </div>
+                </section>
 
-                <div class="flex space-x-2 ml-auto">
+                <section class="flex space-x-2 ml-auto">
                     <!-- Creation Date -->
                     <div>
                         <span class="text-gray-500 text-sm convert-time"
                               data-time="{{ $content->created_at->toIso8601String() }}">
                         </span>
                     </div>
-
-                </div>
-            </div>
-
+                </section>
+            </header>
 
             <!-- Body -->
-            <a href="{{ route('comments.show', ['post' => $content->comment->post_id, 'comment' => $content->comment->id]) }}"
-               class="block">
-                <div class="rounded py-2">
-                    <div class="py-2 ml-14">
-                        <div id="content-preview-{{ $content->id }}"
-                             class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
-                            {!! nl2br(\App\Helpers\UrlHelper::convertUrlsToLinks($content->body)) !!}
-                        </div>
-                        <span id="toggle-container-{{ $content->id }}" class="hidden">
+            <section>
+                <a href="{{ route('comments.show', ['post' => $content->comment->post_id, 'comment' => $content->comment->id]) }}"
+                  class="block">
+                    <div class="rounded py-2">
+                        <div class="py-2 ml-14">
+                            <div id="content-preview-{{ $content->id }}"
+                                 class="max-h-36 overflow-hidden transition-all duration-300 ease-in-out">
+                                {!! nl2br(\App\Helpers\UrlHelper::convertUrlsToLinks($content->body)) !!}
+                            </div>
+                            <span id="toggle-container-{{ $content->id }}" class="hidden">
                             <button id="toggle-button-more-{{ $content->id }}"
                                     class="mt-2 text-blue-600 hover:underline"
                                     onclick="showMore({{ $content->id }})">Dérouler</button>
@@ -56,26 +54,28 @@
                                     class="mt-2 text-blue-600 hover:underline hidden"
                                     onclick="showLess({{ $content->id }})">Cacher</button>
                         </span>
-                    </div>
-
-                    <!-- Media -->
-                    @if ($content->media && ($showMedia ?? true))
-                        <div class="py-2 ml-14">
-                            @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
-                                <!-- If it's a Tenor GIF URL -->
-                                <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
-                            @else
-                                <!-- If it's an uploaded image -->
-                                <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
-                                     class="object-contain h-48 w-48">
-                            @endif
                         </div>
-                    @endif
-                </div>
-            </a>
-        </div>
+
+                        <!-- Media -->
+                        @if ($content->media && ($showMedia ?? true))
+                            <div class="py-2 ml-14">
+                                @if (filter_var($content->media, FILTER_VALIDATE_URL) && strpos($content->media, 'tenor.com') !== false)
+                                    <!-- If it's a Tenor GIF URL -->
+                                    <img src="{{ $content->media }}" alt="Comment GIF" class="object-contain h-48 w-48">
+                                @else
+                                    <!-- If it's an uploaded image -->
+                                    <img src="{{ asset('storage/' . $content->media) }}" alt="Comment Image"
+                                         class="object-contain h-48 w-48">
+                                @endif
+                            </div>
+                        @endif
+                    </div>
+                </a>
+            </section>
+        </article>
     </x-slot>
 </x-dropdown>
+
 
 <script>
     function confirmDelete() {
