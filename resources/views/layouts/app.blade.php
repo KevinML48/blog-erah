@@ -18,20 +18,8 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="{{ asset('js/time-display.js') }}"></script>
-
-    <style>
-        body {
-            background: linear-gradient(to bottom left,
-            #ff0000 0%,
-            #660000 15%,
-            #330000 20%,
-            #000000 50%,
-            #000000 100%);
-            color: white;
-        }
-    </style>
 </head>
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-gradient-to-bl from-red-600 from-0% via-red-800 via-20% to-gray-900 to-50% text-white">
 <div class="min-h-screen">
     @include('layouts.navigation')
 

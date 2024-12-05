@@ -12,7 +12,7 @@
             @if(request()->routeis('comments.show') && request()->route('comment.id') && request()->route('comment.id') == $content->comment->id )
              bg-red-950
              @else
-             bg-gray-900
+             bg-gray-700
             @endif
             ">
             <div class="flex justify-between items-start">
