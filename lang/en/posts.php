@@ -20,4 +20,6 @@ return [
     'empty' => [
         'likes' => 'No liked posts',
     ],
+
+    'more' => 'Read more &rarr;',
 ];

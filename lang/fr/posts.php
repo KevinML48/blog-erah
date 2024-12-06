@@ -21,4 +21,6 @@ return [
     'empty' => [
         'likes' => 'Pas d\'articles aimés',
     ],
+
+    'more' => 'Voir plus &rarr;'
 ];

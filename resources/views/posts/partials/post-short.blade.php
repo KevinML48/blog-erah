@@ -48,7 +48,8 @@
 
         <!-- Truncated Body -->
         <section class="mt-2">
-            <p>{{ Str::limit($post->body, 100) }}</p>
+            {{ Str::limit($post->body, 100) }}
+            <a href="{{ route('posts.show', [$post]) }}" class="erah-link">{!! __('posts.more') !!}</a>
         </section>
 
     </div>
