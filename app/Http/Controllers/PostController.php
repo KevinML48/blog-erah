@@ -86,7 +86,7 @@ class PostController extends Controller
             'theme_id' => $request->theme_id,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', __('messages.posts.success.created'));
+        return redirect()->route('admin.dashboard')->with('success', __('message.posts.success.created'));
     }
 
     /**
@@ -180,7 +180,7 @@ class PostController extends Controller
             'theme_id' => $request->theme_id,
         ]);
 
-        return redirect()->route('admin.dashboard')->with('success', __('messages.posts.success.updated'));
+        return redirect()->route('admin.dashboard')->with('success', __('message.posts.success.updated'));
     }
 
     /**
@@ -190,7 +190,7 @@ class PostController extends Controller
     {
         $post->delete();
 
-        return redirect()->route('admin.dashboard')->with('success', __('messages.posts.success.deleted'));
+        return redirect()->route('admin.dashboard')->with('success', __('message.posts.success.deleted'));
     }
 
     public function like(Post $post)

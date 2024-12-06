@@ -167,7 +167,7 @@ class ProfileController extends Controller
 
         $user->save();
 
-        return Redirect::route('profile.edit')->with('success', __('messages.profile.success.update'));
+        return Redirect::route('profile.edit')->with('success', __('message.profile.success.update'));
     }
 
     public function updateDescription(Request $request)
@@ -184,7 +184,7 @@ class ProfileController extends Controller
 
         if ($user->isDirty('name') || $user->isDirty('description')) {
             $user->save();
-            return back()->with('success', __('messages.profile.success.update'));
+            return back()->with('success', __('message.profile.success.update'));
         }
 
         return back()->with('status', 'no-changes-made');
@@ -220,12 +220,12 @@ class ProfileController extends Controller
         }
 
         if ($user->id === auth()->id()) {
-            return redirect()->route('admin.users.search')->with('error', __('messages.profile.error.cannot_delete_own_account'));
+            return redirect()->route('admin.users.search')->with('error', __('message.profile.error.cannot_delete_own_account'));
         }
 
         $this->profileService->deleteUserAccount($user);
 
-        return redirect()->route('admin.users.search')->with('success', __('messages.profile.success.delete'));
+        return redirect()->route('admin.users.search')->with('success', __('message.profile.success.delete'));
     }
 
     /**
@@ -242,7 +242,7 @@ class ProfileController extends Controller
 
         $this->profileService->updateUserProfilePicture($user, $path);
 
-        return redirect()->back()->with('success', __('messages.profile.success.profile_picture_update'));
+        return redirect()->back()->with('success', __('message.profile.success.profile_picture_update'));
     }
 
     /**
@@ -290,7 +290,7 @@ class ProfileController extends Controller
     public function changeRole(User $user, $role, Request $request): RedirectResponse
     {
         if (!in_array($role, ['user', 'ultra', 'admin'])) {
-            return redirect()->route('admin.users.search')->with('error', __('messages.profile.error.change_role'));
+            return redirect()->route('admin.users.search')->with('error', __('message.profile.error.change_role'));
         }
 
         $this->profileService->changeUserRole($user, $role);
@@ -301,7 +301,7 @@ class ProfileController extends Controller
         return redirect()->route('admin.users.search', [
             'search' => $query,
             'page' => $page
-        ])->with('success', __('messages.profile.success.change_role', ['user' => $user->username, 'role' => $role->name]));
+        ])->with('success', __('message.profile.success.change_role', ['user' => $user->username, 'role' => $role->name]));
     }
 
     /**
