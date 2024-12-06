@@ -2,8 +2,8 @@ let loading = false;
 // Initialize a global `pages` object to track the page and has_more_pages for each section
 window.pages = {
     comments: { page: 1, has_more_pages: true }, // Example: { page: 1, has_more_pages: true }
-    likes: { page: 1, has_more_pages: true },
-    'post-likes': { page: 1, has_more_pages: true }
+    likes: { page: 0, has_more_pages: true },
+    'post-likes': { page: 0, has_more_pages: true }
 };
 
 // Generic function to load more data, now with separate page tracking for each section
