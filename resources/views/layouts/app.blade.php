@@ -19,7 +19,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="{{ asset('js/time-display.js') }}"></script>
 </head>
-<body class="font-sans antialiased bg-gradient-to-bl from-red-600 from-0% via-red-800 via-20% to-gray-900 to-50% text-white">
+<body class="font-sans antialiased bg-gradient-to-bl from-red-600 from-0% via-red-950 via-10% to-gray-900 to-50% text-white">
 <div class="min-h-screen">
     @include('layouts.navigation')
 
