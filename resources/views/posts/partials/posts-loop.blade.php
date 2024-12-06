@@ -1,3 +1,7 @@
-@foreach($posts as $post)
+@forelse($posts as $post)
     @include('posts.partials.post-short', ['post' => $post])
-@endforeach
+@empty
+    @if (!empty($emptyMessageKey))
+        <p>{{ __($emptyMessageKey) }}</p>
+    @endif
+@endforelse

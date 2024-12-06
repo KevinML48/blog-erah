@@ -86,7 +86,7 @@ class ProfileController extends Controller
         $hasMorePages = $likedComments->hasMorePages();
 
         return response()->json([
-            'content' => view('posts.partials.comment-loop', ['comments' => $likedComments, 'depth' => -1])->render(),
+            'content' => view('posts.partials.comment-loop', ['comments' => $likedComments, 'depth' => -1, 'emptyMessageKey' => 'comments.empty.likes'])->render(),
             'has_more_pages' => $hasMorePages,
             'next_page_url' => $hasMorePages ? $likedComments->nextPageUrl() : null,
         ]);
@@ -108,7 +108,7 @@ class ProfileController extends Controller
 
         // Return the new content and pagination info as JSON
         return response()->json([
-            'content' => view('posts.partials.posts-loop', ['posts' => $likedPosts])->render(),
+            'content' => view('posts.partials.posts-loop', ['posts' => $likedPosts, 'emptyMessageKey' => 'posts.empty.likes'])->render(),
             'has_more_pages' => $hasMorePages,
             'next_page_url' => $hasMorePages ? $likedPosts->nextPageUrl() : null,
         ]);

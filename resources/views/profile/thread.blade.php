@@ -10,7 +10,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="erah-box">
                 <div id="comments-container">
-                        @include('posts.partials.comment-loop', ['comments' => $comments, 'depth' => -1])
+                        @include('posts.partials.comment-loop', ['comments' => $comments, 'depth' => -1, 'emptyMessageKey' => 'comments.empty.comments'])
                 </div>
 
                 <div id="loading" class="hidden justify-center items-center space-x-2">

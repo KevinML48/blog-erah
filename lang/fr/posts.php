@@ -16,5 +16,9 @@ return [
         'edit' => 'Éditer',
         'delete' => 'Supprimer',
         'confirm' => 'Le Post et tous les commentaires associés seront supprimés. Continuer?',
-    ]
+    ],
+
+    'empty' => [
+        'likes' => 'Pas d\'articles aimés',
+    ],
 ];

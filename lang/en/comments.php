@@ -41,5 +41,10 @@ return [
             'stop' => 'Stop receiving notifications for this comment',
             'start' => 'Receive notifications for this comment',
         ]
-    ]
+    ],
+
+    'empty' => [
+        'comments' => 'No comments yet',
+        'likes' => 'No likes yet',
+    ],
 ];

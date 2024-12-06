@@ -15,5 +15,9 @@ return [
         'edit' => 'Edit',
         'delete' => 'Delete',
         'confirm' => 'The post and all associated comments will be deleted. Continue?',
-    ]
+    ],
+
+    'empty' => [
+        'likes' => 'No liked posts',
+    ],
 ];
