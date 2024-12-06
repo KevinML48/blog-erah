@@ -45,11 +45,10 @@
                 <x-svg.heart id="filled-icon-{{ $comment->id }}" :filled="true"/>
             </a>
         @endauth
-        @if ($comment->content->likes_count > 0)
-            <span id="likes-comment-count-{{ $comment->id }}" class="ml-1">
+            <span id="likes-comment-count-{{ $comment->id }}"
+                  class="ml-1 {{ $comment->content->likes_count > 0 ? '' : 'hidden' }}">
                 ({{ $comment->content->likes_count }})
             </span>
-        @endif
     </div>
 </div>
 

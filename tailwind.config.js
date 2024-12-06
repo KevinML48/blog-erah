@@ -12,7 +12,7 @@ export default {
     theme: {
         extend: {
             animation: {
-                pingOnce: 'ping 1s ease-out',
+                pingOnce: 'ping 1s ease-out forwards',
             },
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
