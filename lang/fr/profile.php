@@ -76,5 +76,12 @@ return [
         'comments' => 'Commentaires',
         'likes' => 'J\'aimes',
         'post-likes' => 'Articles aimés',
+    ],
+    'edit' => [
+        'navigator' => [
+            'profile' => 'Profile',
+            'account' => 'Account',
+            'notifications' => 'Notifications',
+        ]
     ]
 ];

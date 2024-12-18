@@ -21,9 +21,9 @@
                 <x-navigator
                     :default="'profile'"
                     :triggers="[
-                        'profile' => view('components.navigator-trigger', ['trigger' => 'profile', 'label' => 'Profil']),
-                        'account' => view('components.navigator-trigger', ['trigger' => 'account', 'label' => 'Compte']),
-                        'notifications' => view('components.navigator-trigger', ['trigger' => 'notifications', 'label' => 'Notifications']),
+                        'profile' => view('components.navigator-trigger', ['trigger' => 'profile', 'label' =>  __('profile.edit.navigator.profile')]),
+                        'account' => view('components.navigator-trigger', ['trigger' => 'account', 'label' => __('profile.edit.navigator.account')]),
+                        'notifications' => view('components.navigator-trigger', ['trigger' => 'notifications', 'label' => __('profile.edit.navigator.notifications')]),
                     ]"
                     :sections="[
                         'profile' => view('profile.partials.section-profile', ['user' => $user]),

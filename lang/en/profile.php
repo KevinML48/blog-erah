@@ -76,5 +76,12 @@ return [
         'comments' => 'Comments',
         'likes' => 'Likes',
         'post-likes' => 'Post likes',
+    ],
+    'edit' => [
+        'navigator' => [
+            'profile' => 'Profile',
+            'account' => 'Account',
+            'notifications' => 'Notifications',
+        ]
     ]
 ];
