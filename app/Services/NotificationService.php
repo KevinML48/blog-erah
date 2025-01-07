@@ -63,16 +63,29 @@ class NotificationService implements NotificationServiceInterface
         });
     }
 
-    public function updateNotificationPreferences(Authenticatable $user, string $notificationTypeName, string $contextType, ?int $contextId, bool $isEnabled): void
-    {
+    public function updateNotificationPreferences(
+        Authenticatable $user,
+        string $notificationTypeName,
+        string $contextType,
+        ?int $contextId,
+        bool $isEnabled
+    ): void {
         $notificationType = NotificationType::where('name', $notificationTypeName)->first();
 
-        $user->notificationPreferences()
+        $existingPreference = $user->notificationPreferences()
             ->where('notification_type_id', $notificationType->id)
             ->where('context_type', $contextType)
             ->where('context_id', $contextId)
-            ->delete();
+            ->first();
 
+        if ($existingPreference && !$existingPreference->is_enabled && !$isEnabled) {
+            return;
+        }
+
+        if ($existingPreference) {
+            $existingPreference->delete();
+        }
+        
         if (!$isEnabled) {
             $user->notificationPreferences()->create([
                 'notification_type_id' => $notificationType->id,
@@ -82,4 +95,5 @@ class NotificationService implements NotificationServiceInterface
             ]);
         }
     }
+
 }
